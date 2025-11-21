@@ -1,4 +1,4 @@
-이 프로젝트는 [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)으로 부트스트랩된 [Next.js](https://nextjs.org) 기반 UI 애플리케이션입니다.
+이 프로젝트는 `LoanMate` 서비스의 프론트엔드 프로젝트입니다.
 
 ## 시작하기
 
