@@ -19,6 +19,7 @@ export default function QuickActionButton({
 }: QuickActionButtonProps) {
   return (
     <button
+        type="button"
       onClick={onClick}
       className="w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition"
     >
