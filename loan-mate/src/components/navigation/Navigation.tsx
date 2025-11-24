@@ -38,7 +38,7 @@ export const TopCategoryNav: React.FC<TopCategoryNavProps> = ({
             onClick={() => onChange?.(item.id)}
             className="
               relative flex flex-col items-center
-              outline-none
+              focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500
             "
           >
             <span
