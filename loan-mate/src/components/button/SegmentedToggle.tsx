@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 type Option<T extends string | number> = {
   label: string;
   value: T;
@@ -23,8 +25,8 @@ export default function SegmentedToggle<T extends string | number>({
   onChange,
   className = "",
 }: Props<T>) {
-  const selectedIndex = options.findIndex((o) => o.value === value);
-  const segmentWidth = 100 / options.length;
+  const selectedIndex = useMemo(() => options.findIndex((o) => o.value === value), [options, value]);
+  const segmentWidth = useMemo(() => 100 / options.length, [options.length]);
 
   return (
     <div
