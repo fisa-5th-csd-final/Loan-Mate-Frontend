@@ -16,7 +16,7 @@ export default function MainTopLevelNavigation() {
     const [active, setActive] = useState('loan'); // 기본 선택: "대출"
 
     return (
-        <main className="bg-white py-6">
+        <main className="bg-white py-2">
             {/* 상단 네비게이션 바 */}
             <TopCategoryNav
                 items={items}
