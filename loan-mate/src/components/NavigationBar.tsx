@@ -33,7 +33,7 @@ export default function NavigationBar({ title, showBack = true }: NavigationBarP
       )}
 
       {title && (
-        <h1 className="w-full text-center text-lg font-semibold text-gray-800">{title}</h1>
+        <div className="w-full text-center text-lg font-semibold text-gray-800">{title}</div>
       )}
     </div>
   );
