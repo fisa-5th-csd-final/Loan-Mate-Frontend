@@ -43,7 +43,7 @@ export default function SegmentedToggle<T extends string | number>({
     >
       {/* 움직이는 하이라이트 */}
       <span
-        className="absolute top-1 bottom-1 rounded-full bg-[#686e75] transition-all duration-200"
+        className="absolute rounded-full bg-[#686e75] transition-all duration-200 h-full"
         style={{
           width: `${segmentWidth}%`,
           left: `${selectedIndex * segmentWidth}%`,
