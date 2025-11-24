@@ -6,7 +6,7 @@ import { TopCategoryNav } from '@/components/navigation/Navigation';
 export default function MainTopLevelNavigation() {
     const [active, setActive] = useState('loan'); // 기본 선택: "대출"
 
-    {/* 내비게이션 바에 보여줄 카테고리 리스트 */}
+    // 내비게이션 바에 보여줄 카테고리 리스트
     const items = [
         { id: 'all', label: '전체' },
         { id: 'deposit', label: '입출금/저축' },
