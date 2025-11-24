@@ -20,7 +20,7 @@ export default function CommonButton({
   label,
   colorClassName,
   size = "md",
-  widthClassName = "w-[340px]",
+  widthClassName = "w-full",
   className = "",
   ...props
 }: CommonButtonProps) {
