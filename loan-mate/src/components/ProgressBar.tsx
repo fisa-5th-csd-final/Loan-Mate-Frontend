@@ -19,15 +19,11 @@ export default function ProgressBar({ label, value }: ProgressBarProps) {
       <p className="text-gray-600 text-lg mb-2">{label}</p>
 
       {/* Progress Bar Wrapper */}
-      <div className="w-full h-8 bg-gray-500/80 rounded-full overflow-hidden flex">
-        {/* 채워진 영역 */}
+      <div className="w-full h-8 bg-gray-500/80 rounded-full overflow-hidden">
         <div
-          className="bg-[#4B8DF8] transition-all duration-300"
+          className="h-full bg-[#4B8DF8] transition-all duration-300"
           style={{ width: `${safeValue}%` }}
         />
-
-        {/* 남은 영역 (자동으로 flex-grow) */}
-        <div className="bg-gray-500 flex-1" />
       </div>
     </div>
   );
