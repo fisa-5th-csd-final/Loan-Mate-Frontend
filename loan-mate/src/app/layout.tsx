@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import ClientProviders from "@/components/ClientProviders";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -45,7 +46,10 @@ export default function RootLayout({
             </div>
 
             {/* 실제 페이지 */}
-            {children}
+            <ClientProviders>
+              {children}
+            </ClientProviders>
+            
           </div>
         </div>
       </body>
