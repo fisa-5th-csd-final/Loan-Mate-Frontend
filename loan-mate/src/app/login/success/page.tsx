@@ -7,7 +7,7 @@ export default function LoginSuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/");
+    router.replace("/connect");
   }, [router]);
 
   // TODO: 추후 로딩 컴포넌트로 바꿔야 함 
