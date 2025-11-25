@@ -31,7 +31,7 @@ const defaultHeaders: HeadersInit = {
 function buildUrl(path: string, query?: Record<string, QueryValue>) {
   const trimmed = path.startsWith("/") ? path : `/${path}`;
   const originFallback =
-    typeof window !== "undefined" ? window.location.origin : "http://localhost";
+    typeof window !== "undefined" ? window.location.origin : "";
   const url = new URL(`${BASE_URL || originFallback}${trimmed}`);
 
   if (query) {
@@ -139,5 +139,3 @@ export const apiClient = {
   },
 };
 
-// Usage example:
-// await apiClient.post<LoginResponse>("/login", { id, password });
