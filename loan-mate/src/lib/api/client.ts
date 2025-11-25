@@ -90,6 +90,7 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     method,
     headers,
     body: preparedBody,
+    credentials: "include",
     ...fetchOptions,
   });
 
