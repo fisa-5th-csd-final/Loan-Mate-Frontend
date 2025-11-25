@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { TopCategoryNav } from '@/components/navigation/Navigation';
 
 // 내비게이션 바에 보여줄 카테고리 리스트
-const items = [
+export const MAIN_NAV_ITEMS = [
     { id: 'all', label: '전체' },
     { id: 'deposit', label: '입출금/저축' },
     { id: 'loan', label: '대출' },
@@ -12,18 +12,25 @@ const items = [
     { id: 'pension', label: '연금/보험' },
 ];
 
-export default function MainTopLevelNavigation() {
-    const [active, setActive] = useState('loan'); // 기본 선택: "대출"
+type MainTopLevelNavigationProps = {
+    activeId: string;
+    onChange: (id: string) => void;
+};
+
+export default function MainTopLevelNavigation({
+    activeId,
+    onChange,
+}: MainTopLevelNavigationProps) {
 
     return (
-        <main className="bg-white py-2">
+         <div className="py-2">
             {/* 상단 네비게이션 바 */}
             <TopCategoryNav
-                items={items}
-                activeId={active}
-                onChange={setActive}
+                items={MAIN_NAV_ITEMS}
+                activeId={activeId}
+                onChange={onChange}
                 className="max-w-4xl mx-auto"
             />
-        </main>
+        </div>
     );
 }
