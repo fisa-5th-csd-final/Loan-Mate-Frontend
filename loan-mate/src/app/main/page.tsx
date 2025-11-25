@@ -5,6 +5,7 @@ import AssetAndConsumeToggle from "@/components/button/AssetAndConsumeToggle";
 import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/navigation/MainTopLevelNavigation";
 import MonthlyLoanSummary from "@/components/loan/MonthlyLoanSummary";
 import QuickActionFunctionList from "./_components/QuickActionFunctionList";
+import QuickActionLoanFunctionList from "./_components/QuickActionLoanFunctionList";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
@@ -74,6 +75,7 @@ export default function Home() {
         {contentByCategory[activeCategory]}
       </div>
       <QuickActionFunctionList />
+      <QuickActionLoanFunctionList />
     </>
   );
 }
