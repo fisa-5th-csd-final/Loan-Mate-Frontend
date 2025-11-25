@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, PropsWithChildren } from "react";
+import { ChevronDown } from "lucide-react";
 
 type LoanRiskToggleProps = PropsWithChildren<{
   /** 은행/상품 로고 안에 표시할 이니셜 텍스트 */
@@ -64,17 +65,7 @@ export function LoanRiskToggle({
             open ? "rotate-180" : "rotate-0"
           }`}
         >
-          <svg
-            className="h-4 w-4 text-black"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+          <ChevronDown className="h-4 w-4 text-black" strokeWidth={2} />
         </span>
       </button>
 
