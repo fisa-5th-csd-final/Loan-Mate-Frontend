@@ -86,13 +86,40 @@ export async function request<T = unknown>(path: string, options: RequestOptions
       ? JSON.stringify(body)
       : (body as BodyInit | null | undefined);
 
-  const response = await fetch(url, {
+  let response = await fetch(url, {
     method,
     headers,
     body: preparedBody,
     credentials: "include",
     ...fetchOptions,
   });
+
+  // 액세스 토큰 만료 시 //
+  if (response.status === 401) {
+    console.log("🔄 Access Token expired. Refreshing...");
+
+    const refreshResponse = await fetch("/api/auth/refresh", {
+      method: "POST",
+      credentials: "include", // refreshToken
+    });
+
+    if (refreshResponse.ok) {
+      console.log("액세스 토큰 재발급 성공");
+
+      // 새로운 액세스 토큰으로 요청 
+      response = await fetch(url, {
+        method,
+        headers,
+        body: preparedBody,
+        credentials: "include",
+        ...fetchOptions,
+      });
+    } else {
+      console.warn("리프레시 토큰 만료");
+      window.location.href = "/login";
+      return;
+    }
+  }
 
   const data = await parseResponse(response);
 
