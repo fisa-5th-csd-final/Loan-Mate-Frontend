@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import AssetAndConsumeToggle from "@/components/button/AssetAndConsumeToggle";
 import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/navigation/MainTopLevelNavigation";
 import MonthlyLoanSummary from "@/components/loan/MonthlyLoanSummary";
-import QuickActionList from "./_components/QuickActionList";
+import QuickActionFunctionList from "./_components/QuickActionFunctionList";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
@@ -73,7 +73,7 @@ export default function Home() {
       <div className="p-4 space-y-4 flex flex-col items-center w-full">
         {contentByCategory[activeCategory]}
       </div>
-      <QuickActionList />
+      <QuickActionFunctionList />
     </>
   );
 }
