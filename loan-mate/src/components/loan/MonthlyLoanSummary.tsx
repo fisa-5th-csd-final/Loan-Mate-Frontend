@@ -41,8 +41,7 @@ export default function MonthlyLoanSummary({
                 {/* 개별 대출 위험도 토글들 */}
                 <div>
                     {
-                        loanIds &&
-                        loanIds.map(loanId => {
+                        loanIds?.map(loanId => {
                             return (
                                 <LoanRiskToggle key={loanId} title={`대출 #${loanId}`} riskLabel="보통">
                                     <LoanDetailContainer loanId={loanId} />
