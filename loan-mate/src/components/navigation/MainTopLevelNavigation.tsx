@@ -23,7 +23,7 @@ export default function MainTopLevelNavigation({
 }: MainTopLevelNavigationProps) {
 
     return (
-        <main className="py-2">
+         <div className="py-2">
             {/* 상단 네비게이션 바 */}
             <TopCategoryNav
                 items={MAIN_NAV_ITEMS}
@@ -31,6 +31,6 @@ export default function MainTopLevelNavigation({
                 onChange={onChange}
                 className="max-w-4xl mx-auto"
             />
-        </main>
+        </div>
     );
 }
