@@ -1,4 +1,4 @@
-// src/lib/api/loan.ts
+// src/lib/api/loan/DetailFetch.ts
 
 import type { LoanDetail } from "@/../types/loan/LoanDetail";
 

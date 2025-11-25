@@ -1,9 +1,9 @@
-// src/components/loan/LoanDetailPanel.tsx
+// src/components/loan/LoanRiskDetails.tsx
 "use client";
 
 import ProgressBar from "@/components/ProgressBar";
 
-type LoanDetailPanelProps = {
+type LoanRiskDetailsProps = {
   summaryMessage: string;
   progressPercent: number; // 상환 진척률
 
@@ -19,7 +19,7 @@ type LoanDetailPanelProps = {
   repaymentMethod: string;
 };
 
-export default function LoanDetailPanel({
+export default function LoanRiskDetails({
   summaryMessage,
   progressPercent,
   interestRate,
@@ -31,7 +31,7 @@ export default function LoanDetailPanel({
   repaymentAccount,
   loanType,
   repaymentMethod,
-}: LoanDetailPanelProps) {
+}: LoanRiskDetailsProps){
   const safeProgress = Math.min(100, Math.max(0, progressPercent));
 
   return (

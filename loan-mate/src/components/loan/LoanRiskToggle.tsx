@@ -1,4 +1,4 @@
-// app/components/LoanRiskToggle.tsx
+// src/components/loan/LoanRiskToggle.tsx
 "use client";
 
 import React, { useState, PropsWithChildren } from "react";

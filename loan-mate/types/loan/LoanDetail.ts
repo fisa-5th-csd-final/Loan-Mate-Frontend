@@ -1,4 +1,4 @@
-// src/types/loan.ts
+// types/loan/LoanDetail.ts
 
 export type LoanDetail = {
   id: number;

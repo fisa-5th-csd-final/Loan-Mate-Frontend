@@ -1,4 +1,4 @@
-// src/components/loan/LoanDetailContainer.tsx
+// src/components/loan/LoanRiskDetailsContainer.tsx
 "use client";
 
 import { useEffect, useState } from "react";
