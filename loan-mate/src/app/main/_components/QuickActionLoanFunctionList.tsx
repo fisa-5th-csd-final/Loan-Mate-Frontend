@@ -33,7 +33,7 @@ export default function QuickActionLoanFunctionList() {
   ];
 
   return (
-    <section className="w-full max-w-md mx-auto px-4 py-6">
+    <section className="w-full px-4 py-6">
       {/* 상단 타이틀 */}
       <SectionHeading className="mb-4">
         대출 알아보기

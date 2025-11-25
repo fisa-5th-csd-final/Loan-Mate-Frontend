@@ -27,7 +27,7 @@ export default function QuickActionFunctionList() {
   ];
 
   return (
-    <section className="w-full max-w-md mx-auto px-4 py-6">
+    <section className="w-full px-4 py-6">
       {/* 상단 타이틀 */}
       <SectionHeading className="mb-4">
         이러한 기능을 사용할 수 있어요

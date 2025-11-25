@@ -73,9 +73,10 @@ export default function Home() {
       <MainTopLevelNavigation activeId={activeCategory} onChange={setActiveCategory} />
       <div className="p-4 space-y-4 flex flex-col items-center w-full">
         {contentByCategory[activeCategory]}
+        <QuickActionFunctionList />
+        <QuickActionLoanFunctionList />
       </div>
-      <QuickActionFunctionList />
-      <QuickActionLoanFunctionList />
+
     </>
   );
 }
