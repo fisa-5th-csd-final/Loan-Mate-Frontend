@@ -9,15 +9,11 @@ type PageShellProps = {
   children: ReactNode;
 };
 
-export default function PageShell({
-  title,
-  showBack = true,
-  children,
-}: PageShellProps) {
+export default function PageShell({ title, showBack = true, children }: PageShellProps) {
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-screen flex-col bg-white">
       <NavigationBar title={title} showBack={showBack} />
-      <main className="flex-1 pb-12 pt-4">{children}</main>
+      <main className="flex-1 px-6 py-6">{children}</main>
     </div>
   );
 }
