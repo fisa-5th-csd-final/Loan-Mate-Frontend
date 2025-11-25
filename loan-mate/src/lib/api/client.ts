@@ -66,21 +66,14 @@ function resolveHeaders(options: RequestOptions) {
 async function parseResponse(response: Response) {
   const contentType = response.headers.get("content-type");
   const isJson = contentType?.includes("application/json");
+
   if (response.status === 204) return null;
 
   if (isJson) {
-    try {
-      return await response.json();
-    } catch {
-      return null;
-    }
+    return await response.json();
   }
 
-  try {
-    return await response.text();
-  } catch {
-    return null;
-  }
+  return await response.text();
 }
 
 export async function request<T = unknown>(path: string, options: RequestOptions = {}) {
