@@ -19,19 +19,17 @@ export default function AgreementPage() {
           은 「신용정보의 이용 및 보호에 관한 법률」 등 관련 법령에 따라 다음과 같이 귀하의 개인(신용)정보를 처리합니다.
         </p>
 
-        <h3 className="mt-10 text-[18px] font-semibold text-gray-700">
+        <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-4">
           정보 제공자(전송 요구를 받는 자)
         </h3>
-        <br></br>
+      
         <Collapse title="국민은행" contentColor="text-blue-600">
           국민은행 계좌 목록들...
         </Collapse>
 
-        <h3 className="mt-10 text-[18px] font-semibold text-gray-700">
+        <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-3">
           전송을 요구하는 개인신용정보
         </h3>
-
-        <br></br>
 
         <ul className="list-disc pl-5 text-[16px] text-gray-500 leading-relaxed">
           <li>
@@ -41,15 +39,14 @@ export default function AgreementPage() {
           </li>
         </ul>
 
-
-        <h3 className="mt-12 text-[18px] font-semibold text-gray-700">
+        <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-4">
           수집·이용 항목
         </h3>
-        <br></br>
+       
         <Collapse title="개인(식별)정보" contentColor="text-gray-700">
           전자서명, 접근토큰, 인증서, 전송요구서
         </Collapse>
-        <br></br>
+        <div className="mb-4"></div>
         <Collapse title="신용거래정보" contentColor="text-gray-700">
           전송요구서에 기재된 전송을 요구하는 신용정보
         </Collapse>
