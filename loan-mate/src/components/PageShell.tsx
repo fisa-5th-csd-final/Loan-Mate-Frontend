@@ -1,7 +1,7 @@
 "use client";
 
-import NavigationBar from "@/components/NavigationBar";
 import type { ReactNode } from "react";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 type PageShellProps = {
   title?: string;

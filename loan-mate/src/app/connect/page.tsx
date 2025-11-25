@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/search/SearchBar";
 import CategoryTabs from "@/components/CategoryTabs";
-import InstitutionList from "@/components/InstitutionList";
+import InstitutionList from "@/components/institution/InstitutionList";
 import BottomCTA from "@/components/BottomCTA";
 
 

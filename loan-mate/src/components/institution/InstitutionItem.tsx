@@ -1,6 +1,6 @@
 "use client";
 
-import CheckIcon from "./CheckIcon";
+import CheckIcon from "@/components/CheckIcon";
 
 export default function InstitutionItem({
   logo,
