@@ -1,0 +1,102 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import TransferTabs from "@/app/prepaid2/components/TransferTabs";
+
+export default function Prepaid2Page() {
+  const router = useRouter();
+
+  // 은행 목록 토글 상태
+  const [showBanks, setShowBanks] = useState(false);
+
+  // 은행 선택 시
+  const handleSelectBank = (bank: string) => {
+    if (bank === "신한은행") {
+      router.push("/prepaid3");
+    }
+  };
+
+  const [tab, setTab] = useState("recommended");
+
+  const banks = [
+    { name: "국민은행", logo: "/logo/kookmin.svg" },
+    { name: "신한은행", logo: "/logo/shinhan.svg" },
+    { name: "우리은행", logo: "/logo/woori.svg" },
+    { name: "하나은행", logo: "/logo/hana.svg" },
+  ];
+
+  return (
+    <div className="px-5 pt-4">
+
+      {/* Header ------------------ */}
+      <div className="mb-6">
+        <div className="relative flex items-center justify-center">
+          <button onClick={() => router.back()} className="absolute left-0 text-2xl">
+            ←
+          </button>
+          <h1 className="text-lg font-semibold">자동이체 등록</h1>
+          <button className="absolute right-0 text-blue-500 text-sm">취소</button>
+        </div>
+        <div className="text-sm text-gray-500 mt-2">02 / 07</div>
+      </div>
+
+      {/* Title ------------------ */}
+      <div className="text-xl font-semibold mb-6">어디로 이체하시겠어요?</div>
+
+      {/* 은행/기관 선택 버튼 ------------------ */}
+      <button
+        className="flex items-center gap-2 text-gray-700 mb-3"
+        onClick={() => setShowBanks(!showBanks)}
+      >
+        <span className="text-lg">🏦</span>
+        <span className="font-medium">은행/기관 선택</span>
+        <svg
+          className={`ml-1 w-4 h-4 text-gray-500 transition-transform ${
+            showBanks ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      {/* 은행 목록 드롭다운 ------------------ */}
+      {showBanks && (
+        <div className="border border-gray-200 rounded-xl p-3 mb-4 bg-white shadow-sm">
+          {banks.map((bank) => (
+            <button
+              key={bank.name}
+              className="flex items-center gap-3 w-full text-left p-2 rounded-lg hover:bg-gray-100"
+              onClick={() => handleSelectBank(bank.name)}
+            >
+              <img src={bank.logo} alt={bank.name} className="w-6 h-6" />
+              <span className="text-gray-700">{bank.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* 계좌번호 입력 ------------------ */}
+      <div className="text-gray-500 mb-2">계좌번호 입력</div>
+      <div className="border-b border-gray-200 mb-3"></div>
+
+      {/* Tabs ------------------ */}
+      <TransferTabs value={tab} onChange={setTab} />
+
+      {/* 최근 입금계좌 ------------------ */}
+      <div className="text-sm font-medium mb-4 mt-4">최근입금계좌</div>
+
+      {/* Empty ------------------ */}
+      <div className="flex flex-col items-center mt-16">
+        <div className="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center">
+          <span className="text-3xl text-gray-500">⋯</span>
+        </div>
+        <p className="text-gray-500 text-sm mt-4">최근 이체 내역이 없어요</p>
+      </div>
+    </div>
+  );
+}
