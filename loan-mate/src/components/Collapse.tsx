@@ -21,6 +21,7 @@ export default function Collapse({ title, children, contentColor = "text-blue-60
         <span className="text-[16px] font-medium text-gray-900">{title}</span>
 
         <button
+          type="button"
           className={`text-gray-400 text-[20px] transition-transform ${
             open ? "rotate-180" : "rotate-0"
           }`}
