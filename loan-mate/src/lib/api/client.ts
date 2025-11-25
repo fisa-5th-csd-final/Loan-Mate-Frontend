@@ -1,3 +1,5 @@
+import { refreshToken, waitForRefresh } from "@/lib/api/auth/refreshManager";
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 type QueryValue = string | number | boolean | null | undefined;
@@ -94,19 +96,15 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     ...fetchOptions,
   });
 
-  // 액세스 토큰 만료 시 //
+  // 액세스 만료 시 재발급 요청 //
   if (response.status === 401) {
-    console.log("🔄 Access Token expired. Refreshing...");
+    console.log("401 detected. Refreshing token...");
 
-    const refreshResponse = await fetch("/api/auth/refresh", {
-      method: "POST",
-      credentials: "include", // refreshToken
-    });
+    // 다른 탭에서 refresh 중인지 확인
+    const refreshResponse = await refreshToken();
 
     if (refreshResponse.ok) {
-      console.log("액세스 토큰 재발급 성공");
-
-      // 새로운 액세스 토큰으로 요청 
+      // refresh 끝났으면 원래 요청 재시도
       response = await fetch(url, {
         method,
         headers,
@@ -115,7 +113,6 @@ export async function request<T = unknown>(path: string, options: RequestOptions
         ...fetchOptions,
       });
     } else {
-      console.warn("리프레시 토큰 만료");
       window.location.href = "/login";
       return;
     }
