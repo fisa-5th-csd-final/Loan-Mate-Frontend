@@ -7,25 +7,30 @@ export default function LoginPage() {
         아이디 로그인
       </h1>
 
-      {/* 아이디 입력 */}
-      <div className="w-full border border-slate-200 rounded-2xl px-3 py-3 flex flex-col gap-1.5">
-        <label className="text-[13px] text-foreground/60">아이디</label>
-        <input
-          type="text"
-          placeholder="최대 10자리 입력(영문+숫자)"
-          className="w-full text-[15px] text-foreground placeholder-foreground/40 focus:outline-none"
-        />
-      </div>
+      <form>
+        {/* 아이디 입력 */}
+        <div className="w-full border border-slate-200 rounded-2xl px-3 py-3 flex flex-col gap-1.5">
+          <label htmlFor="userId" className="text-[13px] text-foreground/60">아이디</label>
+          <input
+            id="userId"
+            type="text"
+            placeholder="최대 10자리 입력(영문+숫자)"
+            className="w-full text-[15px] text-foreground placeholder-foreground/40 focus:outline-none"
+            maxLength={10}
+          />
+        </div>
 
-      {/* 비밀번호 입력 */}
-      <div className="w-full border border-slate-200 rounded-2xl px-3 py-3 flex flex-col gap-1.5 mt-5">
-        <label className="text-[13px] text-foreground/60">비밀번호</label>
-        <input
-          type="password"
-          placeholder="비밀번호 입력"
-          className="w-full text-[15px] text-foreground placeholder-foreground/40 focus:outline-none"
-        />
-      </div>
+        {/* 비밀번호 입력 */}
+        <div className="w-full border border-slate-200 rounded-2xl px-3 py-3 flex flex-col gap-1.5 mt-5">
+          <label htmlFor="password" className="text-[13px] text-foreground/60">비밀번호</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="비밀번호 입력"
+            className="w-full text-[15px] text-foreground placeholder-foreground/40 focus:outline-none"
+          />
+        </div>
+      </form>
 
       <div className="flex-1" />
 
