@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import NavigationBar from "@/components/NavigationBar";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 export default function ConnectLayout({ children }: { children: ReactNode }) {
   return (
