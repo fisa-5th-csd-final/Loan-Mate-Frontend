@@ -23,8 +23,6 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|favicon.ico).*)",
-    "/login",      // 로그인 페이지 체크
-    "/login/:path*", // success, fail도 포함
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
