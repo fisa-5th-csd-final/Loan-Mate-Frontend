@@ -27,7 +27,7 @@ export const TopCategoryNav: React.FC<TopCategoryNavProps> = ({
 }) => {
   return (
     <nav
-      className={`w-full bg-[#f4f7f9] px-4 py-3 flex justify-between ${className}`}
+      className={`w-full px-4 py-3 flex justify-between ${className}`}
     >
       {items.map((item) => {
         const isActive = item.id === activeId;
