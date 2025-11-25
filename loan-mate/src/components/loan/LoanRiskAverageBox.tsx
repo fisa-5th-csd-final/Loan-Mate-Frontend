@@ -1,6 +1,6 @@
 "use client";
 
-interface RiskAverageBadgeProps {
+interface RiskAverageBoxProps {
   /** 예: 10.2 (백분율 값, %는 내부에서 붙임) */
   percentage: number;
   /** 예: "보통 수준" */
@@ -16,7 +16,7 @@ export default function RiskAverageBox({
   levelText,
   emoji = "😊",
   label = "평균",
-}: RiskAverageBadgeProps) {
+}: RiskAverageBoxProps){
   return (
     <div className="w-full rounded-[28px] bg-[#E8F4FF] px-5 py-4 flex items-center gap-4">
       {/* 왼쪽 이모지 */}
