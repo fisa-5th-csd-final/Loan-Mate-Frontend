@@ -9,6 +9,9 @@ type NavigationBarProps = {
   right?: ReactNode;
 };
 
+/**
+ * 뒤로가기 버튼과 제목을 포함한 상단 네비게이션 바 컴포넌트
+ */
 export default function NavigationBar({
   title,
   showBack = true,
