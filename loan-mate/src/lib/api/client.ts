@@ -1,6 +1,15 @@
+import { refreshToken, waitForRefresh } from "@/lib/api/auth/refreshManager";
+
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 type QueryValue = string | number | boolean | null | undefined;
+
+let authFailHandler: null | (() => void) = null;
+
+export function setAuthFailHandler(fn: () => void) {
+  authFailHandler = fn;
+}
 
 export type RequestOptions = Omit<RequestInit, "method" | "body" | "headers"> & {
   method?: HttpMethod;
@@ -86,12 +95,41 @@ export async function request<T = unknown>(path: string, options: RequestOptions
       ? JSON.stringify(body)
       : (body as BodyInit | null | undefined);
 
-  const response = await fetch(url, {
+  let response = await fetch(url, {
     method,
     headers,
     body: preparedBody,
+    credentials: "include",
     ...fetchOptions,
   });
+
+  // 액세스 재발급 과정 
+  if (response.status === 401) {
+    console.warn("🔒 401 detected → Trying refresh...");
+
+    // 일단 refreshToken() 호출 
+    const refreshResponse = await refreshToken();
+
+    // 다른 탭에서 refresh 중이면 여기서 완료될 때까지 기다림
+    await waitForRefresh();
+
+    // refresh 실패 → 로그인으로 보내기
+    if (!refreshResponse.ok) {
+      if (authFailHandler) authFailHandler();
+      else window.location.href = "/login";
+
+      return;
+    }
+
+    // refresh 성공 → 원래 요청 재시도
+    response = await fetch(url, {
+      method,
+      headers,
+      body: preparedBody,
+      credentials: "include",
+      ...fetchOptions,
+    });
+  }
 
   const data = await parseResponse(response);
 

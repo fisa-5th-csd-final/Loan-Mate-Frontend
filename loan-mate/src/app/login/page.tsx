@@ -1,3 +1,5 @@
+import WonLoginButton from "./_components/WonLoginButton";
+
 export default function LoginPage() {
   return (
     <div className="flex flex-col h-full px-4 font-sans">
@@ -7,7 +9,7 @@ export default function LoginPage() {
         아이디 로그인
       </h1>
 
-      <form>
+      <form className="mb-13">
         {/* 아이디 입력 */}
         <div className="w-full border border-slate-200 rounded-2xl px-3 py-3 flex flex-col gap-1.5">
           <label htmlFor="userId" className="text-[13px] text-foreground/60">아이디</label>
@@ -32,6 +34,7 @@ export default function LoginPage() {
         </div>
       </form>
 
+      <WonLoginButton></WonLoginButton>
       <div className="flex-1" />
 
       {/* 하단 */}
