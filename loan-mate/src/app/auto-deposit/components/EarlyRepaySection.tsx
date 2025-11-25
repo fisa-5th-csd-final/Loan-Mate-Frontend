@@ -1,0 +1,53 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import Card from "@/components/card/Card";
+import CommonButton from "@/components/button/CommonButton";
+
+export default function EarlyRepaySection() {
+  const router = useRouter();
+
+  // 나중에 API에서도 percent 값만 바꿔주면 자동 반영됨
+  const segments = [
+    { id: "loanA", label: "기업밸민이자백대출", percent: 0.6, color: "bg-red-500" },
+    { id: "loanB", label: "신한만경대출", percent: 0.25, color: "bg-blue-500" },
+    { id: "loanC", label: "기업예금", percent: 0.15, color: "bg-gray-500" },
+  ];
+
+  return (
+    <section className="mt-8">
+      <h2 className="font-semibold text-lg mb-2">선납할 수 있어요</h2>
+
+      <Card>
+        {/* 퍼센트 기반 막대 그래프 */}
+        <div className="flex w-full overflow-hidden rounded-full text-xs font-medium">
+          {segments.map((item, index) => (
+            <div
+              key={item.id}
+              className={`${item.color} text-white text-center py-1 px-2 truncate ${
+                index > 0 ? "border-l border-white/40" : ""
+              }`}
+              style={{ flexGrow: item.percent }}
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+
+        <div className="mb-4"></div>
+
+        <p className="text-base text-gray-700 text-center font-medium">
+          지금 선납하면 <strong className="font-semibold">1,000,000원</strong> 이득이에요
+        </p>
+      </Card>
+
+      <CommonButton
+        label="선납하기"
+        size="lg"
+        widthClassName="w-full"
+        className="mt-4"
+        onClick={() => router.push("/prepaid")} 
+      />
+    </section>
+  );
+}
