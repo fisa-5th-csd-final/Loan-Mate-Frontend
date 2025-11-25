@@ -32,7 +32,7 @@ export default function RootLayout({
               md:max-w-[430px]
               lg:max-w-[780px]       
               min-h-screen
-              bg-white
+              bg-[#f0f4f5]
               border-x
               border-neutral-800
               shadow-[0_0_40px_rgba(0,0,0,0.8)]
