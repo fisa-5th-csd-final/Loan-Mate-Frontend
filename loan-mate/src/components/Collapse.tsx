@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react"; // ⬅️ 추가
+import { ChevronDown } from "lucide-react";
 
 interface CollapseProps {
   title: string;
   children: React.ReactNode;
+  contentColor?: string; // ⬅️ 추가
 }
 
-export default function Collapse({ title, children }: CollapseProps) {
+export default function Collapse({ title, children, contentColor }: CollapseProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -18,7 +19,9 @@ export default function Collapse({ title, children }: CollapseProps) {
         className="flex justify-between items-center cursor-pointer"
         onClick={() => setOpen(!open)}
       >
-        <span className="text-[16px] font-medium text-gray-900">{title}</span>
+        <span className="text-[16px] font-medium text-gray-900">
+          {title}
+        </span>
 
         <ChevronDown
           className={`text-gray-400 transition-transform duration-200 ${
@@ -30,7 +33,7 @@ export default function Collapse({ title, children }: CollapseProps) {
 
       {/* Content */}
       {open && (
-        <div className="mt-4 text-[16px] text-blue-600">
+        <div className={`mt-4 text-[16px] ${contentColor ?? "text-black"}`}>
           {children}
         </div>
       )}
