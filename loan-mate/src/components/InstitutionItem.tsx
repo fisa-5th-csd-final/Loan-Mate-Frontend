@@ -22,7 +22,7 @@ export default function InstitutionItem({
     >
       <div className="flex items-center gap-3">
         {/* 로고 */}
-        <img src={logo} className="w-8 h-8 rounded-full" />
+        <img src={logo} alt={name} className="w-8 h-8 rounded-full" />
 
         {/* 이름 & 연결됨 배지 */}
         <div className="flex items-center gap-2">
