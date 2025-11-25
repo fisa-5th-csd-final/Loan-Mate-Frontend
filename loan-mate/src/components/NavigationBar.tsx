@@ -1,22 +1,29 @@
-// Reusable top navigation with optional title and back action.
 "use client";
 
 import { useRouter } from "next/navigation";
+import type { ReactNode } from "react";
 
 type NavigationBarProps = {
   title?: string;
   showBack?: boolean;
+  right?: ReactNode;
 };
 
-export default function NavigationBar({ title, showBack = true }: NavigationBarProps) {
+export default function NavigationBar({
+  title,
+  showBack = true,
+  right,
+}: NavigationBarProps) {
   const router = useRouter();
 
   return (
-    <div className="relative flex h-14 items-center">
+    <header className="relative flex h-15 items-center bg-white px-2">
+
+      {/* 뒤로가기 */}
       {showBack && (
         <button
           onClick={() => router.back()}
-          className="absolute left-0 flex h-10 w-10 items-center justify-center text-gray-700"
+          className="absolute left-1 flex h-10 w-10 items-center justify-center text-gray-700"
           aria-label="뒤로가기"
         >
           <svg
@@ -32,9 +39,17 @@ export default function NavigationBar({ title, showBack = true }: NavigationBarP
         </button>
       )}
 
-      {title && (
-        <div className="w-full text-center text-lg font-semibold text-gray-800">{title}</div>
+      {/* 제목 */}
+      <h1 className="mx-auto pointer-events-none text-[15px] font-medium text-gray-900">
+        {title}
+      </h1>
+
+      {/* 오른쪽 영역 */}
+      {right && (
+        <div className="absolute right-4 flex items-center h-10">
+          {right}
+        </div>
       )}
-    </div>
+    </header>
   );
 }
