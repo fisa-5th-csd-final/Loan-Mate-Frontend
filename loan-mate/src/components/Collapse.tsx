@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown } from "lucide-react"; // ⬅️ 추가
 
 interface CollapseProps {
   title: string;
   children: React.ReactNode;
-  contentColor?: string; // ← 색상 props 추가
 }
 
-export default function Collapse({ title, children, contentColor = "text-blue-600" }: CollapseProps) {
+export default function Collapse({ title, children }: CollapseProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -20,19 +20,17 @@ export default function Collapse({ title, children, contentColor = "text-blue-60
       >
         <span className="text-[16px] font-medium text-gray-900">{title}</span>
 
-        <button
-          type="button"
-          className={`text-gray-400 text-[20px] transition-transform ${
+        <ChevronDown
+          className={`text-gray-400 transition-transform duration-200 ${
             open ? "rotate-180" : "rotate-0"
           }`}
-        >
-          ⌃
-        </button>
+          size={20}
+        />
       </div>
 
       {/* Content */}
       {open && (
-        <div className={`mt-4 text-[16px] ${contentColor}`}>
+        <div className="mt-4 text-[16px] text-blue-600">
           {children}
         </div>
       )}
