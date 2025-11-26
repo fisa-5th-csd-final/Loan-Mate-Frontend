@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import CommonButton from "@/components/button/CommonButton";
 
 export default function TransferFinalPage() {
   const router = useRouter();
@@ -10,29 +12,25 @@ export default function TransferFinalPage() {
   const formatted = Number(amount).toLocaleString();
 
   return (
-    <div className="px-5 pt-4 pb-10">
+    <div className="px-5 pt-4 pb-10 bg-white">
 
       {/* ---------------- Header ---------------- */}
-      <div className="relative flex items-center justify-center mb-6">
-        <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-          ←
-        </button>
-
-        <button className="absolute right-0 text-blue-500 text-sm">
-          취소
-        </button>
-      </div>
+        <NavigationBar
+            title=""
+            showBack={true}
+            right={<button className="text-blue-500 text-sm">취소</button>}
+        />
 
       {/* ---------------- Icons ---------------- */}
       <div className="flex items-center gap-4 mb-6">
         {/* 보내는 계좌 은행 */}
         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-          <img src="/logo/woori.svg" className="h-7" />
+          <img src="/logo/woori.svg" className="h-12" />
         </div>
 
         {/* 받는 계좌 은행 */}
-        <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-          <img src="/logo/shinhan.svg" className="h-7" />
+        <div className="h-12 w-12 rounded-full bg-blue-300 flex items-center justify-center">
+          <img src="/logo/shinhan.svg" className="h-9" />
         </div>
       </div>
 
@@ -78,20 +76,25 @@ export default function TransferFinalPage() {
       <div className="flex gap-3">
         
         {/* 추가이체 */}
-        <button
-          className="flex-1 py-4 bg-gray-100 rounded-xl text-gray-700 font-medium"
-          onClick={() => router.push("/auto-deposit/amount")}
-        >
-          추가이체
-        </button>
+        <CommonButton
+            label="추가이체"
+            size="lg"
+            widthClassName="w-full"
+            textColorClassName="text-blue-500"
+            className="flex-1 py-4 bg-gray-100 rounded-xl font-medium"
+            onClick={() => router.push("/auto-deposit")}
+        />
+              
 
         {/* 이체 */}
-        <button
-          className="flex-1 py-4 bg-blue-500 text-white rounded-xl font-medium"
-          onClick={() => alert('이체 완료')}
-        >
-          이체
-        </button>
+        <CommonButton
+            label="이체완료"
+            size="lg"
+            widthClassName="w-full"
+            textColorClassName="text-white"
+            className="flex-1 py-4 bg-blue-500 rounded-xl font-medium"
+            onClick={() => router.push("/auto-deposit")}
+        />
 
       </div>
 

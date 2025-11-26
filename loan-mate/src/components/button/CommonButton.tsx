@@ -7,6 +7,7 @@ type ButtonSize = "sm" | "md" | "lg";
 type CommonButtonProps = {
   label: string;
   colorClassName?: string;
+  textColorClassName?: string;
   size?: ButtonSize;
   widthClassName?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
@@ -19,6 +20,7 @@ type CommonButtonProps = {
 export default function CommonButton({
   label,
   colorClassName,
+  textColorClassName = "text-white",
   size = "md",
   widthClassName = "w-full",
   className = "",
@@ -35,7 +37,7 @@ export default function CommonButton({
 
   return (
     <button
-      className={`flex flex-col items-center justify-center gap-2 rounded-md ${widthClassName} ${sizeClasses[size]} text-white shadow-sm transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${colorClasses} ${className}`}
+      className={`flex flex-col items-center justify-center gap-2 rounded-md ${widthClassName} ${sizeClasses[size]} ${textColorClassName} shadow-sm transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${colorClasses} ${className}`}
       {...props}
     >
       {label}
