@@ -5,10 +5,10 @@ import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
-import type { LoanListResponse } from '@/lib/api/loan/ListFetch';
+import type { LoanSummary } from '@/../types/loan/LoanDetail';
 
 type MonthlyLoanSummaryProps = {
-    loans?: LoanListResponse[],
+    loans?: LoanSummary[],
     totalLoanRate: number,
     peerAverageLoanRatio: number,
 }

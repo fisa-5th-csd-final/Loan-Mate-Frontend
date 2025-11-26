@@ -1,33 +1,19 @@
 import { apiClient } from "@/lib/api/client";
 import type { SuccessBody } from "@/../types/response";
+import { MOCK_LOAN_LIST } from "@/data/loan.sample";
+import type { LoanSummary } from "@/../types/loan/LoanDetail";
 
-export interface LoanListResponse {
-    loanId: number;
-    loanName: string;
-    riskLevel: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
-    iconUrl?: string;
-}
+export async function fetchLoanList(): Promise<LoanSummary[]> {
+    // 개발 환경일 때만 Mock 데이터 반환
+    if (process.env.NODE_ENV === "development") {
+        await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5초 딜레이
+        return MOCK_LOAN_LIST as LoanSummary[];
+    }
 
-const MOCK_LIST = [
-    { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE", iconUrl: "/logo/sh.png" },
-    { loanId: 102, loanName: "KB국민은행 직장인신용대출", riskLevel: "THREE", iconUrl: "/logo/kb.jpg" },
-    { loanId: 103, loanName: "현대캐피탈 신용대출", riskLevel: "FIVE", iconUrl: "/logo/hn.png" },
-    { loanId: 104, loanName: "우리은행 주택담보대출", riskLevel: "TWO", iconUrl: "/logo/ibk.svg" },
-];
-
-export async function fetchLoanList(): Promise<LoanListResponse[]> {
-    // 실제 API 호출 (백엔드 준비 시 주석 해제)
-    /*
-    const response = await apiClient.get<SuccessBody<LoanListResponse[]>>("/ledgers");
+    // 실제 API 호출
+    const response = await apiClient.get<SuccessBody<LoanSummary[]>>("/ledgers");
     if (!response || !response.data) {
-      throw new Error("Invalid response from loan list API");
+        throw new Error("Invalid response from loan list API");
     }
     return response.data;
-    */
-
-    // 임시 Mock 데이터
-    await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5초 딜레이
-
-    // TODO: Backend API 응답 구조에 맞게 수정
-    return MOCK_LIST as LoanListResponse[];
 }
