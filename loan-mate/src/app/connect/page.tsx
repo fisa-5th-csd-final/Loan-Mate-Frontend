@@ -43,6 +43,11 @@ export default function ConnectPage() {
     check();
   }, [router]);
 
+  const handleConnect = async () => {
+    // 홈으로 이동
+    router.push("/connect/consent");
+  };
+
   const toggleItem = (index: number) => {
     setItems(prev =>
       prev.map((item, idx) =>
@@ -83,6 +88,7 @@ export default function ConnectPage() {
       <BottomCTA
         count={items.filter(i => i.checked).length}
         label="기관 연결하기"
+        onClick={handleConnect}
       />
     </div>
   );
