@@ -21,6 +21,7 @@ export async function fetchLoanList(): Promise<LoanListResponse[]> {
     // 임시 Mock 데이터
     await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5초 딜레이
 
+    // TODO: Backend API 응답 구조에 맞게 수정
     return [
         { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE", iconUrl: "/logo/sh.png" },
         { loanId: 102, loanName: "KB국민은행 직장인신용대출", riskLevel: "THREE", iconUrl: "/logo/kb.jpg" },
