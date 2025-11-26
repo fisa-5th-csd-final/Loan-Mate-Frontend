@@ -2,5 +2,18 @@
 
 export const PAGES = {
     ROOT: '/',
-    MAIN: '/main'
+    MAIN: '/main',
+
+    AUTO_DEPOSIT: {
+        ROOT: "/auto-deposit",
+
+        LOAN_SELECT: "/auto-deposit/loan-select",                 
+        FROM_ACCOUNT: "/auto-deposit/from-account",              
+        TO_ACCOUNT: "/auto-deposit/to-account",                 
+        INPUT_ACCOUNT_NUMBER: "/auto-deposit/input-account-number", 
+        BANK_SELECT: "/auto-deposit/bank-select",                
+        AMOUNT: "/auto-deposit/amount",                           
+        CONFIRM: "/auto-deposit/confirm", 
+        TRANSFER: "/auto-deposit/transfer",                                      
+  },
 };
