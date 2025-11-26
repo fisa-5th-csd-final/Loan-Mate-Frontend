@@ -17,6 +17,7 @@ type LoanRiskToggleProps = PropsWithChildren<{
   riskColorClassName?: string;
   /** 처음부터 펼쳐둘지 여부 */
   defaultOpen?: boolean;
+  children: React.ReactNode;
 }>;
 
 export function LoanRiskToggle({
@@ -28,8 +29,6 @@ export function LoanRiskToggle({
   defaultOpen = false,
   children,
 }: LoanRiskToggleProps) {
-  const hasChildren = React.Children.count(children) > 0;
-
   const header = (
     <>
       <div
@@ -56,13 +55,7 @@ export function LoanRiskToggle({
       defaultOpen={defaultOpen}
       contentClassName="text-[13px] leading-relaxed text-slate-500"
     >
-      {hasChildren ? (
-        children
-      ) : (
-        <p className="text-sm text-red-500 font-semibold">
-          오류: 이 토글에는 children이 필요합니다. 렌더할 내용을 전달해 주세요.
-        </p>
-      )}
+      {children}
     </ChevronToggle>
   );
 }
