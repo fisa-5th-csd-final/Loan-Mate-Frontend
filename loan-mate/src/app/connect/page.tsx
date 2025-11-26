@@ -1,27 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "@/components/search/SearchBar";
 import CategoryTabs from "@/components/CategoryTabs";
 import InstitutionList from "@/components/institution/InstitutionList";
 import BottomCTA from "@/components/BottomCTA";
+import { getFlag, setFlag } from "@/lib/db/userFlags";
+import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
-
-export default function ConnectPage() {
-  type Institution = {
+type Institution = {
   logo: string;
   name: string;
   connected?: boolean;
   checked?: boolean;
 };
 
-const [items, setItems] = useState<Institution[]>([
-  { logo: "/logo/kb.jpg", name: "국민은행" },
-  { logo: "/logo/ibk.svg", name: "IBK기업은행" },
-  { logo: "/logo/sh.png", name: "신한은행", connected: true },
-  { logo: "/logo/hn.png", name: "하나은행"},
-]);
+export default function ConnectPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
+  const [items, setItems] = useState<Institution[]>([
+    { logo: "/logo/kb.jpg", name: "국민은행" },
+    { logo: "/logo/ibk.svg", name: "IBK기업은행" },
+    { logo: "/logo/sh.png", name: "신한은행", connected: true },
+    { logo: "/logo/hn.png", name: "하나은행" },
+  ]);
+
+  useEffect(() => {
+    async function check() {
+      const connected = await getFlag("asset_connected");
+
+      // 이미 연결한 적 있음 → 홈으로 이동
+      if (connected) {
+        router.replace("/main");
+        return;
+      }
+
+      // 처음 도달 → UI 보여주기
+      setLoading(false);
+    }
+
+    check();
+  }, [router]);
+
+  const handleConnect = async () => {
+    const selected = items.filter(i => i.checked).map(i => i.name);
+    const params = new URLSearchParams();
+    params.set("banks", JSON.stringify(selected));
+    // 홈으로 이동
+    router.push(`/connect/consent?${params.toString()}`);
+  };
 
   const toggleItem = (index: number) => {
     setItems(prev =>
@@ -31,23 +60,26 @@ const [items, setItems] = useState<Institution[]>([
     );
   };
 
-  // 전체 선택
   const toggleAll = () => {
     const allChecked = items.every(item => item.checked);
     setItems(prev => prev.map(item => ({ ...item, checked: !allChecked })));
   };
 
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <LoadingSpinner size="lg" label="약관 동의 페이지로 이동 중" />
+      </div>
+    );
+
   return (
     <div>
-      {/* 타이틀 */}
       <h2 className="text-[18px] font-semibold mt-7">
         연결할 기관을 선택해 주세요
       </h2>
 
-      {/* 검색창 */}
       <SearchBar />
 
-      {/* 탭 */}
       <CategoryTabs
         tabs={["추천", "은행", "카드", "증권", "페이"]}
         active={0}
@@ -55,19 +87,16 @@ const [items, setItems] = useState<Institution[]>([
 
       <div className="h-6" />
 
-      {/* 리스트 */}
       <InstitutionList
         title="추천"
         items={items}
         onToggle={toggleItem}
         onToggleAll={toggleAll}
       />
-      
 
-      {/* 고정 CTA */}
       <BottomCTA
-        count={items.filter(i => i.checked).length}
-        label="기관 연결하기"
+        label={`${items.filter(i => i.checked).length}개 기관 연결하기`}
+        onClick={handleConnect}
       />
     </div>
   );

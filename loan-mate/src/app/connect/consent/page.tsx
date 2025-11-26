@@ -1,7 +1,28 @@
 "use client";
+import BottomCTA from "@/components/BottomCTA";
 import Collapse from "@/components/Collapse";
+import { useRouter } from "next/navigation";
+import { setFlag } from "@/lib/db/userFlags"
+import { useSearchParams } from "next/navigation";
 
 export default function AgreementPage() {
+  const router = useRouter();
+  const params = useSearchParams();
+  let banks: string[] = [];
+  try {
+    banks = JSON.parse(params.get("banks") || "[]");
+  } catch (error) {
+    console.error("URL 'banks' 파라미터 파싱 오류:", error);
+  }
+
+  const handleConnect = async () => {
+
+    await setFlag("asset_connected", true);
+
+    // 저장 성공 후 홈으로 이동
+    router.push("/main");
+  };
+
   return (
     <div className="relative min-h-screen bg-white overflow-y-auto">
 
@@ -11,9 +32,10 @@ export default function AgreementPage() {
           자산 연결을 위해 동의해 주세요
         </h2>
 
-        <h3 className="text-[20px] font-semibold text-gray-700 mt-10 mb-2 whitespace-nowrap truncate">
+        <h3 className="mt-10 mb-2 font-semibold text-gray-700 text-[min(5vw,20px)] leading-tight">
           전송요구 및 개인(신용)정보 수집·이용 동의
         </h3>
+
         <p className="text-[16px] text-gray-500 leading-relaxed">
           <span className="text-blue-600">(주)우리은행</span>
           은 「신용정보의 이용 및 보호에 관한 법률」 등 관련 법령에 따라 다음과 같이 귀하의 개인(신용)정보를 처리합니다.
@@ -22,9 +44,23 @@ export default function AgreementPage() {
         <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-4">
           정보 제공자(전송 요구를 받는 자)
         </h3>
-      
-        <Collapse title="국민은행" contentColor="text-blue-600">
-          국민은행 계좌 목록들...
+
+        <Collapse
+          title={
+            banks.length === 1
+              ? banks[0]
+              : `${banks[0]} 외 ${banks.length - 1}개 기관`
+          }
+          contentColor="text-blue-600"
+          defaultOpen
+        >
+          <ul className="space-y-2">
+            {banks.map((bank) => (
+              <li key={bank} className="text-[15px]">
+                • {bank}
+              </li>
+            ))}
+          </ul>
         </Collapse>
 
         <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-3">
@@ -42,22 +78,20 @@ export default function AgreementPage() {
         <h3 className="mt-10 text-[18px] font-semibold text-gray-700 mb-4">
           수집·이용 항목
         </h3>
-       
-        <Collapse title="개인(식별)정보" contentColor="text-gray-700">
+        <Collapse title="개인(식별)정보" contentColor="text-gray-700" defaultOpen>
           전자서명, 접근토큰, 인증서, 전송요구서
         </Collapse>
         <div className="mb-4"></div>
-        <Collapse title="신용거래정보" contentColor="text-gray-700">
+        <Collapse title="신용거래정보" contentColor="text-gray-700" defaultOpen>
           전송요구서에 기재된 전송을 요구하는 신용정보
         </Collapse>
       </div>
 
       {/* 하단 CTA (고정) */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-4 pb-6 pt-4 bg-white">
-        <button className="w-full bg-blue-500 text-white font-semibold py-4 rounded-2xl text-[16px]">
-          전체 동의하기
-        </button>
-      </div>
+      <BottomCTA
+        label="전체 동의하기"
+        onClick={handleConnect}
+      />
     </div>
   );
 }

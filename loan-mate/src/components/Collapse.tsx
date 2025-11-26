@@ -6,11 +6,17 @@ import { ChevronDown } from "lucide-react";
 interface CollapseProps {
   title: string;
   children: React.ReactNode;
-  contentColor?: string; // ⬅️ 추가
+  contentColor?: string;
+  defaultOpen?: boolean; 
 }
 
-export default function Collapse({ title, children, contentColor }: CollapseProps) {
-  const [open, setOpen] = useState(false);
+export default function Collapse({
+  title,
+  children,
+  contentColor,
+  defaultOpen = false, 
+}: CollapseProps) {
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <div className="border border-gray-200 rounded-2xl p-4">
