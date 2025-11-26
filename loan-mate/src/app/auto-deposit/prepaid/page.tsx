@@ -1,8 +1,8 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 
 // --------------------
@@ -32,26 +32,20 @@ function AccountCard({ onClick }: { onClick: () => void }) {
 }
 
 // --------------------
-// Main Page
+// Content: Suspense 내부에서 실행될 부분
 // --------------------
-export default function PrepaidPage() {
+function PrepaidContent() {
   const router = useRouter();
   const params = useSearchParams();
   const { setTitle } = useNavigation();
 
   const mode = params.get("mode");
 
-  // apply 페이지와 동일한 방식으로 title 제어
   useEffect(() => {
-    if (mode === "deposit") {
-      setTitle("자동예치 신청하기");
-    } else if (mode === "prepaid") {
-      setTitle("선납하기");
-    } else {
-      setTitle("신청하기");
-    }
+    if (mode === "deposit") setTitle("자동예치 신청하기");
+    else if (mode === "prepaid") setTitle("선납하기");
+    else setTitle("신청하기");
   }, [mode, setTitle]);
-
 
   return (
     <div
@@ -61,11 +55,25 @@ export default function PrepaidPage() {
       <div className="mb-6">
         <div className="text-sm text-gray-500 mt-2">01 / 07</div>
       </div>
+
       <div className="text-xl font-semibold mb-6">
         어디에서 이체하시겠어요?
       </div>
-    
-      <AccountCard onClick={() => router.push(`/auto-deposit/prepaid2?mode=${mode}`)} />
+
+      <AccountCard
+        onClick={() => router.push(`/auto-deposit/prepaid2?mode=${mode}`)}
+      />
     </div>
+  );
+}
+
+// --------------------
+// 페이지 컴포넌트
+// --------------------
+export default function PrepaidPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PrepaidContent />
+    </Suspense>
   );
 }

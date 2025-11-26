@@ -1,31 +1,26 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
 
-
-export default function AutoDepositConfirmPage() {
-
+function ConfirmInner() {
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
-
   const formatted = Number(amount).toLocaleString();
 
   const router = useRouter();
+
   return (
-
     <div className="px-5 pt-4 pb-10 bg-white">
-
       {/* Header */}
-
       <NavigationBar
-            title=""
-            showBack={true}
-            right={<button className="text-blue-500 text-sm">취소</button>}
+        title=""
+        showBack={true}
+        right={<button className="text-blue-500 text-sm">취소</button>}
       />
 
       {/* From Account */}
@@ -37,14 +32,11 @@ export default function AutoDepositConfirmPage() {
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
             우리은행 계좌에서
-            {/* 화살표 아이콘 라이브러리 사용*/}
-          <ChevronDown size={16} className="text-gray-500" />
+            <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 
-        <div className="text-gray-500 text-sm">
-          WON통장 1002-865-685398
-        </div>
+        <div className="text-gray-500 text-sm">WON통장 1002-865-685398</div>
       </div>
 
       {/* To Account */}
@@ -54,25 +46,21 @@ export default function AutoDepositConfirmPage() {
             <img src="/logo/shinhan.svg" className="h-6" />
           </div>
 
-        <div className="text-gray-900 font-medium flex items-center gap-1">
+          <div className="text-gray-900 font-medium flex items-center gap-1">
             박준상 님 계좌로
-            {/* 화살표 아이콘 라이브러리 사용*/}
-          <ChevronDown size={16} className="text-gray-500" />
+            <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 
-        <div className="text-gray-500 text-sm">
-          신한 110259718376
-        </div>
+        <div className="text-gray-500 text-sm">신한 110259718376</div>
       </div>
 
       {/* Amount */}
       <div className="w-full mt-4 mb-4 text-6xl">
-        <span className="inline-block text-xl font-semibold **:leading-tight">
-            {formatted}원
+        <span className="inline-block text-xl font-semibold leading-tight">
+          {formatted}원
         </span>
-        </div>
-
+      </div>
 
       <div className="text-m text-gray-500 mb-8">
         {formatted}원 · 출금가능금액 360,588원
@@ -92,15 +80,7 @@ export default function AutoDepositConfirmPage() {
       {/* More */}
       <div className="flex justify-center py-5 text-gray-500">
         <span>더보기</span>
-        <svg
-          className="ml-1 w-4 h-4 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
-        </svg>
+        <ChevronDown size={14} className="ml-1" />
       </div>
 
       {/* Warning */}
@@ -110,13 +90,21 @@ export default function AutoDepositConfirmPage() {
 
       {/* Next Button */}
       <CommonButton
-              label="다음"
-              size="lg"                          
-              widthClassName="w-full"            
-              colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
-              className="rounded-xl text-lg font-medium"                 
-              onClick={() => router.push(`/confirm?amount=${amount}`)}
-            />
+        label="다음"
+        size="lg"
+        widthClassName="w-full"
+        colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
+        className="rounded-xl text-lg font-medium"
+        onClick={() => router.push(`/confirm?amount=${amount}`)}
+      />
     </div>
+  );
+}
+
+export default function AutoDepositConfirmPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmInner />
+    </Suspense>
   );
 }

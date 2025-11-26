@@ -1,38 +1,25 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import TransferTabs from "@/components/TransferTabs";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { ChevronDown } from "lucide-react";
 
-export default function Prepaid2Page() {
+function Prepaid2Inner() {
   const router = useRouter();
   const params = useSearchParams();
   const mode = params.get("mode");
   const { setTitle } = useNavigation();
 
   useEffect(() => {
-    if (mode === "deposit") {
-      setTitle("자동예치 신청하기");
-    } else if (mode === "prepaid") {
-      setTitle("선납하기");
-    } else {
-      setTitle("신청하기");
-    }
+    if (mode === "deposit") setTitle("자동예치 신청하기");
+    else if (mode === "prepaid") setTitle("선납하기");
+    else setTitle("신청하기");
   }, [mode, setTitle]);
 
-  // 은행 목록 토글 상태
   const [showBanks, setShowBanks] = useState(false);
-
-  // 은행 선택 시
-  const handleSelectBank = (bank: string) => {
-    if (bank === "신한은행") {
-      router.push("/auto-deposit/prepaid3");
-    }
-  };
-
   const [tab, setTab] = useState("recommended");
 
   const banks = [
@@ -42,30 +29,33 @@ export default function Prepaid2Page() {
     { name: "하나은행", logo: "/logo/hana.svg" },
   ];
 
-  return (
-    <div className="px-5 pt-4 bg-white"
-         >
+  const handleSelectBank = (bank: string) => {
+    if (bank === "신한은행") {
+      router.push("/auto-deposit/prepaid3");
+    }
+  };
 
-      {/* Header ------------------ */}
+  return (
+    <div className="px-5 pt-4 bg-white">
+      {/* Header */}
       <div className="mb-6">
         <div className="text-sm text-gray-500 mt-2">02 / 07</div>
       </div>
 
-      {/* Title ------------------ */}
+      {/* Title */}
       <div className="text-xl font-semibold mb-6">어디로 이체하시겠어요?</div>
 
-      {/* 은행/기관 선택 버튼 ------------------ */}
+      {/* 은행/기관 선택 */}
       <button
         className="flex items-center gap-2 text-gray-700 mb-3"
         onClick={() => setShowBanks(!showBanks)}
       >
         <span className="text-lg">🏦</span>
         <span className="font-medium">은행/기관 선택</span>
-        {/* 화살표 아이콘 라이브러리 사용*/}
-          <ChevronDown size={16} className="text-gray-500" />
+        <ChevronDown size={16} className="text-gray-500" />
       </button>
 
-      {/* 은행 목록 드롭다운 ------------------ */}
+      {/* 은행 목록 */}
       {showBanks && (
         <div className="border border-gray-200 rounded-xl p-3 mb-4 bg-white shadow-sm">
           {banks.map((bank) => (
@@ -81,11 +71,11 @@ export default function Prepaid2Page() {
         </div>
       )}
 
-      {/* 계좌번호 입력 ------------------ */}
+      {/* 계좌번호 입력 */}
       <div className="text-gray-500 mb-2">계좌번호 입력</div>
       <div className="border-b border-gray-200 mb-3"></div>
 
-      {/* Tabs ------------------ */}
+      {/* Tabs */}
       <TransferTabs
         tabs={[
           { label: "추천", value: "recommended" },
@@ -96,11 +86,10 @@ export default function Prepaid2Page() {
         onChange={setTab}
       />
 
-
-      {/* 최근 입금계좌 ------------------ */}
+      {/* 최근 계좌 */}
       <div className="text-sm font-medium mb-4 mt-4">최근입금계좌</div>
 
-      {/* Empty ------------------ */}
+      {/* Empty */}
       <div className="flex flex-col items-center mt-16">
         <div className="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center">
           <span className="text-3xl text-gray-500">⋯</span>
@@ -108,5 +97,13 @@ export default function Prepaid2Page() {
         <p className="text-gray-500 text-sm mt-4">최근 이체 내역이 없어요</p>
       </div>
     </div>
+  );
+}
+
+export default function Prepaid2Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Prepaid2Inner />
+    </Suspense>
   );
 }

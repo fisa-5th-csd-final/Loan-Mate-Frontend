@@ -8,9 +8,9 @@ import CommonButton from "@/components/button/CommonButton";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { useEffect } from "react";
 import CategoryTabs from "@/components/CategoryTabs"
-import { useState } from "react"; 
+import { useState, Suspense } from "react"; 
 
-export default function ApplyAutoDepositPage() {
+function ApplyAutoDepositContent() {
   const params = useSearchParams();
   const mode = params.get("mode");
   const { setTitle } = useNavigation();
@@ -67,4 +67,12 @@ export default function ApplyAutoDepositPage() {
       </div>
     </>
   );
+}
+
+export default function ApplyAutoDepositPage() {
+  return (
+    <Suspense>
+      <ApplyAutoDepositContent />
+    </Suspense>
+  )
 }
