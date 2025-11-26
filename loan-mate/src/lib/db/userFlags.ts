@@ -1,13 +1,13 @@
 import { openDB } from "idb";
 
-const DB_NAME = "appSettings";
-const STORE = "flags";
+const DB_NAME = "APP_SETTINGS";
+const FLAGS_STORE = "flags";
 
 async function getDB() {
   return await openDB(DB_NAME, 1, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains(STORE)) {
-        db.createObjectStore(STORE);
+      if (!db.objectStoreNames.contains(FLAGS_STORE)) {
+        db.createObjectStore(FLAGS_STORE);
       }
     },
   });
@@ -15,11 +15,11 @@ async function getDB() {
 
 export async function setFlag(key: string, value: boolean) {
   const db = await getDB();
-  await db.put(STORE, value, key);
+  await db.put(FLAGS_STORE, value, key);
 }
 
 export async function getFlag(key: string): Promise<boolean> {
   const db = await getDB();
-  const value = await db.get(STORE, key);
+  const value = await db.get(FLAGS_STORE, key);
   return value === true;
 }
