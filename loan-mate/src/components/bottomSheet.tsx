@@ -7,7 +7,7 @@ export default function BottomSheet({
   open,
   onClose,
   children,
-  height = "auto", 
+  height = "auto",
 }: {
   open: boolean;
   onClose: () => void;
@@ -16,8 +16,14 @@ export default function BottomSheet({
 }) {
   // 배경 스크롤 방지
   useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "auto";
+    if (!open) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
   }, [open]);
 
   return (
