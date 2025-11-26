@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import TransferTabs from "@/app/auto-deposit/prepaid2/_components/TransferTabs";
+import TransferTabs from "@/components/TransferTabs";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { ChevronDown } from "lucide-react";
 
@@ -85,7 +85,16 @@ export default function Prepaid2Page() {
       <div className="border-b border-gray-200 mb-3"></div>
 
       {/* Tabs ------------------ */}
-      <TransferTabs value={tab} onChange={setTab} />
+      <TransferTabs
+        tabs={[
+          { label: "추천", value: "recommended" },
+          { label: "자주", value: "often" },
+          { label: "내계좌", value: "mine" },
+        ]}
+        value={tab}
+        onChange={setTab}
+      />
+
 
       {/* 최근 입금계좌 ------------------ */}
       <div className="text-sm font-medium mb-4 mt-4">최근입금계좌</div>
