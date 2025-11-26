@@ -1,11 +1,9 @@
 "use client";
 
 export default function BottomCTA({
-  count,
   label,
   onClick,
 }: {
-  count: number;
   label: string;
   onClick?: () => void;
 }) {
@@ -15,7 +13,7 @@ export default function BottomCTA({
         onClick={onClick}
         className="w-full bg-blue-500 text-white py-3.5 rounded-xl text-[14px] font-semibold"
       >
-        {count}개 {label}
+        {label}
       </button>
     </div>
   );
