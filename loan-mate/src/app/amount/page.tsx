@@ -26,6 +26,7 @@ export default function AutoDepositAmountPage() {
       />
       <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
+
       {/* ------------------ From Account ------------------ */}
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-1">
@@ -75,6 +76,9 @@ export default function AutoDepositAmountPage() {
       </div>
 
       {/* ------------------ Quick Buttons------------------ */}
+      {/* ------------------ Quick Buttons (옵션: 필요하면 유지) ------------------ */}
+      {/* 필요 없다면 이 영역 삭제 가능 */}
+
       <div className="flex gap-2 mb-8">
         <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
           onClick={() => setAmount((+amount + 10000).toString())}>+1만</button>
@@ -101,7 +105,6 @@ export default function AutoDepositAmountPage() {
         onClick={() => router.push(`/confirm?amount=${amount}`)}
       />
 
-      
 
     </div>
   );

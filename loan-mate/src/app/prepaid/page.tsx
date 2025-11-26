@@ -36,6 +36,7 @@ export default function PrepaidPage() {
   const router = useRouter();
 
   const handleSelect = () => {
+
     router.push("/amount");
   };
 

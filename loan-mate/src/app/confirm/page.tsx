@@ -1,14 +1,18 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 
+
 export default function AutoDepositConfirmPage() {
+
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
 
   const formatted = Number(amount).toLocaleString();
+
   const router = useRouter();
   return (
 
