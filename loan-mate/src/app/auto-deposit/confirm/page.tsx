@@ -21,7 +21,7 @@ export default function AutoDepositConfirmPage() {
       {/* Header */}
 
       <NavigationBar
-            title="자동이체 등록"
+            title=""
             showBack={true}
             right={<button className="text-blue-500 text-sm">취소</button>}
       />

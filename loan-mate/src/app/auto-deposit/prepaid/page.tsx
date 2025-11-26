@@ -57,6 +57,9 @@ export default function PrepaidPage() {
       className="px-5 pt-4 bg-white"
       style={{ width: "381px", height: "712px", margin: "0 auto" }}
     >
+      <div className="mb-6">
+        <div className="text-sm text-gray-500 mt-2">01 / 07</div>
+      </div>
       <div className="text-xl font-semibold mb-6">
         어디에서 이체하시겠어요?
       </div>

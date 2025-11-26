@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 export default function SelectBankPage() {
   const router = useRouter();
@@ -14,22 +15,16 @@ export default function SelectBankPage() {
   ];
 
   return (
-    <div className="px-5 pt-4 pb-10 block w-full">
+    <div className="px-5 pt-4 pb-10 block w-full bg-white">
       {/* Header ------------------------------------------------- */}
-      <div className="relative flex items-center justify-center mb-6">
-        <button
-          onClick={() => router.back()}
-          className="absolute left-0 text-2xl"
-        >
-          ←
-        </button>
+      <div className="relative pr-8"> 
+  <NavigationBar
+    title="금융회사를 선택해주세요"
+    showBack={true}
+    right={<button className="text-black text-sm">✕</button>}
+  />
+</div>
 
-        <h1 className="text-lg font-semibold">금융회사를 선택해 주세요</h1>
-
-        <button className="absolute right-0 text-xl" onClick={() => router.push("/")}>
-          ✕
-        </button>
-      </div>
 
       {/* Tabs ------------------------------------------------- */}
       <div className="flex gap-4 mb-4 text-sm font-medium">
@@ -50,7 +45,7 @@ export default function SelectBankPage() {
             <button
             key={bank.name}
             className="flex flex-col items-center gap-2 bg-[#f5f7fa] rounded-xl p-4"
-            onClick={() => router.push("/amount")}
+            onClick={() => router.push("/auto-deposit/amount")}
             >
             <img src={bank.logo} className="w-10 h-10 object-contain" />
             <span className="text-sm text-center">{bank.name}</span>

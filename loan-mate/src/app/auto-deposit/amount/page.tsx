@@ -20,7 +20,7 @@ export default function AutoDepositAmountPage() {
 
       {/* ------------------ Header ------------------ */}
       <NavigationBar
-      title="자동이체 등록"
+      title=""
       showBack={true}
       right={<button className="text-blue-500 text-sm">취소</button>}
       />
@@ -102,7 +102,7 @@ export default function AutoDepositAmountPage() {
         widthClassName="w-full"            
         colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
         className="rounded-xl text-lg font-medium"                 
-        onClick={() => router.push(`/confirm?amount=${amount}`)}
+        onClick={() => router.push(`/auto-deposit/confirm?amount=${amount}`)}
       />
 
 

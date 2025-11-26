@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import TransferTabs from "@/app/auto-deposit/prepaid2/components/TransferTabs";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 
 export default function Prepaid2Page() {
@@ -28,7 +27,7 @@ export default function Prepaid2Page() {
   // 은행 선택 시
   const handleSelectBank = (bank: string) => {
     if (bank === "신한은행") {
-      router.push("/prepaid3");
+      router.push("/auto-deposit/prepaid3");
     }
   };
 
