@@ -1,10 +1,12 @@
 "use client";
+export const dynamic = "force-dynamic";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 
-export default function TransferFinalPage() {
+function TransferFinalInner() {
   const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
@@ -15,20 +17,18 @@ export default function TransferFinalPage() {
     <div className="px-5 pt-4 pb-10 bg-white">
 
       {/* ---------------- Header ---------------- */}
-        <NavigationBar
-            title=""
-            showBack={true}
-            right={<button className="text-blue-500 text-sm">취소</button>}
-        />
+      <NavigationBar
+        title=""
+        showBack={true}
+        right={<button className="text-blue-500 text-sm">취소</button>}
+      />
 
       {/* ---------------- Icons ---------------- */}
       <div className="flex items-center gap-4 mb-6">
-        {/* 보내는 계좌 은행 */}
         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
           <img src="/logo/woori.svg" className="h-12" />
         </div>
 
-        {/* 받는 계좌 은행 */}
         <div className="h-12 w-12 rounded-full bg-blue-300 flex items-center justify-center">
           <img src="/logo/shinhan.svg" className="h-9" />
         </div>
@@ -49,7 +49,6 @@ export default function TransferFinalPage() {
 
       {/* ---------------- Info Box ---------------- */}
       <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
-
         <div className="flex justify-between py-2">
           <span className="text-gray-600">수수료</span>
           <span className="text-gray-800">면제</span>
@@ -64,7 +63,6 @@ export default function TransferFinalPage() {
           <span className="text-gray-600">내 통장표기</span>
           <span className="text-gray-800">박준상</span>
         </div>
-
       </div>
 
       {/* ---------------- Info Notice ---------------- */}
@@ -74,30 +72,34 @@ export default function TransferFinalPage() {
 
       {/* ---------------- Buttons ---------------- */}
       <div className="flex gap-3">
-        
-        {/* 추가이체 */}
-        <CommonButton
-            label="추가이체"
-            size="lg"
-            widthClassName="w-full"
-            textColorClassName="text-blue-500"
-            className="flex-1 py-4 bg-gray-100 rounded-xl font-medium"
-            onClick={() => router.push("/auto-deposit")}
-        />
-              
 
-        {/* 이체 */}
         <CommonButton
-            label="이체완료"
-            size="lg"
-            widthClassName="w-full"
-            textColorClassName="text-white"
-            className="flex-1 py-4 bg-blue-500 rounded-xl font-medium"
-            onClick={() => router.push("/auto-deposit")}
+          label="추가이체"
+          size="lg"
+          widthClassName="w-full"
+          textColorClassName="text-blue-500"
+          className="flex-1 py-4 bg-gray-100 rounded-xl font-medium"
+          onClick={() => router.push("/auto-deposit")}
+        />
+
+        <CommonButton
+          label="이체완료"
+          size="lg"
+          widthClassName="w-full"
+          textColorClassName="text-white"
+          className="flex-1 py-4 bg-blue-500 rounded-xl font-medium"
+          onClick={() => router.push("/auto-deposit")}
         />
 
       </div>
-
     </div>
+  );
+}
+
+export default function TransferFinalPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TransferFinalInner />
+    </Suspense>
   );
 }
