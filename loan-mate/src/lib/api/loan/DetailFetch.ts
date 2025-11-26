@@ -1,32 +1,37 @@
 // src/lib/api/loan/DetailFetch.ts
 
 import type { LoanDetail } from "@/../types/loan/LoanDetail";
+import { MOCK_LOAN_DETAIL } from "@/data/loan.sample";
 
 // 나중에 실제 API 호출 시 여기만 바꾸면 됨
 export async function fetchLoanDetail(loanId: number): Promise<LoanDetail> {
-  // ── mock 데이터 ──
-  const mock: LoanDetail = {
-    id: loanId,
-    summaryMessage:
-      "부채 관리가 안정적으로 이루어지고 있습니다. 지금처럼 꾸준히 유지해보세요.",
-    progressPercent: 78,
+  // 개발 환경일 때만 Mock 데이터 반환
+  if (process.env.NODE_ENV === "development") {
+    // 네트워크 딜레이 흉내
+    await new Promise((res) => setTimeout(res, 500));
 
-    interestRate: "12.5%",
-    riskLevel: "높음",
-    nextDueDate: "12월 4일",
+    return (
+      (MOCK_LOAN_DETAIL as Record<number, LoanDetail>)[loanId] || {
+        id: loanId,
+        summaryMessage: "대출 정보를 불러올 수 없습니다.",
+        progressPercent: 0,
+        interestRate: "-",
+        riskLevel: "-",
+        nextDueDate: "-",
+        remainingPrincipal: "-",
+        principal: "-",
+        monthlyPayment: "-",
+        repaymentAccount: "-",
+        loanType: "-",
+        repaymentMethod: "-",
+      }
+    );
+  }
 
-    remainingPrincipal: "20,000,000 원",
-    principal: "50,000,000 원",
-    monthlyPayment: "2,000,000 원",
-    repaymentAccount: "신한 110-259-1234567",
-    loanType: "신용 대출",
-    repaymentMethod: "원금 균등 분할",
-  };
-
-  // 네트워크 딜레이 흉내
-  await new Promise((res) => setTimeout(res, 500));
-
-  return mock;
+  // 실제 API 호출 (예시)
+  // const response = await apiClient.get<SuccessBody<LoanDetail>>(`/loans/${loanId}`);
+  // return response.data;
+  throw new Error("API not implemented");
 }
 
 /*

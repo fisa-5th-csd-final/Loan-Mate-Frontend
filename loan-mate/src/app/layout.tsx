@@ -1,3 +1,4 @@
+import MobileNotch from "@/components/layout/MobileNotch";
 import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
 import "./globals.css";
@@ -41,15 +42,13 @@ export default function RootLayout({
             ">
 
             {/* 상단 노치 */}
-            <div className="w-full flex flex-col items-center">
-              <div className="h-4 w-[20dvw] bg-black rounded-b-lg"/>
-            </div>
+            <MobileNotch />
 
             {/* 실제 페이지 */}
             <ClientProviders>
               {children}
             </ClientProviders>
-            
+
           </div>
         </div>
       </body>
