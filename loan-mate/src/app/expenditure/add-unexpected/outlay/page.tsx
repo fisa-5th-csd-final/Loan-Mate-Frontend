@@ -8,11 +8,10 @@ import EditableAmountList, { Item } from "@/app/expenditure/_components/Editable
 import { AddItem, AddItemType } from "@/consts/add-item";
 import { useRouter } from "next/navigation"
 
-export default function IncomePage() {
+export default function OutlayPage() {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
-  const pageType: AddItemType = AddItemType.INCOME;
-  const router = useRouter();
+  const pageType: AddItemType = AddItemType.EXPENSE;
 
   const handleAddItem = (data: AddItem) => {
     // 새로운 item 구성
@@ -28,8 +27,8 @@ export default function IncomePage() {
 
   return (
     <PageWithCTA
-      ctaLabel="수입 저장하기"
-      onClick={() => router.push("/expenditure/add-unexpected/outlay")}
+      ctaLabel="분석하기"
+      onClick={() => console.log("수입 저장 로직 들어갈 곳")}
     >
       {/* 리스트 UI */}
       <EditableAmountList
