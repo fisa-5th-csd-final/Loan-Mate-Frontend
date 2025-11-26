@@ -5,17 +5,34 @@ import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
+import type { LoanListResponse } from '@/lib/api/loan/main';
 
 type MonthlyLoanSummaryProps = {
-    loanIds?: number[],
+    loans?: LoanListResponse[],
     totalLoanRate: number,
     peerAverageLoanRatio: number,
 }
 
+const RISK_LEVEL_MAP: Record<string, string> = {
+    ONE: "매우 양호",
+    TWO: "양호",
+    THREE: "보통",
+    FOUR: "주의",
+    FIVE: "위험",
+};
+
+const RISK_COLOR_MAP: Record<string, string> = {
+    ONE: "text-green-600",
+    TWO: "text-green-500",
+    THREE: "text-yellow-500",
+    FOUR: "text-orange-500",
+    FIVE: "text-red-500",
+};
+
 export default function MonthlyLoanSummary({
-    loanIds,
+    loans,
     totalLoanRate,
-        peerAverageLoanRatio
+    peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
     return (
         <div className="w-full max-w-2xl space-y-4">
@@ -42,10 +59,18 @@ export default function MonthlyLoanSummary({
                 {/* 개별 대출 위험도 토글들 */}
                 <div>
                     {
-                        loanIds?.map(loanId => {
+                        loans?.map(loan => {
+                            const riskLabel = RISK_LEVEL_MAP[loan.riskLevel] || loan.riskLevel;
+                            const riskColor = RISK_COLOR_MAP[loan.riskLevel] || "text-gray-500";
+
                             return (
-                                <LoanRiskToggle key={loanId} title={`대출 #${loanId}`} riskLabel="보통">
-                                    <LoanDetailContainer loanId={loanId} />
+                                <LoanRiskToggle
+                                    key={loan.loanId}
+                                    title={loan.loanName}
+                                    riskLabel={riskLabel}
+                                    riskColorClassName={riskColor}
+                                >
+                                    <LoanDetailContainer loanId={loan.loanId} />
                                 </LoanRiskToggle>
                             );
                         })
