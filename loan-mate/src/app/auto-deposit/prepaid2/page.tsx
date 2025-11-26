@@ -1,12 +1,26 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import TransferTabs from "@/app/prepaid2/components/TransferTabs";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import TransferTabs from "@/app/auto-deposit/prepaid2/components/TransferTabs";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 export default function Prepaid2Page() {
   const router = useRouter();
+  const params = useSearchParams();
+  const mode = params.get("mode");
+  const { setTitle } = useNavigation();
+
+  useEffect(() => {
+    if (mode === "deposit") {
+      setTitle("자동예치 신청하기");
+    } else if (mode === "prepaid") {
+      setTitle("선납하기");
+    } else {
+      setTitle("신청하기");
+    }
+  }, [mode, setTitle]);
 
   // 은행 목록 토글 상태
   const [showBanks, setShowBanks] = useState(false);
@@ -33,11 +47,6 @@ export default function Prepaid2Page() {
 
       {/* Header ------------------ */}
       <div className="mb-6">
-        <NavigationBar
-              title="자동이체 등록"
-              showBack={true}
-              right={<button className="text-blue-500 text-sm">취소</button>}
-              />
         <div className="text-sm text-gray-500 mt-2">02 / 07</div>
       </div>
 

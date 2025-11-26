@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 // --------------------
 // Account Card Component
@@ -34,23 +35,33 @@ function AccountCard({ onClick }: { onClick: () => void }) {
 // --------------------
 export default function PrepaidPage() {
   const router = useRouter();
+  const params = useSearchParams();
+  const { setTitle } = useNavigation();
 
-  const handleSelect = () => {
+  const mode = params.get("mode");
 
-    router.push("/amount");
-  };
+  // apply 페이지와 동일한 방식으로 title 제어
+  useEffect(() => {
+    if (mode === "deposit") {
+      setTitle("자동예치 신청하기");
+    } else if (mode === "prepaid") {
+      setTitle("선납하기");
+    } else {
+      setTitle("신청하기");
+    }
+  }, [mode, setTitle]);
+
 
   return (
-    <div className="px-5 pt-4 bg-white"
-       style={{ width: "381px", height: "712px", margin: "0 auto" }}>
-        
-      <NavigationBar
-      title="자동이체 등록"
-      showBack={true}
-      />
-      <div className="text-xl font-semibold mb-6">어디에서 이체하시겠어요?</div>
-
-      <AccountCard onClick={handleSelect} />
+    <div
+      className="px-5 pt-4 bg-white"
+      style={{ width: "381px", height: "712px", margin: "0 auto" }}
+    >
+      <div className="text-xl font-semibold mb-6">
+        어디에서 이체하시겠어요?
+      </div>
+    
+      <AccountCard onClick={() => router.push(`/auto-deposit/prepaid2?mode=${mode}`)} />
     </div>
   );
 }
