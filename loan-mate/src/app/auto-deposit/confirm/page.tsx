@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
+import { ChevronDown } from "lucide-react";
 
 
 export default function AutoDepositConfirmPage() {
@@ -35,16 +36,8 @@ export default function AutoDepositConfirmPage() {
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
             우리은행 계좌에서
-
-            <svg
-          className="ml-1 w-4 h-4 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
-        </svg>
+            {/* 화살표 아이콘 라이브러리 사용*/}
+          <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 
@@ -62,15 +55,8 @@ export default function AutoDepositConfirmPage() {
 
         <div className="text-gray-900 font-medium flex items-center gap-1">
             박준상 님 계좌로
-            <svg
-          className="ml-1 w-4 h-4 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
-        </svg>
+            {/* 화살표 아이콘 라이브러리 사용*/}
+          <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 

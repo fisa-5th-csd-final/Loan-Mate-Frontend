@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import TransferTabs from "@/app/auto-deposit/prepaid2/_components/TransferTabs";
 import { useNavigation } from "@/components/navigation/NavigationContext";
+import { ChevronDown } from "lucide-react";
 
 export default function Prepaid2Page() {
   const router = useRouter();
@@ -59,17 +60,8 @@ export default function Prepaid2Page() {
       >
         <span className="text-lg">🏦</span>
         <span className="font-medium">은행/기관 선택</span>
-        <svg
-          className={`ml-1 w-4 h-4 text-gray-500 transition-transform ${
-            showBanks ? "rotate-180" : ""
-          }`}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6" />
-        </svg>
+        {/* 화살표 아이콘 라이브러리 사용*/}
+          <ChevronDown size={16} className="text-gray-500" />
       </button>
 
       {/* 은행 목록 드롭다운 ------------------ */}

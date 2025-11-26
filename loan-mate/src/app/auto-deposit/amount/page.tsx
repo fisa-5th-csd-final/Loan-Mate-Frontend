@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import { ChevronDown } from "lucide-react";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
@@ -35,8 +36,9 @@ export default function AutoDepositAmountPage() {
           </div>
 
           <div className="text-gray-900 font-medium">우리은행 계좌에서</div>
-        </div>
 
+        </div>
+        
         <div className="text-gray-500 text-sm">
           우리 1002-865-685398
         </div>
@@ -50,6 +52,7 @@ export default function AutoDepositAmountPage() {
           </div>
 
           <div className="text-gray-900 font-medium">박준삼님 계좌로</div>
+          
         </div>
 
         <div className="text-gray-500 text-sm">
