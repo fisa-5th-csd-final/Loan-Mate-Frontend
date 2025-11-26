@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import AutoDepositTable from "./_components/AutoDepositTable";
 import CommonButton from "@/components/button/CommonButton";
