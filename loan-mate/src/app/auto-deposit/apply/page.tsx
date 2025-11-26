@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import InstitutionSearchBar from "@/components/search/SearchBar";
-import CategoryTabs from "./components/CategoryTabs";
+import CategoryTabs from "./_components/CategoryTabs";
 import InstitutionList from "@/components/institution/InstitutionList";
 import CommonButton from "@/components/button/CommonButton";
 import { useNavigation } from "@/components/navigation/NavigationContext";

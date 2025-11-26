@@ -1,8 +1,8 @@
 "use client";
 
-import AutoDepositTable from "./components/AutoDepositTable";
+import AutoDepositTable from "./_components/AutoDepositTable";
 import CommonButton from "@/components/button/CommonButton";
-import EarlyRepaySection from "./components/EarlyRepaySection";
+import EarlyRepaySection from "./_components/EarlyRepaySection";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 

@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import TransferTabs from "@/app/auto-deposit/prepaid2/components/TransferTabs";
+import TransferTabs from "@/app/auto-deposit/prepaid2/_components/TransferTabs";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 
 export default function Prepaid2Page() {

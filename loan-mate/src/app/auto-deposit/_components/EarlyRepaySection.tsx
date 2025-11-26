@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import Card from "@/components/card/Card";
+import ProgressBar from "@/components/ProgressBar";
+import SegmentProgressBar from "@/components/SegmentProgressBar";
 
 export default function EarlyRepaySection() {
   const router = useRouter();
@@ -13,31 +15,22 @@ export default function EarlyRepaySection() {
     { id: "loanC", label: "기업예금", percent: 0.15, color: "bg-gray-500" },
   ];
 
+  const totalPercent = segments.reduce((acc, cur) => acc + cur.percent, 0) * 100;
+
   return (
     <section className="mt-8">
       <h2 className="font-semibold text-lg mb-2">선납할 수 있어요</h2>
 
       <Card>
-        {/* 퍼센트 기반 막대 그래프 */}
-        <div className="flex w-full overflow-hidden rounded-full text-xs font-medium">
-          {segments.map((item, index) => (
-            <div
-              key={item.id}
-              className={`${item.color} text-white text-center py-1 px-2 truncate ${
-                index > 0 ? "border-l border-white/40" : ""
-              }`}
-              style={{ flexGrow: item.percent }}
-            >
-              {item.label}
-            </div>
-          ))}
-        </div>
+        {/* SegmentProgressBar 사용 */}
+        <div className="mt-3">
+          <SegmentProgressBar segments={segments} />
+          </div>
 
-        <div className="mb-4"></div>
-
-        <p className="text-base text-gray-700 text-center font-medium">
+        <p className="mt-4 text-base text-gray-700 text-center font-medium">
           지금 선납하면 <strong className="font-semibold">1,000,000원</strong> 이득이에요
         </p>
+
       </Card>
     </section>
   );
