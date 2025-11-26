@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import {
