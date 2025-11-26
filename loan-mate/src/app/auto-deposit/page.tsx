@@ -19,7 +19,7 @@ export default function AutoDepositPage() {
                 label="자동 예치 등록하기"
                 size="lg"
                 widthClassName="w-full"
-                onClick={() => router.push("/auto-deposit/apply?mode=deposit")}
+                onClick={() => router.push("/auto-deposit/loan-select?mode=deposit")}
               />
           </div>
       <EarlyRepaySection />
@@ -28,7 +28,7 @@ export default function AutoDepositPage() {
           size="lg"
           widthClassName="w-full"
           className="mt-4"
-          onClick={() => router.push("/auto-deposit/apply?mode=prepaid")}
+          onClick={() => router.push("/auto-deposit/loan-select?mode=prepaid")}
         />
     </>
   );

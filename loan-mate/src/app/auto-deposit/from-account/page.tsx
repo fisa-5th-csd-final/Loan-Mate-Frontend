@@ -48,10 +48,7 @@ function PrepaidContent() {
   }, [mode, setTitle]);
 
   return (
-    <div
-      className="px-5 pt-4 bg-white"
-      style={{ width: "381px", height: "712px", margin: "0 auto" }}
-    >
+    <div className="px-5 pt-4 bg-white">
       <div className="mb-6">
         <div className="text-sm text-gray-500 mt-2">01 / 07</div>
       </div>
@@ -61,7 +58,7 @@ function PrepaidContent() {
       </div>
 
       <AccountCard
-        onClick={() => router.push(`/auto-deposit/prepaid2?mode=${mode}`)}
+        onClick={() => router.push(`/auto-deposit/to-account?mode=${mode}`)}
       />
     </div>
   );

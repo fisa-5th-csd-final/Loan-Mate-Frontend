@@ -61,7 +61,7 @@ function ApplyAutoDepositContent() {
           label={buttonLabel}
           size="lg"
           widthClassName="w-full"
-          onClick={() => router.push(`/auto-deposit/prepaid?mode=${mode}`)}
+          onClick={() => router.push(`/auto-deposit/from-account?mode=${mode}`)}
 
         />
       </div>

@@ -31,7 +31,7 @@ function Prepaid2Inner() {
 
   const handleSelectBank = (bank: string) => {
     if (bank === "신한은행") {
-      router.push("/auto-deposit/prepaid3");
+      router.push("/auto-deposit/input-account-number");
     }
   };
 
