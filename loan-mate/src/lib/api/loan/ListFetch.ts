@@ -8,6 +8,13 @@ export interface LoanListResponse {
     iconUrl?: string;
 }
 
+const MOCK_LIST = [
+    { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE", iconUrl: "/logo/sh.png" },
+    { loanId: 102, loanName: "KB국민은행 직장인신용대출", riskLevel: "THREE", iconUrl: "/logo/kb.jpg" },
+    { loanId: 103, loanName: "현대캐피탈 신용대출", riskLevel: "FIVE", iconUrl: "/logo/hn.png" },
+    { loanId: 104, loanName: "우리은행 주택담보대출", riskLevel: "TWO", iconUrl: "/logo/ibk.svg" },
+];
+
 export async function fetchLoanList(): Promise<LoanListResponse[]> {
     // 실제 API 호출 (백엔드 준비 시 주석 해제)
     /*
@@ -22,10 +29,5 @@ export async function fetchLoanList(): Promise<LoanListResponse[]> {
     await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5초 딜레이
 
     // TODO: Backend API 응답 구조에 맞게 수정
-    return [
-        { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE", iconUrl: "/logo/sh.png" },
-        { loanId: 102, loanName: "KB국민은행 직장인신용대출", riskLevel: "THREE", iconUrl: "/logo/kb.jpg" },
-        { loanId: 103, loanName: "현대캐피탈 신용대출", riskLevel: "FIVE", iconUrl: "/logo/hn.png" },
-        { loanId: 104, loanName: "우리은행 주택담보대출", riskLevel: "TWO", iconUrl: "/logo/ibk.svg" },
-    ];
+    return MOCK_LIST as LoanListResponse[];
 }
