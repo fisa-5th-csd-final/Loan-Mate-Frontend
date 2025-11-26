@@ -1,20 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import CommonButton from "@/components/button/CommonButton";
 
 export default function Prepaid3Page() {
   const router = useRouter();
 
   return (
     <div className="px-5 pt-4">
+
       {/* Header */}
-      <div className="relative flex items-center justify-center mb-6">
-        <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-          ←
-        </button>
-        <h1 className="text-lg font-semibold">계좌번호를 입력해 주세요</h1>
-        <button className="absolute right-0 text-2xl">✕</button>
-      </div>
+        <NavigationBar
+              title="계좌번호를 입력해주세요"
+              showBack={true}
+              right={<button className="absolute right-0 text-2xl">✕</button>}
+              />
 
       {/* 은행 선택 */}
       <div className="flex items-center gap-2 mb-4">
@@ -44,6 +45,9 @@ export default function Prepaid3Page() {
       />
 
       {/* 다음 버튼 */}
+      {/* <CommonButton>
+
+      </CommonButton> */}
       <button 
         onClick={() => router.push("/select-bank")}
         className="w-full bg-blue-500 text-white py-3 rounded-lg mt-10 font-medium">

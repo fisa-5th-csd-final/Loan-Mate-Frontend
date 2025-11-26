@@ -1,26 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
-// --------------------
-// Header Component
-// --------------------
-function PageHeader({ title, step }: { title: string; step: string }) {
-  const router = useRouter();
-
-  return (
-    <div className="mb-6">
-      <div className="relative flex items-center justify-center">
-        <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-          ←
-        </button>
-        <h1 className="text-lg font-semibold">{title}</h1>
-      </div>
-
-      <div className="text-sm text-gray-500 mt-2">{step}</div>
-    </div>
-  );
-}
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 // --------------------
 // Account Card Component
@@ -55,13 +36,17 @@ export default function PrepaidPage() {
   const router = useRouter();
 
   const handleSelect = () => {
-    router.push("/auto-deposit/amount");
+    router.push("/amount");
   };
 
   return (
-    <div className="px-5 pt-4">
-      <PageHeader title="자동이체 등록" step="01 / 07" />
-
+    <div className="px-5 pt-4 bg-white"
+       style={{ width: "381px", height: "712px", margin: "0 auto" }}>
+        
+      <NavigationBar
+      title="자동이체 등록"
+      showBack={true}
+      />
       <div className="text-xl font-semibold mb-6">어디에서 이체하시겠어요?</div>
 
       <AccountCard onClick={handleSelect} />

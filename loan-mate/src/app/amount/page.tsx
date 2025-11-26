@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CommonButton from "@/components/button/CommonButton";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
@@ -14,18 +16,15 @@ export default function AutoDepositAmountPage() {
   };
 
   return (
-    <div className="px-5 pt-4 pb-10">
+    <div className="px-5 pt-4 pb-10 bg-white">
 
       {/* ------------------ Header ------------------ */}
-      <div className="relative flex items-center justify-center mb-6">
-        <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-          ←
-        </button>
-
-        <h1 className="text-lg font-semibold">자동이체 등록</h1>
-
-        <button className="absolute right-0 text-blue-500 text-sm">취소</button>
-      </div>
+      <NavigationBar
+      title="자동이체 등록"
+      showBack={true}
+      right={<button className="text-blue-500 text-sm">취소</button>}
+      />
+      <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
       {/* ------------------ From Account ------------------ */}
       <div className="mb-4">
@@ -75,8 +74,7 @@ export default function AutoDepositAmountPage() {
         잔액 360,588원
       </div>
 
-      {/* ------------------ Quick Buttons (옵션: 필요하면 유지) ------------------ */}
-      {/* 필요 없다면 이 영역 삭제 가능 */}
+      {/* ------------------ Quick Buttons------------------ */}
       <div className="flex gap-2 mb-8">
         <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
           onClick={() => setAmount((+amount + 10000).toString())}>+1만</button>
@@ -94,13 +92,16 @@ export default function AutoDepositAmountPage() {
           onClick={() => setAmount("360588")}>전액</button>
       </div>
 
-      {/* ------------------ Confirm Button ------------------ */}
-      <button
-        className="w-full bg-blue-500 text-white py-3 rounded-xl text-lg font-medium"
+      <CommonButton
+        label="확인"
+        size="lg"                          
+        widthClassName="w-full"            
+        colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
+        className="rounded-xl text-lg font-medium"                 
         onClick={() => router.push(`/confirm?amount=${amount}`)}
-    >
-        확인
-      </button>
+      />
+
+      
 
     </div>
   );

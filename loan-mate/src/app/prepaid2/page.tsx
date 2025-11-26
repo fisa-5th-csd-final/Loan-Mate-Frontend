@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TransferTabs from "@/app/prepaid2/components/TransferTabs";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
 
 export default function Prepaid2Page() {
   const router = useRouter();
@@ -27,17 +28,16 @@ export default function Prepaid2Page() {
   ];
 
   return (
-    <div className="px-5 pt-4">
+    <div className="px-5 pt-4 bg-white"
+         >
 
       {/* Header ------------------ */}
       <div className="mb-6">
-        <div className="relative flex items-center justify-center">
-          <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-            ←
-          </button>
-          <h1 className="text-lg font-semibold">자동이체 등록</h1>
-          <button className="absolute right-0 text-blue-500 text-sm">취소</button>
-        </div>
+        <NavigationBar
+              title="자동이체 등록"
+              showBack={true}
+              right={<button className="text-blue-500 text-sm">취소</button>}
+              />
         <div className="text-sm text-gray-500 mt-2">02 / 07</div>
       </div>
 

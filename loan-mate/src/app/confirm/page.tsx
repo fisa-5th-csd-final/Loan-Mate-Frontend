@@ -1,27 +1,26 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import CommonButton from "@/components/button/CommonButton";
 
 export default function AutoDepositConfirmPage() {
-  const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
 
   const formatted = Number(amount).toLocaleString();
-
+  const router = useRouter();
   return (
-    <div className="px-5 pt-4 pb-10">
+
+    <div className="px-5 pt-4 pb-10 bg-white">
 
       {/* Header */}
-      <div className="relative flex items-center justify-center mb-6">
-        <button onClick={() => router.back()} className="absolute left-0 text-2xl">
-          ←
-        </button>
 
-        <h1 className="text-lg font-semibold">자동이체 등록</h1>
-
-        <button className="absolute right-0 text-blue-500 text-sm">취소</button>
-      </div>
+      <NavigationBar
+            title="자동이체 등록"
+            showBack={true}
+            right={<button className="text-blue-500 text-sm">취소</button>}
+      />
 
       {/* From Account */}
       <div className="mb-4">
@@ -119,12 +118,14 @@ export default function AutoDepositConfirmPage() {
       </div>
 
       {/* Next Button */}
-      <button
-        className="w-full bg-blue-500 text-white py-3 rounded-xl text-lg font-medium"
-        onClick={() => alert("다음 단계")}
-      >
-        다음
-      </button>
+      <CommonButton
+              label="다음"
+              size="lg"                          
+              widthClassName="w-full"            
+              colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
+              className="rounded-xl text-lg font-medium"                 
+              onClick={() => router.push(`/confirm?amount=${amount}`)}
+            />
     </div>
   );
 }
