@@ -4,9 +4,13 @@
 import React, { PropsWithChildren } from "react";
 import ChevronToggle from "@/components/ChevronToggle";
 
+import Image from "next/image";
+
 type LoanRiskToggleProps = PropsWithChildren<{
   /** 은행/상품 로고 안에 표시할 이니셜 텍스트 */
   logoText?: string;
+  /** 로고 이미지 URL (있으면 텍스트 대신 표시) */
+  logoUrl?: string;
   /** 로고 배경색 클래스 */
   logoBgClassName?: string;
   /** 상품 이름 */
@@ -22,6 +26,7 @@ type LoanRiskToggleProps = PropsWithChildren<{
 
 export function LoanRiskToggle({
   logoText = "KB",
+  logoUrl,
   logoBgClassName = "bg-neutral-500",
   title,
   riskLabel,
@@ -32,11 +37,20 @@ export function LoanRiskToggle({
   const header = (
     <>
       <div
-        className={`flex h-9 w-9 items-center justify-center rounded-full ${logoBgClassName}`}
+        className={`relative flex h-8 w-8 items-center justify-center rounded-full overflow-hidden ${logoBgClassName}`}
       >
-        <span className="text-[14px] font-semibold text-yellow-200">
-          {logoText}
-        </span>
+        {logoUrl ? (
+          <Image
+            src={logoUrl}
+            alt={title}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <span className="text-[14px] font-semibold text-yellow-200">
+            {logoText}
+          </span>
+        )}
       </div>
 
       <span className="flex-1 text-[15px] font-semibold text-slate-600 truncate">

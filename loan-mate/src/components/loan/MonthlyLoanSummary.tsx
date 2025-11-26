@@ -69,6 +69,7 @@ export default function MonthlyLoanSummary({
                                     title={loan.loanName}
                                     riskLabel={riskLabel}
                                     riskColorClassName={riskColor}
+                                    logoUrl={loan.iconUrl}
                                 >
                                     <LoanDetailContainer loanId={loan.loanId} />
                                 </LoanRiskToggle>
