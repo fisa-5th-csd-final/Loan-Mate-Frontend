@@ -7,6 +7,7 @@ import InstitutionList from "@/components/institution/InstitutionList";
 import BottomCTA from "@/components/BottomCTA";
 import { getFlag, setFlag } from "@/lib/db/userFlags";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 type Institution = {
   logo: string;
@@ -32,7 +33,7 @@ export default function ConnectPage() {
 
       // 이미 연결한 적 있음 → 홈으로 이동
       if (connected) {
-        router.replace("/");
+        router.replace("/main");
         return;
       }
 
@@ -64,7 +65,12 @@ export default function ConnectPage() {
     setItems(prev => prev.map(item => ({ ...item, checked: !allChecked })));
   };
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <LoadingSpinner size="lg" label="약관 동의 페이지로 이동 중" />
+      </div>
+    );
 
   return (
     <div>
