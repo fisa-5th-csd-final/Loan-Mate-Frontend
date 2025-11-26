@@ -5,6 +5,7 @@ export interface LoanListResponse {
     loanId: number;
     loanName: string;
     riskLevel: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+    iconUrl?: string;
 }
 
 export async function fetchLoanList(): Promise<LoanListResponse[]> {
@@ -21,9 +22,9 @@ export async function fetchLoanList(): Promise<LoanListResponse[]> {
     await new Promise((resolve) => setTimeout(resolve, 500)); // 0.5초 딜레이
 
     return [
-        { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE" },
-        { loanId: 102, loanName: "카카오뱅크 비상금대출", riskLevel: "THREE" },
-        { loanId: 103, loanName: "현대캐피탈 신용대출", riskLevel: "FIVE" },
-        { loanId: 104, loanName: "우리은행 주택담보대출", riskLevel: "TWO" },
+        { loanId: 101, loanName: "신한 마이카 대출", riskLevel: "ONE", iconUrl: "/logo/sh.png" },
+        { loanId: 102, loanName: "KB국민은행 직장인신용대출", riskLevel: "THREE", iconUrl: "/logo/kb.jpg" },
+        { loanId: 103, loanName: "현대캐피탈 신용대출", riskLevel: "FIVE", iconUrl: "/logo/hn.png" },
+        { loanId: 104, loanName: "우리은행 주택담보대출", riskLevel: "TWO", iconUrl: "/logo/ibk.svg" },
     ];
 }
