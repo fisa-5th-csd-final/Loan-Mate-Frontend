@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import Card from "@/components/card/Card";
-import CommonButton from "@/components/button/CommonButton";
 
 export default function EarlyRepaySection() {
   const router = useRouter();
@@ -40,14 +39,6 @@ export default function EarlyRepaySection() {
           지금 선납하면 <strong className="font-semibold">1,000,000원</strong> 이득이에요
         </p>
       </Card>
-
-      <CommonButton
-        label="선납하기"
-        size="lg"
-        widthClassName="w-full"
-        className="mt-4"
-        onClick={() => router.push("/prepaid")} 
-      />
     </section>
   );
 }
