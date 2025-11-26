@@ -8,7 +8,12 @@ import { useSearchParams } from "next/navigation";
 export default function AgreementPage() {
   const router = useRouter();
   const params = useSearchParams();
-  const banks = JSON.parse(params.get("banks") || "[]") as string[];
+  let banks: string[] = [];
+  try {
+    banks = JSON.parse(params.get("banks") || "[]");
+  } catch (error) {
+    console.error("URL 'banks' 파라미터 파싱 오류:", error);
+  }
 
   const handleConnect = async () => {
 
