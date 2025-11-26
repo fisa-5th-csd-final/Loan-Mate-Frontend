@@ -1,0 +1,76 @@
+"use client";
+export const dynamic = "force-dynamic";
+
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useNavigation } from "@/components/navigation/NavigationContext";
+
+// --------------------
+// Account Card Component
+// --------------------
+function AccountCard({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full bg-white p-4 rounded-xl flex gap-4 active:scale-[0.98] transition"
+    >
+      <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+        <img src="/logo/woori.svg" alt="woori" className="h-12" />
+      </div>
+
+      <div className="flex flex-col text-left">
+        <div className="font-semibold">WON 통장</div>
+        <div className="text-sm text-gray-500">우리 1002-865-685398</div>
+        <div className="text-sm font-medium mt-1">잔액 360,588원</div>
+
+        <span className="text-red-500 text-xs border border-red-300 px-2 py-0.5 rounded-full w-fit mt-1">
+          한도제한
+        </span>
+      </div>
+    </button>
+  );
+}
+
+// --------------------
+// Content: Suspense 내부에서 실행될 부분
+// --------------------
+function PrepaidContent() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const { setTitle } = useNavigation();
+
+  const mode = params.get("mode");
+
+  useEffect(() => {
+    if (mode === "deposit") setTitle("자동예치 신청하기");
+    else if (mode === "prepaid") setTitle("선납하기");
+    else setTitle("신청하기");
+  }, [mode, setTitle]);
+
+  return (
+    <div className="px-5 pt-4 bg-white">
+      <div className="mb-6">
+        <div className="text-sm text-gray-500 mt-2">01 / 07</div>
+      </div>
+
+      <div className="text-xl font-semibold mb-6">
+        어디에서 이체하시겠어요?
+      </div>
+
+      <AccountCard
+        onClick={() => router.push(`/auto-deposit/to-account?mode=${mode}`)}
+      />
+    </div>
+  );
+}
+
+// --------------------
+// 페이지 컴포넌트
+// --------------------
+export default function PrepaidPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PrepaidContent />
+    </Suspense>
+  );
+}
