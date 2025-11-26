@@ -16,7 +16,7 @@ export default function RiskAverageBox({
   levelText,
   emoji = "😊",
   label = "평균",
-}: RiskAverageBoxProps){
+}: RiskAverageBoxProps) {
   return (
     <div className="w-full rounded-[28px] bg-[#E8F4FF] px-5 py-4 flex items-center gap-4">
       {/* 왼쪽 이모지 */}

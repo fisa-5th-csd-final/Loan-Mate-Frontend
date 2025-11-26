@@ -17,3 +17,10 @@ export type LoanDetail = {
   loanType: string;
   repaymentMethod: string;
 };
+
+export interface LoanSummary {
+  loanId: number;
+  loanName: string;
+  riskLevel: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+  iconUrl?: string;
+}
