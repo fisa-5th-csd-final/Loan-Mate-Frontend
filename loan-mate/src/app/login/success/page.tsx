@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 export default function LoginSuccessPage() {
   const router = useRouter();
@@ -10,6 +11,9 @@ export default function LoginSuccessPage() {
     router.replace("/connect");
   }, [router]);
 
-  // TODO: 추후 로딩 컴포넌트로 바꿔야 함 
-  return <p>로그인 중...</p>;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <LoadingSpinner size="lg" label="페이지로 이동 중..." />
+    </div>
+  );
 }
