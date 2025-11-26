@@ -23,13 +23,14 @@ export default function SelectBankPage() {
     <div className="px-5 pt-4 pb-10 block w-full bg-white">
       {/* Header ------------------------------------------------- */}
       <div className="relative pr-8"> 
-  <NavigationBar
-    title=""
-    showBack={true}
-    right={<button className="text-black text-sm">✕</button>}
-  />
+      <NavigationBar
+          title=""
+          showBack={true}
+          right={<button className="absolute right-0 text-xl"
+          onClick={() => router.push("/auto-deposit")}>✕</button>}
+      />
 </div>
-<h1 className="text-2xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
+<h2 className="text-2xl font-medium mt-6 mb-4">금융회사를 선택해주세요</h2>
 <TransferTabs
         tabs={[
           { label: "은행", value: "recommended" },

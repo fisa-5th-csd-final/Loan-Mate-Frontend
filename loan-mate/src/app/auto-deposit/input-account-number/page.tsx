@@ -16,7 +16,8 @@ export default function Prepaid3Page() {
         <NavigationBar
               title="계좌번호를 입력해주세요"
               showBack={true}
-              right={<button className="absolute right-0 text-2xl">✕</button>}
+              right={<button className="absolute right-0 text-xl"
+              onClick={() => router.push("/auto-deposit")}>✕</button>}
               />
 
       {/* 은행 선택 */}
