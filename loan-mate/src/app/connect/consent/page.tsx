@@ -1,11 +1,14 @@
 "use client";
+
+import React, { Suspense } from "react";
 import BottomCTA from "@/components/BottomCTA";
 import Collapse from "@/components/Collapse";
 import { useRouter } from "next/navigation";
 import { setFlag } from "@/lib/db/userFlags"
 import { useSearchParams } from "next/navigation";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
-export default function AgreementPage() {
+function AgreementContent() {
   const router = useRouter();
   const params = useSearchParams();
   let banks: string[] = [];
@@ -93,5 +96,13 @@ export default function AgreementPage() {
         onClick={handleConnect}
       />
     </div>
+  );
+}
+
+export default function AgreementPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center p-8"><LoadingSpinner /></div>}>
+      <AgreementContent />
+    </Suspense>
   );
 }
