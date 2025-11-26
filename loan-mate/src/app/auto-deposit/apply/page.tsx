@@ -2,17 +2,21 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import InstitutionSearchBar from "@/components/search/SearchBar";
-import CategoryTabs from "./_components/CategoryTabs";
 import InstitutionList from "@/components/institution/InstitutionList";
 import CommonButton from "@/components/button/CommonButton";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { useEffect } from "react";
+import CategoryTabs from "@/components/CategoryTabs"
+import { useState } from "react"; 
 
 export default function ApplyAutoDepositPage() {
   const params = useSearchParams();
   const mode = params.get("mode");
   const { setTitle } = useNavigation();
   const router = useRouter();
+
+  const tabs = ["추천", "신용", "담보", "부동산"];
+  const [activeTab, setActiveTab] = useState(0);
 
    useEffect(() => {
     if (mode === "deposit") {
@@ -43,7 +47,12 @@ export default function ApplyAutoDepositPage() {
         </h2>
 
         <InstitutionSearchBar />
-        <CategoryTabs />
+        <CategoryTabs
+          tabs={tabs}
+          active={activeTab}
+          onChange={setActiveTab}
+        />
+
 
         <InstitutionList title="은행 목록" items={mockItems} />
 
