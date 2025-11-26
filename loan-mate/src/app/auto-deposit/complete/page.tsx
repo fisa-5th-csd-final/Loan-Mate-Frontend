@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import CommonButton from "@/components/button/CommonButton";
 import Card from "@/components/card/Card";
+import { ChevronDown } from "lucide-react";
 
 export default function TransferCompletePage() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function TransferCompletePage() {
 
             <button className="text-gray-500 text-sm w-full text-center flex justify-center items-center gap-1">
               더보기
-              <span>▼</span>
+              <ChevronDown size={16} className="text-gray-500" />
             </button>
 
           </div>
