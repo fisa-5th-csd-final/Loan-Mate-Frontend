@@ -12,10 +12,10 @@ export default function AgreementPage() {
 
   const handleConnect = async () => {
 
-    // await setFlag("asset_connected", true);
+    await setFlag("asset_connected", true);
 
     // 저장 성공 후 홈으로 이동
-    router.push("/");
+    router.push("/main");
   };
 
   return (
