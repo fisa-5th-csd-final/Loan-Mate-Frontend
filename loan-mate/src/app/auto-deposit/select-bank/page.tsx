@@ -2,10 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import TransferTabs from "@/components/TransferTabs";
+import { useState } from "react";
 
 export default function SelectBankPage() {
   const router = useRouter();
 
+  const [tab, setTab] = useState("recommended");
+  
   const banks = [
     { name: "우리은행", logo: "/logo/woori.svg" },
     { name: "국민은행", logo: "/logo/kookmin.svg" },
@@ -19,24 +23,19 @@ export default function SelectBankPage() {
       {/* Header ------------------------------------------------- */}
       <div className="relative pr-8"> 
   <NavigationBar
-    title="금융회사를 선택해주세요"
+    title=""
     showBack={true}
     right={<button className="text-black text-sm">✕</button>}
   />
 </div>
-
-
-      {/* Tabs ------------------------------------------------- */}
-      <div className="flex gap-4 mb-4 text-sm font-medium">
-        <button className="text-black border-b-2 border-black pb-1">은행</button>
-        <button className="text-gray-400">증권사</button>
-      </div>
-
-      {/* Search ------------------------------------------------- */}
-      <input
-        type="text"
-        placeholder="은행명 검색"
-        className="w-full bg-gray-100 rounded-xl px-4 py-3 mb-6 outline-none"
+<h1 className="text-2xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
+<TransferTabs
+        tabs={[
+          { label: "은행", value: "recommended" },
+          { label: "증권사", value: "often" }
+        ]}
+        value={tab}
+        onChange={setTab}
       />
 
       {/* Bank Grid ------------------------------------------------- */}
