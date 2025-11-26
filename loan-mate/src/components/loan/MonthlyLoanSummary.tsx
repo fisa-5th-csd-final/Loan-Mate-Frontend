@@ -4,6 +4,7 @@ import ProgressBar from '../ProgressBar';
 import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
+import SectionHeading from '../SectionHeading';
 
 type MonthlyLoanSummaryProps = {
     loanIds?: number[],
@@ -14,14 +15,14 @@ type MonthlyLoanSummaryProps = {
 export default function MonthlyLoanSummary({
     loanIds,
     totalLoanRate,
-    peerAverageLoanRatio
+        peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
     return (
         <div className="w-full max-w-2xl space-y-4">
             {/* 타이틀 */}
-            <h2 className="inline-block text-2xl font-bold text-gray-800">
+            <SectionHeading className="inline-block">
                 이번달 나의 위험도 요약
-            </h2>
+            </SectionHeading>
 
             <div className="flex flex-col w-full justify-center p-4 gap-5 rounded-xl space-y-4 bg-white shadow-md">
                 {/* 전체 대출 평균 위험도 박스 */}

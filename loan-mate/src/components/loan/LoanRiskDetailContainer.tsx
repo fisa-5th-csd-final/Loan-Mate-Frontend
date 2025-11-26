@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { LoanDetail } from "@/../types/loan/LoanDetail";
 import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 type LoanDetailContainerProps = {
   loanId: number;
@@ -49,8 +50,8 @@ export default function LoanDetailContainer({
 
   if (loading) {
     return (
-      <div className="w-full rounded-3xl bg-white px-5 py-8 text-center text-sm text-gray-500">
-        불러오는 중입니다…
+      <div className="w-full rounded-3xl bg-white px-5 py-8 flex items-center justify-center">
+        <LoadingSpinner label="대출 정보를 불러오는 중입니다" />
       </div>
     );
   }

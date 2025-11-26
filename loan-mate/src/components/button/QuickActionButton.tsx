@@ -1,11 +1,13 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
 
 interface QuickActionButtonProps {
   title: string;
   description: string;
   onClick?: () => void;
+  leading?: ReactNode;
 }
 
 /**
@@ -16,6 +18,7 @@ export default function QuickActionButton({
   title,
   description,
   onClick,
+  leading,
 }: QuickActionButtonProps) {
   return (
     <button
@@ -23,10 +26,19 @@ export default function QuickActionButton({
       onClick={onClick}
       className="w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition"
     >
-      {/* 텍스트 영역 */}
-      <div className="text-left">
-        <div className="text-lg font-bold text-gray-900">{title}</div>
-        <div className="mt-1 text-sm text-gray-500 leading-5">{description}</div>
+      <div className="flex items-start gap-3 flex-1">
+        {/* 왼쪽 아이콘/이미지 */}
+        {leading && (
+          <div className="flex-shrink-0">
+            {leading}
+          </div>
+        )}
+
+        {/* 텍스트 영역 */}
+        <div className="text-left">
+          <div className="text-lg font-bold text-gray-900">{title}</div>
+          <div className="mt-1 text-sm text-gray-500 leading-5">{description}</div>
+        </div>
       </div>
 
       {/* 아이콘 */}
