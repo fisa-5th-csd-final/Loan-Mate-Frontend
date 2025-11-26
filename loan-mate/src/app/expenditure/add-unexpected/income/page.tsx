@@ -31,6 +31,17 @@ export default function IncomePage() {
       ctaLabel="수입 저장하기"
       onClick={() => router.push("/expenditure/add-unexpected/outlay")}
     >
+      <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
+        이번 달 예상하지 못한{" "}
+        <span
+          className={
+            "text-blue-500 font-semibold"
+          }
+        >
+          {"수입"}
+        </span>
+        을 추가해주세요.
+      </p>
       {/* 리스트 UI */}
       <EditableAmountList
         items={items}

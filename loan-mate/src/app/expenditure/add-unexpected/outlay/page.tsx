@@ -28,8 +28,20 @@ export default function OutlayPage() {
   return (
     <PageWithCTA
       ctaLabel="분석하기"
-      onClick={() => console.log("수입 저장 로직 들어갈 곳")}
+      onClick={() => console.log("지출 저장 로직 들어갈 곳")}
     >
+      <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
+        이번 달 예상하지 못한{" "}
+        <span
+          className={
+            "text-red-500 font-semibold"
+          }
+        >
+          {"지출"}
+        </span>
+        을 추가해주세요.
+      </p>
+
       {/* 리스트 UI */}
       <EditableAmountList
         items={items}
