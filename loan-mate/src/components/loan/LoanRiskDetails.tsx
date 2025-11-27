@@ -38,7 +38,7 @@ export default function LoanRiskDetails({
   return (
     <div className="w-full rounded-3xl bg-white px-5 pb-8 pt-5 shadow-sm">
       {/* 상단 안내 문구 박스 */}
-      <MessageBox>
+      <MessageBox className="mb-6">
         {summaryMessage}
       </MessageBox>
 
