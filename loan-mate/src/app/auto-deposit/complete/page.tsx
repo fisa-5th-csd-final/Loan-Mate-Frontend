@@ -80,7 +80,7 @@ export default function TransferCompletePage() {
           <CommonButton
             label="공유"
             size="lg"
-            widthClassName="flex-1"
+            widthClassName="flex-[1]"
             colorClassName="bg-[#EEF5FF] !text-[#3B82F6] hover:bg-[#DCEBFF]"
             onClick={() => console.log("공유 클릭")}
           />
@@ -89,7 +89,7 @@ export default function TransferCompletePage() {
           <CommonButton
             label="확인"
             size="lg"
-            widthClassName="flex-2"
+            widthClassName="flex-[2]"
             colorClassName="bg-[#4F8BFF] hover:bg-[#3D7CFF] text-white"
             onClick={() => router.push("/")}
           />
