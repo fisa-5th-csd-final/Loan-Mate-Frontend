@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function BottomSheet({
   open,
   onClose,
-  children,
+  children
 }: {
   open: boolean;
   onClose: () => void;

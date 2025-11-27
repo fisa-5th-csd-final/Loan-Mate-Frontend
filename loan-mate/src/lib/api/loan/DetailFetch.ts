@@ -3,6 +3,10 @@
 import type { LoanDetail } from "@/../types/loan/LoanDetail";
 import { MOCK_LOAN_DETAIL } from "@/data/loan.sample";
 
+import { apiClient } from "@/lib/api/client";
+import type { SuccessBody } from "@/../types/response";
+import { API } from "@/consts/ROUTES";
+
 // 나중에 실제 API 호출 시 여기만 바꾸면 됨
 export async function fetchLoanDetail(loanId: number): Promise<LoanDetail> {
   // 개발 환경일 때만 Mock 데이터 반환
@@ -28,10 +32,12 @@ export async function fetchLoanDetail(loanId: number): Promise<LoanDetail> {
     );
   }
 
-  // 실제 API 호출 (예시)
-  // const response = await apiClient.get<SuccessBody<LoanDetail>>(`/loans/${loanId}`);
-  // return response.data;
-  throw new Error("API not implemented");
+  // 실제 API 호출
+  const response = await apiClient.get<SuccessBody<LoanDetail>>(API.LOAN.DETAIL(loanId));
+  if (!response || !response.data) {
+    throw new Error("Invalid response from loan detail API");
+  }
+  return response.data;
 }
 
 /*
