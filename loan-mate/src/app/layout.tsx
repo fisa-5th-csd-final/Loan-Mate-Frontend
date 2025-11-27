@@ -41,9 +41,6 @@ export default function RootLayout({
               relative
             ">
 
-            {/* 상단 노치 */}
-            <MobileNotch />
-
             {/* 실제 페이지 */}
             <ClientProviders>
               {children}
