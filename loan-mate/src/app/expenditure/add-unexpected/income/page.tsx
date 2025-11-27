@@ -17,7 +17,7 @@ export default function IncomePage() {
   const handleAddItem = (data: AddItem) => {
     // 새로운 item 구성
     const newItem: Item = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       name: data.name,
       amount: data.amount,
     };
