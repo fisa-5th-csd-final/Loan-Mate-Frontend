@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import CommonButton from "@/components/button/CommonButton";
 import Card from "@/components/card/Card";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight, Star } from "lucide-react";
 
 export default function TransferCompletePage() {
   const router = useRouter();
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-sm rounded-2xl p-6 pt-14">
+      <div className="bg-white w-full rounded-2xl p-6 pt-14">
         {/* 체크 아이콘 */}
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
@@ -42,7 +42,10 @@ export default function TransferCompletePage() {
 
             <div className="flex justify-between">
               <span className="text-gray-500">받는 계좌</span>
-              <span className="font-medium">신한 110259718376</span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-medium">신한 110259718376</span>
+                <Star size={16} className="text-gray-400" />
+              </div>
             </div>
 
             <div className="flex justify-between">
@@ -52,8 +55,8 @@ export default function TransferCompletePage() {
 
             <div className="flex justify-between">
               <span className="text-gray-500">메모</span>
-              <button className="text-gray-400 font-medium">
-                내용을 입력할 수 있어요
+              <button className="flex items-center gap-1 text-gray-400 font-medium">
+                내용을 입력할 수 있어요<ChevronRight size={16} className="text-gray-500" />
               </button>
             </div>
 
