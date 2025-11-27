@@ -1,17 +1,27 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
+import BottomSheet from "@/components/bottomSheet";
+import PinInputSheet from "../_components/PinInputSheet";
 
 function TransferFinalInner() {
+  const [open, setOpen] = useState(false);
+
   const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
 
   const formatted = Number(amount).toLocaleString();
+
+  const handleSubmitPin = (pin: string) => {
+    setOpen(false);
+
+    // 실제 이체 완료 로직 넣기
+  };
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -78,20 +88,26 @@ function TransferFinalInner() {
           size="lg"
           widthClassName="w-full"
           textColorClassName="text-blue-500"
-          className="flex-1 py-4 bg-gray-100 rounded-xl font-medium"
+          className="flex-1 py-4 bg-blue-100 rounded-xl font-medium"
           onClick={() => router.push("/auto-deposit")}
         />
 
         <CommonButton
-          label="이체완료"
+          label="이체"
           size="lg"
           widthClassName="w-full"
           textColorClassName="text-white"
           className="flex-1 py-4 bg-blue-500 rounded-xl font-medium"
-          onClick={() => router.push("/auto-deposit")}
+          onClick={() => setOpen(true)}
         />
-
       </div>
+
+      <BottomSheet open={open} onClose={() => setOpen(false)}>
+        <PinInputSheet
+          onSubmit={handleSubmitPin}
+          onCancel={() => setOpen(false)}
+        />
+      </BottomSheet>
     </div>
   );
 }
