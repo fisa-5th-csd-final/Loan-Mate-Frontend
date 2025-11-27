@@ -2,6 +2,7 @@
 "use client";
 
 import ProgressBar from "@/components/ProgressBar";
+import MessageBox from "../MessageBox";
 
 type LoanRiskDetailsProps = {
   summaryMessage: string;
@@ -37,9 +38,9 @@ export default function LoanRiskDetails({
   return (
     <div className="w-full rounded-3xl bg-white px-5 pb-8 pt-5 shadow-sm">
       {/* 상단 안내 문구 박스 */}
-      <div className="mb-6 rounded-3xl bg-[#E6F2FF] px-5 py-4 text-center text-[15px] leading-relaxed text-gray-700">
+      <MessageBox>
         {summaryMessage}
-      </div>
+      </MessageBox>
 
       {/* 상환 진척률 + 공용 ProgressBar 사용 */}
       <div className="mb-6">
