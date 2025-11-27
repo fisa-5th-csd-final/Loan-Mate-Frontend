@@ -21,7 +21,7 @@ export default function MonthlyLoanSummary({
     peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
     return (
-        <div className="w-full max-w-2xl space-y-4 px-4">
+        <div className="w-full space-y-4">
             {/* 타이틀 */}
             <SectionHeading className="inline-block">
                 이번달 나의 위험도 요약

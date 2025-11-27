@@ -33,7 +33,7 @@ export default function QuickActionLoanFunctionList() {
   const router = useRouter();
 
   return (
-    <section className="w-full px-4 py-6 max-w-2xl">
+    <section className="w-full py-6">
       {/* 상단 타이틀 */}
       <SectionHeading className="mb-4">
         대출 알아보기
