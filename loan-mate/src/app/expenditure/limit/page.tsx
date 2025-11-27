@@ -9,7 +9,7 @@ import PageWithCTA from "../_components/PageWithCTA";
 import { useRouter } from "next/navigation"
 import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
-import SegmentProgressBar from "../_components/SegmentProgressBar";
+import SegmentProgressBar from "@/components/SegmentProgressBar";
 
 export function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
