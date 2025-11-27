@@ -3,6 +3,7 @@
 import Card from "@/components/card/Card";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api/client"; 
 
 export default function EarlyRepaySection() {
   const [benefitTotal, setBenefitTotal] = useState<number>(0);
@@ -10,13 +11,29 @@ export default function EarlyRepaySection() {
 
   useEffect(() => {
     async function fetchBenefits() {
+      interface PrepaymentInfo {
+      loanName: string;
+      benefit: number;
+    }
+
+    interface PrepaymentInfoResponse {
+      code: string;
+      message: string;
+      data: PrepaymentInfo[];
+    }
+
       try {
-        const res = await fetch("http://localhost:8081/api/loans/prepayment-infos", {
+        const res = await apiClient.get<PrepaymentInfoResponse>(
+          "/api/loans/prepayment-infos", {
           cache: "no-store"
         });
 
-        const json = await res.json();
-        const list = json.data || [];
+        if (!res) {
+        console.warn("로그인이 필요합니다.");
+        return;
+      }
+
+        const list = res.data ?? [];
 
         const colors = ["bg-red-500", "bg-blue-500", "bg-gray-500", "bg-green-500"];
 
