@@ -1,12 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Card from "@/components/card/Card";
-import ProgressBar from "@/components/ProgressBar";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 
 export default function EarlyRepaySection() {
-  const router = useRouter();
 
   // 나중에 API에서도 percent 값만 바꿔주면 자동 반영됨
   const segments = [
@@ -15,7 +12,6 @@ export default function EarlyRepaySection() {
     { id: "loanC", label: "기업예금", percent: 0.15, color: "bg-gray-500" },
   ];
 
-  const totalPercent = segments.reduce((acc, cur) => acc + cur.percent, 0) * 100;
 
   return (
     <section className="mt-8">
