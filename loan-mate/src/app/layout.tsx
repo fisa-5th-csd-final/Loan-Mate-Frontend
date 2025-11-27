@@ -6,6 +6,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Loan Mate",
   description: "모바일 웹앱 레이아웃",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Loan Mate",
+  },
+  icons: {
+    icon: "/icon/icon-192x192.png",
+    apple: "/icon/icon-192x192.png",
+  },
 };
 
 export const viewport: Viewport = {
