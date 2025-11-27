@@ -18,7 +18,6 @@ function TransferFinalInner() {
   const formatted = Number(amount).toLocaleString();
 
   const handleSubmitPin = (pin: string) => {
-    console.log("입력된 비밀번호:", pin);
     setOpen(false);
 
     // 실제 이체 완료 로직 넣기
@@ -89,7 +88,7 @@ function TransferFinalInner() {
           size="lg"
           widthClassName="w-full"
           textColorClassName="text-blue-500"
-          className="flex-1 py-4 bg-gray-100 rounded-xl font-medium"
+          className="flex-1 py-4 bg-blue-100 rounded-xl font-medium"
           onClick={() => router.push("/auto-deposit")}
         />
 

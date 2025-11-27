@@ -19,9 +19,11 @@ export default function TransferCompletePage() {
               height="36"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="blue"
+              stroke="currentColor"
               strokeWidth="2.5"
+              className="text-blue-600"
             >
+              <title>이체 완료</title>
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
