@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import QuickActionButton from "@/components/button/QuickActionButton"; // 버튼 컴포넌트 경로에 맞게 수정해주세요
 import SectionHeading from "@/components/SectionHeading";
+import { PAGES } from "@/consts/ROUTES";
 
 // 버튼 데이터 정의
 const actions = [
@@ -19,7 +20,7 @@ const actions = [
   {
     title: "자동 예치 등록/선납하기",
     description: "여유 자금을 감지하면 예치와 부분 상환을 유도해주어 연체를 예방할 수 있어요",
-    path: "/loan/auto-pay", // TODO: 추후 경로 수정 필요
+    path: PAGES.AUTO_DEPOSIT
   },
 ];
 
@@ -42,7 +43,7 @@ export default function QuickActionFunctionList() {
             description={action.description}
             onClick={() => {
               // 실제 경로 이동 로직 (필요시 활성화)
-              // router.push(action.path);
+              router.push(action.path);
               console.log(`${action.title} 클릭됨`);
             }}
           />

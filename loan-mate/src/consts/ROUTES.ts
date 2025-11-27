@@ -2,7 +2,8 @@
 
 export const PAGES = {
     ROOT: '/',
-    MAIN: '/main'
+    MAIN: '/main',
+    AUTO_DEPOSIT: '/auto-deposit'
 };
 
 export const API = {
