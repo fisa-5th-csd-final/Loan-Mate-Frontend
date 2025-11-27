@@ -4,7 +4,7 @@ import MessageBox from "@/components/MessageBox";
 import TableSection from "@/components/ui/TableSection";
 import { TableRow, TableCell } from "@/components/ui/Table";
 import { expenditureLimitSample } from "@/data/expenditure-limit.sample";
-import { formatNumber } from "@/lib/util/NumberFormatter";
+import { formatCurrency } from "@/lib/util/NumberFormatter";
 import PageWithCTA from "../_components/PageWithCTA";
 import { useRouter } from "next/navigation"
 import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
@@ -99,7 +99,7 @@ export default function ExpenditureLimitPage() {
                   </TableCell>
 
                   <TableCell className="text-center font-medium">
-                    {formatNumber(cat.available)}원
+                    {formatCurrency(cat.available)}
                   </TableCell>
                 </TableRow>
               );
@@ -114,17 +114,17 @@ export default function ExpenditureLimitPage() {
         <MessageBox className="flex-1 text-left">
           <span>이번 달에 총 </span>
           <span className="font-semibold text-blue-700">
-            {formatNumber(data.limit.usedAmount)}
+            {formatCurrency(data.limit.usedAmount)}
           </span>
-          <span>원 쓸 수 있어요</span>
+          <span> 쓸 수 있어요</span>
         </MessageBox>
 
         <MessageBox className="flex-1 text-left">
           <span>이번 달에 총 </span>
           <span className="font-semibold text-blue-700">
-            {formatNumber(data.limit.availableAmount)}
+            {formatCurrency(data.limit.availableAmount)}
           </span>
-          <span>원 쓸 수 있어요</span>
+          <span> 쓸 수 있어요</span>
         </MessageBox>
       </div>
 
@@ -145,21 +145,17 @@ export default function ExpenditureLimitPage() {
             <span className="text-center">상환일</span>
           </>
         }
-        rows={
-          <>
-            {data.loanInterests.map((loan) => (
-              <TableRow key={loan.id}>
-                <TableCell className="text-center font-medium">{loan.loanName}</TableCell>
-                <TableCell className="text-center font-medium">
-                  {formatNumber(loan.nextInterest)}원
-                </TableCell>
-                <TableCell className="text-center font-medium">
-                  {loan.dueDate}
-                </TableCell>
-              </TableRow>
-            ))}
-          </>
-        }
+        rows={data.loanRepayments.map((loan) => (
+          <TableRow key={loan.id}>
+            <TableCell className="text-center font-medium">{loan.loanName}</TableCell>
+            <TableCell className="text-center font-medium">
+              {formatCurrency(loan.nextRepayment)}
+            </TableCell>
+            <TableCell className="text-center font-medium">
+              {loan.dueDate}
+            </TableCell>
+          </TableRow>
+        ))}
       />
       {/* 내 상환금을 확인해요 */}
       <div className="flex items-center justify-between mt-10 mb-4 px-1">
@@ -178,22 +174,19 @@ export default function ExpenditureLimitPage() {
             <span className="text-center">상환일</span>
           </>
         }
-        rows={
-          <>
-            {data.loanRepayments.map((loan) => (
-              <TableRow key={loan.id}>
-                <TableCell className="text-center font-medium">{loan.loanName}</TableCell>
-                <TableCell className="text-center font-medium">
-                  {formatNumber(loan.nextRepayment)}원
-                </TableCell>
-                <TableCell className="text-center font-medium">
-                  {loan.dueDate}
-                </TableCell>
-              </TableRow>
-            ))}
-          </>
-        }
+        rows={data.loanRepayments.map((loan) => (
+          <TableRow key={loan.id}>
+            <TableCell className="text-center font-medium">{loan.loanName}</TableCell>
+            <TableCell className="text-center font-medium">
+              {formatCurrency(loan.nextRepayment)}
+            </TableCell>
+            <TableCell className="text-center font-medium">
+              {loan.dueDate}
+            </TableCell>
+          </TableRow>
+        ))}
       />
+
     </PageWithCTA>
 
   );

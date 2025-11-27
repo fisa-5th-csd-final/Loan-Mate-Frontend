@@ -15,11 +15,16 @@ export function Table({ children, className }: BaseProps) {
   );
 }
 
-export function TableHeader({children, className, columns}: BaseProps & { columns?: string }) {
+export function TableHeader({
+  children,
+  className,
+  columns,
+}: BaseProps & { columns?: string }) {
   return (
     <div
-      className={`grid items-center text-[13px] px-1 text-gray-700 font-semibold mb-2 ${className ?? ""
-        }`}
+      className={`grid items-center text-[13px] px-1 text-gray-700 font-semibold mb-2 ${
+        className ?? ""
+      }`}
       style={{ gridTemplateColumns: columns || "1fr 1fr 1fr" }}
     >
       {children}
@@ -28,7 +33,11 @@ export function TableHeader({children, className, columns}: BaseProps & { column
 }
 
 
-export function TableRow({ children, className, columns }: BaseProps & { columns?: string }) {
+export function TableRow({
+  children,
+  className,
+  columns,
+}: BaseProps & { columns?: string }) {
   return (
     <div
       className={`grid items-center py-3 px-1 ${className ?? ""}`}
