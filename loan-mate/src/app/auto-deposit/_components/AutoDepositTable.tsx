@@ -18,9 +18,13 @@ export default function AutoDepositTable() {
       try {
         const res = await fetch("http://localhost:8081/api/loans/auto-deposit-summary");
         const json = await res.json();
-        setRows(json.data); // API의 data 배열만 저장
+
+        // 방어 코드 추가
+        const data = Array.isArray(json.data) ? json.data : [];
+        setRows(data);
       } catch (error) {
         console.error("API 호출 실패:", error);
+        setRows([]); // 에러 시 빈 배열
       } finally {
         setLoading(false);
       }
@@ -47,20 +51,24 @@ export default function AutoDepositTable() {
             </thead>
 
             <tbody>
-              {rows.map((row) => (
-                <tr
-                  key={row.loanName}
-                  className="border-t border-gray-200 text-center"
-                >
-                  <td className="py-3 text-left">{row.loanName}</td>
-
-                  {/* 숫자를 "원"으로 포매팅 */}
-                  <td>{row.accountBalance.toLocaleString()}원</td>
-
-                  {/* boolean → O/X 변환 */}
-                  <td>{row.autoDepositEnabled ? "O" : "X"}</td>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-4 text-gray-400 text-center">
+                    데이터가 없습니다.
+                  </td>
                 </tr>
-              ))}
+              ) : (
+                rows.map((row) => (
+                  <tr
+                    key={row.loanName}
+                    className="border-t border-gray-200 text-center"
+                  >
+                    <td className="py-3 text-left">{row.loanName}</td>
+                    <td>{row.accountBalance.toLocaleString()}원</td>
+                    <td>{row.autoDepositEnabled ? "O" : "X"}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         )}
