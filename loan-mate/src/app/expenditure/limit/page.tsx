@@ -11,7 +11,7 @@ import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_componen
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 
-export function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
+function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
     const key = ConsumptionCategoryKeyMap[cat.name];
     const meta = ConsumptionCategoryMeta[key];
