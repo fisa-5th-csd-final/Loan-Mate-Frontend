@@ -95,7 +95,7 @@ export default function ExpenditureLimitPage() {
                   </TableCell>
 
                   <TableCell className="text-center font-medium">
-                    {formatNumber(cat.spent)}원
+                    {formatCurrency(cat.spent)}
                   </TableCell>
 
                   <TableCell className="text-center font-medium">
