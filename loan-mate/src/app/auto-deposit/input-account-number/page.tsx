@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
-import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
 
 export default function Prepaid3Page() {
