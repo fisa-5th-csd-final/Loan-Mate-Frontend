@@ -3,28 +3,40 @@
 import Card from "@/components/card/Card";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api/client";
+
+interface PrepaymentInfo {
+  loanName: string;
+  benefit: number;
+}
+
+interface PrepaymentInfoResponse {
+  code: string;
+  message: string;
+  data: PrepaymentInfo[];
+}
 
 export default function EarlyRepaySection() {
   const [benefitTotal, setBenefitTotal] = useState<number>(0);
   const [segments, setSegments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API = process.env.NEXT_PUBLIC_API_URL;
-
   useEffect(() => {
     async function fetchBenefits() {
       try {
-        const res = await fetch(`${API}/api/loans/prepayment-infos`, {
-          cache: "no-store",
-        });
+        // apiClient는 이미 JSON 파싱된 값을 반환함
+        const res = await apiClient.get<PrepaymentInfoResponse>(
+          "/api/loans/prepayment-infos"
+        );
 
         if (!res) {
-          console.warn("로그인이 필요합니다.");
-          return;
-        }
+        console.warn("응답 없음(로그인 필요)");
+        setSegments([]);
+        setLoading(false);
+        return;
+      }
 
-        const json = await res.json();
-        const list = json.data ?? [];
+        const list = Array.isArray(res.data) ? res.data : [];
 
         const colors = [
           "bg-red-500",
@@ -37,11 +49,11 @@ export default function EarlyRepaySection() {
         ];
 
         const totalBenefit = list.reduce(
-          (acc: number, cur: { benefit: number }) => acc + Number(cur.benefit),
+          (acc, cur) => acc + Number(cur.benefit),
           0
         );
 
-        const generatedSegments = list.map((item: any, index: number) => ({
+        const generatedSegments = list.map((item, index) => ({
           id: `loan-${index}`,
           label: item.loanName,
           percent: totalBenefit === 0 ? 0 : item.benefit / totalBenefit,
@@ -53,7 +65,7 @@ export default function EarlyRepaySection() {
       } catch (error) {
         console.error("Failed to fetch benefits:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     }
 
