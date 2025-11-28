@@ -1,24 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddItem, AddItemType } from "@/consts/add-item";
 
+type InitialData = Partial<AddItem> & { id?: string | number };
+
+interface Props {
+  type: AddItemType; // 수입 or 지출
+  onCancel: () => void;
+  onSubmit: (data: AddItem & { id?: string | number }) => void;
+  initialData?: InitialData;
+}
+
 export default function AddItemModalPage({
-  type,  // 수입 or 지출 
+  type,
   onCancel,
   onSubmit,
-}: {
-  type: AddItemType;
-  onCancel: () => void;
-  onSubmit: (data: AddItem) => void;
-}) {
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState<number | "">("");
-  const title = type === "income" ? "수입 추가하기" : "지출 추가하기";
+  initialData,
+}: Props) {
+  const [name, setName] = useState(initialData?.name ?? "");
+  const [amount, setAmount] = useState<number | "">(initialData?.amount ?? "");
+
+  useEffect(() => {
+    setName(initialData?.name ?? "");
+    setAmount(initialData?.amount ?? "");
+  }, [initialData?.id, initialData?.name, initialData?.amount]);
+
+  const isEditMode = Boolean(initialData?.id);
+  const title =
+    type === AddItemType.INCOME
+      ? isEditMode
+        ? "수입 수정하기"
+        : "수입 추가하기"
+      : isEditMode
+        ? "지출 수정하기"
+        : "지출 추가하기";
+  const submitLabel = isEditMode ? "수정하기" : "추가하기";
 
   const handleSubmit = () => {
     if (!name || !amount) return;
     onSubmit({
+      id: initialData?.id,
       type,
       name,
       amount: Number(amount),
@@ -27,9 +49,7 @@ export default function AddItemModalPage({
 
   return (
     <div className="w-full">
-      <h3 className="text-lg font-semibold mb-4">
-        {title}
-      </h3>
+      <h3 className="text-lg font-semibold mb-4">{title}</h3>
 
       <div className="flex flex-col gap-4">
         {/* 이름 */}
@@ -48,7 +68,10 @@ export default function AddItemModalPage({
           <label className="text-sm font-medium text-gray-700">예상 최대 금액</label>
           <input
             value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
+            onChange={(e) => {
+              const value = e.target.value;
+              setAmount(value === "" ? "" : Number(value));
+            }}
             placeholder="예: 3,000,000"
             type="number"
             className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"
@@ -68,7 +91,7 @@ export default function AddItemModalPage({
             onClick={handleSubmit}
             className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-medium"
           >
-            추가하기
+            {submitLabel}
           </button>
         </div>
       </div>
