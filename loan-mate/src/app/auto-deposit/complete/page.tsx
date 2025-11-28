@@ -96,7 +96,7 @@ export default function TransferCompletePage() {
             size="lg"
             widthClassName="flex-[2]"
             colorClassName="bg-[#4F8BFF] hover:bg-[#3D7CFF] text-white"
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/auto-deposit")}
           />
         </div>
       </div>
