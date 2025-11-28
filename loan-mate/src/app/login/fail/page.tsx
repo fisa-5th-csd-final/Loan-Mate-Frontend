@@ -22,8 +22,9 @@ export default function LoginFailPage() {
         로그인 과정에서 오류가 발생했습니다.<br />
         잠시 후 로그인 페이지로 이동합니다.
       </p>
-
-      <LoadingSpinner size="md" label="로그인 페이지로 이동 중..." />
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <LoadingSpinner size="md" label="로그인 페이지로 이동 중..." />
+      </div>
     </div>
   );
 }
