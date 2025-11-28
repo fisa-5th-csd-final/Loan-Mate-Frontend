@@ -15,12 +15,13 @@ export default function AutoDepositPage() {
     <NavigationBar title="자동 예치 등록/선납하기" />
       <AutoDepositTable />
       <div className="mt-4">
-            <CommonButton 
-                label="자동 예치 등록하기"
-                size="lg"
-                widthClassName="w-full"
-                onClick={() => router.push("/auto-deposit/loan-select?mode=deposit")}
-              />
+            <CommonButton
+              label="자동 예치 등록하기"
+              size="lg"
+              widthClassName="w-full"
+              onClick={() => router.push("/auto-deposit/loan-select?mode=deposit")}
+            />
+
           </div>
       <EarlyRepaySection />
       <CommonButton

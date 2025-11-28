@@ -6,7 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
-import PinInputSheet from "../_components/PinInputSheet";
+import NumberKeypad from "../_components/NumberKeypad";
+import { useEffect } from "react";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
@@ -14,14 +15,30 @@ function TransferFinalInner() {
   const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount") || "0";
-
   const formatted = Number(amount).toLocaleString();
+  const [pin, setPin] = useState("");
 
-  const handleSubmitPin = (pin: string) => {
-    setOpen(false);
-
-    // 실제 이체 완료 로직 넣기
+  const addDigit = (num: string) => {
+    if (pin.length >= 6) return;
+    setPin((prev) => prev + num);
   };
+
+  const deleteDigit = () => {
+    setPin((prev) => prev.slice(0, -1));
+  }
+
+  // const handleSubmitPin = (pin: string) => {
+  //   setOpen(false);
+
+  //   // 실제 이체 완료 로직 넣기
+  // };
+
+  useEffect(() => {
+    if (pin.length === 6) {
+      router.push("/auto-deposit/complete"); // ← 원하는 화면으로 이동
+    }
+  }, [pin]);
+
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -103,14 +120,36 @@ function TransferFinalInner() {
       </div>
 
       <BottomSheet open={open} onClose={() => setOpen(false)}>
-        <PinInputSheet
-          onSubmit={handleSubmitPin}
-          onCancel={() => setOpen(false)}
-        />
+
+      <NavigationBar
+        title=""
+        showBack={false}
+        right={
+          <button
+            className="text-black text-xl"
+            onClick={() => setOpen(false)}
+          >
+            ✕
+          </button>
+        }
+      />
+
+      {/* 타이틀 */}
+      <div className="text-center mb-6">
+        <h2 className="text-lg font-semibold">계좌 비밀번호</h2>
+      </div>
+
+      <NumberKeypad
+        pinMode={true}
+        onDigit={addDigit}
+        onDelete={deleteDigit}
+      />
+
       </BottomSheet>
     </div>
   );
 }
+
 
 export default function TransferFinalPage() {
   return (

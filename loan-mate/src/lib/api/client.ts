@@ -1,8 +1,5 @@
 import { refreshToken, waitForRefresh } from "@/lib/api/auth/refreshManager";
-
-
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
 type QueryValue = string | number | boolean | null | undefined;
 
 let authFailHandler: null | (() => void) = null;
@@ -31,8 +28,7 @@ export class ApiError extends Error {
   }
 }
 
-const BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
-
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 const defaultHeaders: HeadersInit = {
   Accept: "application/json",
 };
@@ -42,14 +38,12 @@ function buildUrl(path: string, query?: Record<string, QueryValue>) {
   const originFallback =
     typeof window !== "undefined" ? window.location.origin : "";
   const url = new URL(`${BASE_URL || originFallback}${trimmed}`);
-
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
       url.searchParams.set(key, String(value));
     });
   }
-
   return url.toString();
 }
 
@@ -58,30 +52,24 @@ function resolveHeaders(options: RequestOptions) {
   if (options.token) {
     headers.set("Authorization", `Bearer ${options.token}`);
   }
-
   const isJsonBody =
     options.body !== undefined &&
     options.body !== null &&
     !(options.body instanceof FormData) &&
     !(options.body instanceof Blob);
-
   if (isJsonBody && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-
   return headers;
 }
 
 async function parseResponse(response: Response) {
   const contentType = response.headers.get("content-type");
   const isJson = contentType?.includes("application/json");
-
   if (response.status === 204) return null;
-
   if (isJson) {
     return await response.json();
   }
-
   return await response.text();
 }
 
@@ -89,54 +77,44 @@ export async function request<T = unknown>(path: string, options: RequestOptions
   const { query, body, method = "GET", ...fetchOptions } = options;
   const url = buildUrl(path, query);
   const headers = resolveHeaders(options);
-
   const preparedBody =
     body && headers.get("Content-Type") === "application/json"
       ? JSON.stringify(body)
       : (body as BodyInit | null | undefined);
-
   let response = await fetch(url, {
+    ...fetchOptions,
     method,
     headers,
-    body: preparedBody,
     credentials: "include",
-    ...fetchOptions,
+    body: preparedBody
   });
 
-  // 액세스 재발급 과정 
-  if (response.status === 401) {
-    console.warn("🔒 401 detected → Trying refresh...");
-
-    // 일단 refreshToken() 호출 
+  // 액세스 재발급 과정
+  if (response.status === 403) {
     const refreshResponse = await refreshToken();
-
-    // 다른 탭에서 refresh 중이면 여기서 완료될 때까지 기다림
     await waitForRefresh();
 
-    // refresh 실패 → 로그인으로 보내기
     if (!refreshResponse.ok) {
       if (authFailHandler) authFailHandler();
       else window.location.href = "/login";
-
-      return;
+      throw new Error("Refresh expired");
     }
 
-    // refresh 성공 → 원래 요청 재시도
-    response = await fetch(url, {
+    const retryUrl = `${url}?_t=${Math.random()}`;
+    console.log("refreshtoken 재발급 완료 ")
+
+    response = await fetch(retryUrl, {
       method,
-      headers,
+      credentials: 'include',
       body: preparedBody,
-      credentials: "include",
-      ...fetchOptions,
+      cache: 'no-store', 
     });
   }
 
   const data = await parseResponse(response);
-
   if (!response.ok) {
     throw new ApiError(response.status, data);
   }
-
   return data as T;
 }
 
@@ -169,4 +147,3 @@ export const apiClient = {
     return request<T>(path, { ...options, method: "DELETE" });
   },
 };
-
