@@ -32,20 +32,16 @@ export default function EditableAmountList({ items, onAdd, onDelete, onEdit }: P
   const handlePointerMove = (clientX: number) => {
     if (!dragging.current) return;
     const delta = clientX - startX.current;
-    setDragX(Math.min(Math.max(delta, 0), 140));
+    setDragX(Math.max(-140, Math.min(delta, 0)));
   };
-
   const handlePointerUp = (item: Item) => {
     if (!dragging.current) return;
-
     dragging.current = false;
-
-    if (dragX > 80 && onDelete) {
+    if (dragX < -80 && onDelete) {
       onDelete(item.id);
-    } else if (dragX < 10 && onEdit) {
+    } else if (Math.abs(dragX) < 10 && onEdit) {
       onEdit(item);
     }
-
     setActiveId(null);
     setDragX(0);
   };
