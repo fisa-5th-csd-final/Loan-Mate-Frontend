@@ -91,24 +91,23 @@ export async function request<T = unknown>(path: string, options: RequestOptions
 
   // 액세스 재발급 과정
   if (response.status === 403) {
-    // 일단 refreshToken() 호출
     const refreshResponse = await refreshToken();
-    // 다른 탭에서 refresh 중이면 여기서 완료될 때까지 기다림
     await waitForRefresh();
-    // refresh 실패 → 로그인으로 보내기
+
     if (!refreshResponse.ok) {
       if (authFailHandler) authFailHandler();
       else window.location.href = "/login";
-      throw new Error("Refresh token expired. Redirecting to login.");
+      throw new Error("Refresh expired");
     }
 
-    // refresh 성공 → 원래 요청 재시도
-    response = await fetch(url, {
-      ...fetchOptions,
+    const retryUrl = `${url}?_t=${Math.random()}`;
+    console.log("refreshtoken 재발급 완료 ")
+
+    response = await fetch(retryUrl, {
       method,
-      headers,
-      credentials: "include",
+      credentials: 'include',
       body: preparedBody,
+      cache: 'no-store', 
     });
   }
 

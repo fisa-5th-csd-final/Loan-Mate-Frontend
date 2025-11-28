@@ -1,19 +1,22 @@
+let isRefreshing = false;
 let refreshPromise: Promise<Response> | null = null;
 const bc = new BroadcastChannel("auth");
 
 export async function refreshToken() {
-  // 이미 다른 탭에서 refresh 중이면 기다림
   if (refreshPromise) {
     return refreshPromise;
   }
 
-  // 브로드캐스트: refresh 시작
+  isRefreshing = true;
   bc.postMessage("refresh-start");
+
   const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
+
   refreshPromise = fetch(`${BASE_URL}/api/auth/refresh`, {
     method: "POST",
     credentials: "include",
   }).finally(() => {
+    isRefreshing = false;
     refreshPromise = null;
     bc.postMessage("refresh-done");
   });
@@ -21,13 +24,25 @@ export async function refreshToken() {
   return refreshPromise;
 }
 
+
 // 다른 탭에서 refresh 하는 동안 기다리는 기능
 export function waitForRefresh() {
   return new Promise<void>((resolve) => {
-    bc.onmessage = (event) => {
+
+    // 이미 refresh 끝난 상태라면 즉시 resolve
+    if (!isRefreshing) {
+      resolve();
+      return;
+    }
+
+    // 갱신 중이면 메시지로 기다림
+    const handler = (event: MessageEvent) => {
       if (event.data === "refresh-done") {
+        bc.removeEventListener("message", handler);
         resolve();
       }
     };
+
+    bc.addEventListener("message", handler);
   });
 }
