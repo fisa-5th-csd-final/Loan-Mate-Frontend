@@ -89,7 +89,7 @@ export default function OutlayPage() {
     >
       <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
         이번 달 예상하지 못한{" "}
-        <span className="text-blue-500 font-semibold">{"지출"}</span>
+        <span className="text-red-500 font-semibold">{"지출"}</span>
         을 추가해주세요.
       </p>
 
