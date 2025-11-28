@@ -9,7 +9,6 @@ import { useNavigation } from "@/components/navigation/NavigationContext";
 import CategoryTabs from "@/components/CategoryTabs";
 import { useEffect, useState, Suspense } from "react";
 import { apiClient } from "@/lib/api/client";
-import { channel } from "diagnostics_channel";
 
 function ApplyAutoDepositContent() {
   const params = useSearchParams();
@@ -20,9 +19,8 @@ function ApplyAutoDepositContent() {
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
 
-  const [items, setItems] = useState<
-    { logo: string; name: string; connected: boolean, checked: boolean }[]
-  >([]);
+    type LoanItem = { logo: string; name: string; connected: boolean, checked: boolean };
+  const [items, setItems] = useState<LoanItem[]>([]);
 
   // 화면 상단 제목 설정
   useEffect(() => {
