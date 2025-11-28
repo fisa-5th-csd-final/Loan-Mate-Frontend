@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Card from "@/components/card/Card";
+import { apiClient } from "@/lib/api/client";
 
 interface AutoDeposit {
   loanName: string;
@@ -9,31 +10,40 @@ interface AutoDeposit {
   autoDepositEnabled: boolean;
 }
 
+interface AutoDepositResponse {
+  code: string;
+  message: string;
+  data: AutoDeposit[];
+}
+
 export default function AutoDepositTable() {
   const [rows, setRows] = useState<AutoDeposit[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API = process.env.NEXT_PUBLIC_API_URL;
-  
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
-        const res = await fetch(`${API}/api/loans/auto-deposit-summary`);
-        const json = await res.json();
+        const res = await apiClient.get<AutoDepositResponse>(
+          "/api/loans/auto-deposit-summary"
+        );
 
-        // 방어 코드 추가
-        const data = Array.isArray(json.data) ? json.data : [];
+        if (!res) {
+          console.warn("응답이 없어서 rows를 빈 배열로 설정합니다.");
+          setRows([]);
+          return;
+        }
+        const data = Array.isArray(res.data) ? res.data : [];
         setRows(data);
       } catch (error) {
         console.error("API 호출 실패:", error);
-        setRows([]); // 에러 시 빈 배열
+        setRows([]);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    if (API) fetchData();
-  }, [API]);
+    fetchData();
+  }, []);
 
   return (
     <section className="mt-4">
@@ -60,9 +70,9 @@ export default function AutoDepositTable() {
                   </td>
                 </tr>
               ) : (
-                rows.map((row) => (
+                rows.map((row, idx) => (
                   <tr
-                    key={row.loanName}
+                    key={`${row.loanName}-${idx}`}
                     className="border-t border-gray-200 text-center"
                   >
                     <td className="py-3 text-left">{row.loanName}</td>
