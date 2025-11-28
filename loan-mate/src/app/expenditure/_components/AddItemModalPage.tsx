@@ -24,7 +24,7 @@ export default function AddItemModalPage({
   useEffect(() => {
     setName(initialData?.name ?? "");
     setAmount(initialData?.amount ?? "");
-  }, [initialData?.id, initialData?.name, initialData?.amount]);
+  }, [initialData?.id]);
 
   const isEditMode = Boolean(initialData?.id);
   const title =
