@@ -40,5 +40,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# husky
+# .husky
+
+# PWA
+**/public/sw.js
+**/public/sw.js.map
+**/public/workbox-*.js
+**/public/workbox-*.js.map
+**/public/worker-*.js
+**/public/worker-*.js.map
+**/public/swe-worker-*.js
+**/public/swe-worker-*.js.map
 .husky

@@ -2,6 +2,8 @@ let isRefreshing = false;
 let refreshPromise: Promise<Response> | null = null;
 const bc = new BroadcastChannel("auth");
 
+import { API } from "@/consts/ROUTES";
+
 export async function refreshToken() {
   if (refreshPromise) {
     return refreshPromise;

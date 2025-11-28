@@ -18,7 +18,7 @@ export default function SegmentProgressBar({ segments }: SegmentProgressBarProps
     <div className="flex w-full overflow-hidden rounded-full text-xs font-medium">
       {segments.map((item, index) => (
         <div
-          key={item.label}
+          key={`${item.label}-${index}`}
           className={`${item.color} text-white text-center py-1 px-2 truncate ${
             index > 0 ? "border-l border-white/40" : ""
           }`}

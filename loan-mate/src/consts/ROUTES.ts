@@ -2,5 +2,24 @@
 
 export const PAGES = {
     ROOT: '/',
-    MAIN: '/main'
+    MAIN: '/main',
+    AUTO_DEPOSIT: '/auto-deposit'
+};
+
+export const API = {
+    AUTH: {
+        LOGIN: '/api/login',
+        REFRESH: '/api/auth/refresh',
+        LOGOUT: '/api/logout',
+    },
+    LOAN: {
+        LIST: '/api/loans/ledgers',
+        DETAIL: (loanId: number) => `/api/loans/ledger/${loanId}`,
+        AUTO_DEPOSIT: (loanId: number) => `/api/loans/ledgers/${loanId}/auto-deposit`,
+        DELETE: (loanId: number) => `/api/loans/${loanId}`,
+        PREPAYMENT_INFOS: '/api/loans/prepayment-infos',
+    },
+    SPENDING: {
+        MONTHLY: (accountId: number, year: number, month: number) => `/api/spending/${accountId}/${year}/${month}`,
+    }
 };

@@ -12,14 +12,7 @@ import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
-function CategoryCard({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="w-full max-w-4xl bg-white shadow-md rounded-xl p-4 space-y-2">
-      <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-      <div className="text-gray-700 text-base leading-relaxed">{children}</div>
-    </div>
-  );
-}
+import CategoryCard from "@/components/card/CategoryCard";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("loan");
@@ -98,7 +91,7 @@ export default function Home() {
     <>
       <AssetAndConsumeToggle />
       <MainTopLevelNavigation activeId={activeCategory} onChange={setActiveCategory} />
-      <div className="p-4 space-y-4 flex flex-col items-center w-full">
+      <div className="py-4 px-8 space-y-4 flex flex-col w-full max-w-2xl mx-auto">
         {contentByCategory[activeCategory]}
         <QuickActionFunctionList />
         <QuickActionLoanFunctionList />

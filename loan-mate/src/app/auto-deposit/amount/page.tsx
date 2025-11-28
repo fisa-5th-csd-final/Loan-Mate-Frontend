@@ -1,11 +1,12 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
-import { ChevronDown } from "lucide-react";
+import NumberKeypad from "../_components/NumberKeypad";
+
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
@@ -63,9 +64,6 @@ export default function AutoDepositAmountPage() {
 
       {/* ------------------ 네이티브 키패드 입력창 ------------------ */}
       <input
-        type="tel"                 // 숫자 키패드 활성화
-        inputMode="numeric"        // iOS/Android 숫자패드 강제
-        pattern="[0-9]*" 
         value={amount}
         onChange={handleChange}
         placeholder="얼마를 이체하시겠어요?"
@@ -80,9 +78,6 @@ export default function AutoDepositAmountPage() {
       </div>
 
       {/* ------------------ Quick Buttons------------------ */}
-      {/* ------------------ Quick Buttons (옵션: 필요하면 유지) ------------------ */}
-      {/* 필요 없다면 이 영역 삭제 가능 */}
-
       <div className="flex gap-2 mb-8">
         <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
           onClick={() => setAmount((+amount + 10000).toString())}>+1만</button>
@@ -100,6 +95,11 @@ export default function AutoDepositAmountPage() {
           onClick={() => setAmount("360588")}>전액</button>
       </div>
 
+      <NumberKeypad
+        onDigit={(n) => setAmount((prev) => prev + n)}
+        onDelete={() => setAmount((prev) => prev.slice(0, -1))}
+      />
+      
       <CommonButton
         label="확인"
         size="lg"                          
@@ -112,4 +112,5 @@ export default function AutoDepositAmountPage() {
 
     </div>
   );
-}
+  }
+
