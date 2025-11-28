@@ -82,6 +82,18 @@ function handleToggleAll() {
     return prev.map((item) => ({ ...item, checked: !allChecked }));
   });
 }
+
+async function handleSubmit() {
+  if (mode === "deposit") {
+     router.push("/auto-deposit");
+     // Todo: 자동 예치 수정 api 추가해야함 
+
+  }
+  else if (mode === "prepaid") {
+    router.push(`/auto-deposit/from-account?mode=${mode}`);
+  }
+}
+
   const buttonLabel =
     mode === "deposit" ? "자동 예치 등록하기" : "선납하기";
 
@@ -104,9 +116,7 @@ function handleToggleAll() {
         label={buttonLabel}
         size="lg"
         widthClassName="w-full"
-        onClick={() =>
-          router.push(`/auto-deposit/from-account?mode=${mode}`)
-        }
+        onClick={handleSubmit}
       />
     </div>
   );
