@@ -5,41 +5,37 @@ import ProgressBar from "@/components/ProgressBar";
 import MessageBox from "../MessageBox";
 
 type LoanRiskDetailsProps = {
-  summaryMessage: string;
-  progressPercent: number; // 상환 진척률
-
-  interestRate: string;
-  riskLevel: string;
-  nextDueDate: string;
-
-  remainingPrincipal: string;
+  message: string;
+  progress: number; // 상환 진척률
+  interestPayment: string;
+  nextRepaymentDate: string;
+  remainPrincipal: string;
   principal: string;
-  monthlyPayment: string;
-  repaymentAccount: string;
+  monthlyRepayment: string;
+  accountNumber: string;
   loanType: string;
-  repaymentMethod: string;
+  repaymentType: string;
 };
 
 export default function LoanRiskDetails({
-  summaryMessage,
-  progressPercent,
-  interestRate,
-  riskLevel,
-  nextDueDate,
-  remainingPrincipal,
+  message,
+  progress,
+  interestPayment,
+  nextRepaymentDate,
+  remainPrincipal,
   principal,
-  monthlyPayment,
-  repaymentAccount,
+  monthlyRepayment,
+  accountNumber,
   loanType,
-  repaymentMethod,
-}: LoanRiskDetailsProps){
-  const safeProgress = Math.min(100, Math.max(0, progressPercent));
+  repaymentType,
+}: LoanRiskDetailsProps) {
+  const safeProgress = Math.min(100, Math.max(0, progress));
 
   return (
     <div className="w-full rounded-3xl bg-white px-5 pb-8 pt-5 shadow-sm">
       {/* 상단 안내 문구 박스 */}
       <MessageBox className="mb-6">
-        {summaryMessage}
+        {message}
       </MessageBox>
 
       {/* 상환 진척률 + 공용 ProgressBar 사용 */}
@@ -50,20 +46,15 @@ export default function LoanRiskDetails({
         />
       </div>
 
-      {/* 3-컬럼 요약 (금리 / 연체위험도 / 다음 납입일) */}
-      <div className="mb-6 grid grid-cols-3 gap-3 text-center">
+      {/* 3-컬럼 요약 (이자납입액 / 다음 납입일) */}
+      <div className="mb-6 grid grid-cols-2 gap-3 text-center">
         <div className="flex flex-col gap-1">
-          <span className="text-lg font-semibold">{interestRate}</span>
-          <span className="text-xs text-gray-500">금리</span>
+          <span className="text-lg font-semibold">{interestPayment}</span>
+          <span className="text-xs text-gray-500">이자납입액</span>
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-lg font-semibold">{riskLevel}</span>
-          <span className="text-xs text-gray-500">연체위험도</span>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <span className="text-lg font-semibold">{nextDueDate}</span>
+          <span className="text-lg font-semibold">{nextRepaymentDate}</span>
           <span className="text-xs text-gray-500">다음 납입일</span>
         </div>
       </div>
@@ -74,7 +65,7 @@ export default function LoanRiskDetails({
         <div className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">남은 원금</span>
           <span className="text-base font-semibold text-gray-800">
-            {remainingPrincipal}
+            {remainPrincipal}
           </span>
         </div>
         <div className="flex flex-col items-end gap-1 text-right">
@@ -88,13 +79,13 @@ export default function LoanRiskDetails({
         <div className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">월 상환액</span>
           <span className="text-base font-semibold text-gray-800">
-            {monthlyPayment}
+            {monthlyRepayment}
           </span>
         </div>
         <div className="flex flex-col items-end gap-1 text-right">
           <span className="text-xs text-gray-500">상환 계좌</span>
           <span className="text-base font-semibold text-gray-800 leading-snug">
-            {repaymentAccount}
+            {accountNumber}
           </span>
         </div>
 
@@ -108,7 +99,7 @@ export default function LoanRiskDetails({
         <div className="flex flex-col items-end gap-1 text-right">
           <span className="text-xs text-gray-500">상환 방식</span>
           <span className="text-base font-semibold text-gray-800">
-            {repaymentMethod}
+            {repaymentType}
           </span>
         </div>
       </div>

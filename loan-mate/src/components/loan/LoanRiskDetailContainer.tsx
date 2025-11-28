@@ -64,20 +64,44 @@ export default function LoanDetailContainer({
     );
   }
 
-  // 데이터 정상 로드 시: LoanDetailPanel에 그대로 전달
+  // 데이터 정상 로드 시: LoanRiskDetails에 포맷팅하여 전달
+  const formatCurrency = (value: number | null | undefined) =>
+    value != null ? `${value.toLocaleString()}원` : "-";
+
+  const formatDate = (dateStr: string | null | undefined) => {
+    if (!dateStr) return "-";
+    try {
+      const date = new Date(dateStr);
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    } catch {
+      return "-";
+    }
+  };
+
+  const loanTypeMap: Record<string, string> = {
+    MORTGAGE: "전세/담보대출",
+    CREDIT: "신용대출",
+    PERSONAL: "개인대출",
+  };
+
+  const repaymentTypeMap: Record<string, string> = {
+    EQUAL_INSTALLMENT: "원리금균등상환",
+    EQUAL_PRINCIPAL: "원금균등상환",
+    BULLET: "만기일시상환",
+  };
+
   return (
     <LoanRiskDetails
-      summaryMessage={data.summaryMessage}
-      progressPercent={data.progressPercent}
-      interestRate={data.interestRate}
-      riskLevel={data.riskLevel}
-      nextDueDate={data.nextDueDate}
-      remainingPrincipal={data.remainingPrincipal}
-      principal={data.principal}
-      monthlyPayment={data.monthlyPayment}
-      repaymentAccount={data.repaymentAccount}
-      loanType={data.loanType}
-      repaymentMethod={data.repaymentMethod}
+      message="이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다."
+      progress={data.progress ?? 0}
+      interestPayment={formatCurrency(data.interestPayment)}
+      nextRepaymentDate={formatDate(data.nextRepaymentDate)}
+      remainPrincipal={formatCurrency(data.remainPrincipal)}
+      principal={formatCurrency(data.principal)}
+      monthlyRepayment={formatCurrency(data.monthlyRepayment)}
+      accountNumber={data.accountNumber || "-"}
+      loanType={loanTypeMap[data.loanType] || data.loanType || "-"}
+      repaymentType={repaymentTypeMap[data.repaymentType] || data.repaymentType || "-"}
     />
   );
 }

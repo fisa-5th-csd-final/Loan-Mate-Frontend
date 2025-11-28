@@ -25,9 +25,9 @@ type LoanRiskToggleProps = PropsWithChildren<{
 }>;
 
 export function LoanRiskToggle({
-  logoText = "KB",
+  logoText = "우리",
   logoUrl,
-  logoBgClassName = "bg-neutral-500",
+  logoBgClassName = "bg-blue-600",
   title,
   riskLabel,
   riskColorClassName = "text-red-500",
@@ -47,7 +47,7 @@ export function LoanRiskToggle({
             className="object-cover"
           />
         ) : (
-          <span className="text-[14px] font-semibold text-yellow-200">
+          <span className="text-[14px] font-semibold text-white">
             {logoText}
           </span>
         )}

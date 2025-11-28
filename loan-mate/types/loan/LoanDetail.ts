@@ -1,21 +1,17 @@
 // types/loan/LoanDetail.ts
 
 export type LoanDetail = {
-  id: number;
-
-  summaryMessage: string;
-  progressPercent: number;
-
-  interestRate: string;
-  riskLevel: string;
-  nextDueDate: string;
-
-  remainingPrincipal: string;
-  principal: string;
-  monthlyPayment: string;
-  repaymentAccount: string;
-  loanType: string;
-  repaymentMethod: string;
+  loanId: number;
+  loanName: string;
+  remainPrincipal: number;
+  principal: number;
+  monthlyRepayment: number;
+  interestPayment: number;
+  accountNumber: string;
+  loanType: "MORTGAGE" | "CREDIT" | "PERSONAL";
+  repaymentType: "EQUAL_INSTALLMENT" | "EQUAL_PRINCIPAL" | "BULLET";
+  progress: number;
+  nextRepaymentDate: string;
 };
 
 export interface LoanSummary {
