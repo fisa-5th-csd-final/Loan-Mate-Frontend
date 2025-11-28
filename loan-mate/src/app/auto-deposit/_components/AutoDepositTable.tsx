@@ -1,39 +1,79 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Card from "@/components/card/Card";
 
-const rows = [
-  { name: "KB준싱무이자대출", amount: "0원", auto: "O" },
-  { name: "신한만경대출", amount: "160,000원", auto: "X" },
-  { name: "기업밸민이자백대출", amount: "300,000원", auto: "X" },
-];
+interface AutoDeposit {
+  loanName: string;
+  accountBalance: number;
+  autoDepositEnabled: boolean;
+}
 
 export default function AutoDepositTable() {
+  const [rows, setRows] = useState<AutoDeposit[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const API = process.env.NEXT_PUBLIC_API_URL;
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${API}/api/loans/auto-deposit-summary`);
+        const json = await res.json();
+
+        // 방어 코드 추가
+        const data = Array.isArray(json.data) ? json.data : [];
+        setRows(data);
+      } catch (error) {
+        console.error("API 호출 실패:", error);
+        setRows([]); // 에러 시 빈 배열
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (API) fetchData();
+  }, [API]);
+
   return (
     <section className="mt-4">
       <h2 className="font-semibold text-lg mb-2">자동 예치 현황</h2>
 
       <Card>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-gray-600 text-center">
-              <th className="text-left py-2">대출명</th>
-              <th>예치금 현황</th>
-              <th>자동 예치 여부</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.name}
-                className="border-t border-gray-200 text-center"
-              >
-                <td className="py-3 text-left">{row.name}</td>
-                <td>{row.amount}</td>
-                <td>{row.auto}</td>
+        {loading ? (
+          <div className="p-4 text-center text-gray-500">불러오는 중...</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-gray-600 text-center">
+                <th className="text-left py-2">대출명</th>
+                <th>예치금 현황</th>
+                <th>자동 예치 여부</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-4 text-gray-400 text-center">
+                    데이터가 없습니다.
+                  </td>
+                </tr>
+              ) : (
+                rows.map((row) => (
+                  <tr
+                    key={row.loanName}
+                    className="border-t border-gray-200 text-center"
+                  >
+                    <td className="py-3 text-left">{row.loanName}</td>
+                    <td>{row.accountBalance.toLocaleString()}원</td>
+                    <td>{row.autoDepositEnabled ? "O" : "X"}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
       </Card>
     </section>
   );
