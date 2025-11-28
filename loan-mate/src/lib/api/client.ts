@@ -101,7 +101,6 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     }
 
     const retryUrl = `${url}?_t=${Math.random()}`;
-    console.log("refreshtoken 재발급 완료 ")
 
     response = await fetch(retryUrl, {
       method,
