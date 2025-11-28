@@ -26,13 +26,13 @@ export default function EarlyRepaySection() {
       try {
         // apiClient는 이미 JSON 파싱된 값을 반환함
         const res = await apiClient.get<PrepaymentInfoResponse>(
-          "/api/loans/prepayment-infos"
+          "/api/loans/prepayment-infos",
+          { cache: "no-store" }
         );
 
         if (!res) {
         console.warn("응답 없음(로그인 필요)");
         setSegments([]);
-        setLoading(false);
         return;
       }
 
