@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { LoanDetail } from "@/../types/loan/LoanDetail";
+import type { LoanDetail } from "@/../types/loan";
 import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
 import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";

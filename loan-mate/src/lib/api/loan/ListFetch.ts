@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api/client";
 import type { SuccessBody } from "@/../types/response";
 import { MOCK_LOAN_LIST } from "@/data/loan.sample";
-import type { LoanSummary } from "@/../types/loan/LoanDetail";
+import type { LoanSummary } from "@/../types/loan";
 import { API } from "@/consts/ROUTES";
 
 export async function fetchLoanList(): Promise<LoanSummary[]> {

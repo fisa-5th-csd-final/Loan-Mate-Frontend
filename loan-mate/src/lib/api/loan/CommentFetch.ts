@@ -1,6 +1,6 @@
 // src/lib/api/loan/CommentFetch.ts
 
-import type { LoanAiCommentResponse } from "@/../types/loan/LoanAiCommentResponse";
+import type { LoanAiCommentResponse } from "@/../types/loan";
 import { apiClient } from "@/lib/api/client";
 import type { SuccessBody } from "@/../types/response";
 import { API } from "@/consts/ROUTES";

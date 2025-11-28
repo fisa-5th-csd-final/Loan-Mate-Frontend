@@ -1,6 +1,6 @@
 // src/lib/api/loan/DetailFetch.ts
 
-import type { LoanDetail } from "@/../types/loan/LoanDetail";
+import type { LoanDetail } from "@/../types/loan";
 import { apiClient } from "@/lib/api/client";
 import type { SuccessBody } from "@/../types/response";
 import { API } from "@/consts/ROUTES";
