@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
+import CommonButton from "@/components/button/CommonButton";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
@@ -52,6 +53,43 @@ export default function ExpenditureLimitPage() {
       <MessageBox>
         {data.limit.summaryMessage}
       </MessageBox>
+
+      {/* 예외 수입/지출 추가 섹션 */}
+<div className="mt-6 mb-4 px-1">
+  <p className="text-[18px] font-semibold text-gray-900">
+    예상치 못한 변동이 있나요?
+  </p>
+  <p className="text-[15px] text-gray-600 mt-1">
+    이번 달 수입·지출에 특별한 변화가 있다면 아래에서 추가해 한도를 다시 계산해보세요.
+  </p>
+
+  {/* 버튼 영역 */}
+  <div className="flex gap-3 mt-4">
+
+    {/* 예외 수입 추가하기 버튼 */}
+    <CommonButton
+      label="예외 수입 추가하기"
+      onClick={() => router.push("/expenditure/add-unexpected/income")}
+      widthClassName="w-1/2"
+      size="lg"
+      colorClassName="bg-[#E3F2FD] hover:bg-[#D6EBFB]"
+      textColorClassName="text-[#0A4AAC]"
+      className="border border-[#B7D7F5]"
+    />
+
+    {/* 예외 지출 추가하기 버튼 */}
+    <CommonButton
+      label="예외 지출 추가하기"
+      onClick={() => router.push("/expenditure/add-unexpected/outlay")}
+      widthClassName="w-1/2"
+      size="lg"
+      colorClassName="bg-[#FFE7D9] hover:bg-[#FFDCCB]"
+      textColorClassName="text-[#8A3A16]"
+      className="border border-[#F8C7B3]"
+    />
+
+  </div>
+</div>
 
       {/* 카테고리 지출 테이블 */}
       <TableSection
