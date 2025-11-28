@@ -8,6 +8,32 @@ import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
+// 상수는 컴포넌트 외부로 이동하여 리렌더링 시 재생성 방지
+const LOAN_TYPE_MAP: Record<string, string> = {
+  MORTGAGE: "전세/담보대출",
+  CREDIT: "신용대출",
+  PERSONAL: "개인대출",
+};
+
+const REPAYMENT_TYPE_MAP: Record<string, string> = {
+  EQUAL_INSTALLMENT: "원리금균등상환",
+  EQUAL_PRINCIPAL: "원금균등상환",
+  BULLET: "만기일시상환",
+};
+
+const formatCurrency = (value: number | null | undefined): string =>
+  value != null ? `${value.toLocaleString()}원` : "-";
+
+const formatDate = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return "-";
+  try {
+    const date = new Date(dateStr);
+    return `${date.getMonth() + 1}/${date.getDate()}`;
+  } catch {
+    return "-";
+  }
+};
+
 type LoanDetailContainerProps = {
   loanId: number;
 };
@@ -73,31 +99,6 @@ export default function LoanDetailContainer({
   }
 
   // 데이터 정상 로드 시: LoanRiskDetails에 포맷팅하여 전달
-  const formatCurrency = (value: number | null | undefined) =>
-    value != null ? `${value.toLocaleString()}원` : "-";
-
-  const formatDate = (dateStr: string | null | undefined) => {
-    if (!dateStr) return "-";
-    try {
-      const date = new Date(dateStr);
-      return `${date.getMonth() + 1}/${date.getDate()}`;
-    } catch {
-      return "-";
-    }
-  };
-
-  const loanTypeMap: Record<string, string> = {
-    MORTGAGE: "전세/담보대출",
-    CREDIT: "신용대출",
-    PERSONAL: "개인대출",
-  };
-
-  const repaymentTypeMap: Record<string, string> = {
-    EQUAL_INSTALLMENT: "원리금균등상환",
-    EQUAL_PRINCIPAL: "원금균등상환",
-    BULLET: "만기일시상환",
-  };
-
   return (
     <LoanRiskDetails
       message={comment}
@@ -108,8 +109,8 @@ export default function LoanDetailContainer({
       principal={formatCurrency(data.principal)}
       monthlyRepayment={formatCurrency(data.monthlyRepayment)}
       accountNumber={data.accountNumber || "-"}
-      loanType={loanTypeMap[data.loanType] || data.loanType || "-"}
-      repaymentType={repaymentTypeMap[data.repaymentType] || data.repaymentType || "-"}
+      loanType={LOAN_TYPE_MAP[data.loanType] || data.loanType || "-"}
+      repaymentType={REPAYMENT_TYPE_MAP[data.repaymentType] || data.repaymentType || "-"}
     />
   );
 }
