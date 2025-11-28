@@ -13,10 +13,12 @@ export default function AutoDepositTable() {
   const [rows, setRows] = useState<AutoDeposit[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const API = process.env.NEXT_PUBLIC_API_URL;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:8081/api/loans/auto-deposit-summary");
+        const res = await fetch(`${API}/api/loans/auto-deposit-summary`);
         const json = await res.json();
 
         // 방어 코드 추가
@@ -30,8 +32,8 @@ export default function AutoDepositTable() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (API) fetchData();
+  }, [API]);
 
   return (
     <section className="mt-4">

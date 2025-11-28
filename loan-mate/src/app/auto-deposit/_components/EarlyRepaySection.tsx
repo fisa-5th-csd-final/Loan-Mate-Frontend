@@ -9,6 +9,10 @@ export default function EarlyRepaySection() {
   const [benefitTotal, setBenefitTotal] = useState<number>(0);
   const [segments, setSegments] = useState<any[]>([]);
 
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
+  console.log("API URL:", API);
+
   useEffect(() => {
     async function fetchBenefits() {
       interface PrepaymentInfo {
@@ -23,17 +27,18 @@ export default function EarlyRepaySection() {
     }
 
       try {
-        const res = await apiClient.get<PrepaymentInfoResponse>(
-          "/api/loans/prepayment-infos", {
-          cache: "no-store"
-        });
+        const res = await fetch(
+          `${API}/api/loans/prepayment-infos`,
+          { cache: "no-store" }
+        );
 
         if (!res) {
         console.warn("로그인이 필요합니다.");
         return;
       }
 
-        const list = res.data ?? [];
+        const json: PrepaymentInfoResponse = await res.json();
+        const list = json.data ?? [];
 
         const colors = ["bg-red-500", "bg-blue-500", "bg-gray-500", "bg-green-500"];
 
