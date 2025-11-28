@@ -103,8 +103,6 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     ...fetchOptions,
   });
 
-  console.log("BASE_URL in client.ts:", process.env.NEXT_PUBLIC_API_BASE_URL);
-
   // 액세스 재발급 과정 
   if (response.status === 401) {
     console.warn("🔒 401 detected → Trying refresh...");
