@@ -1,5 +1,4 @@
 "use client";
-import { useCallback, useState } from "react";
 import FixedBudgetBox from "./FixedBudgetBox";
 
 export type FixedBudgetItem = {
@@ -9,32 +8,21 @@ export type FixedBudgetItem = {
     max: number;
 };
 
-export default function FixedBudgetDashboard() {
-    const [incomeValues, setIncomeValues] = useState<FixedBudgetItem[]>([
-        { id: 'inc-1', label: '인형 눈 붙이기', value: 20, max: 100 },
-        { id: 'inc-2', label: '부수입', value: 50, max: 200 },
-        { id: 'inc-3', label: '상여금', value: 80, max: 100 }
-    ]);
-    const [expenseValues, setExpenseValues] = useState<FixedBudgetItem[]>([
-        { id: 'exp-1', label: '식비', value: 10, max: 100 },
-        { id: 'exp-2', label: '교통비', value: 30, max: 100 }
-    ]);
+interface FixedBudgetDashboardProps {
+    incomeValues: FixedBudgetItem[];
+    expenseValues: FixedBudgetItem[];
+    onUpdateIncome: (index: number, newValue: number) => void;
+    onUpdateExpense: (index: number, newValue: number) => void;
+    onAddClick: () => void;
+}
 
-    const updateIncomeBar = useCallback((index: number, newValue: number) => {
-        setIncomeValues(prev => {
-            const copy = [...prev];
-            copy[index] = { ...copy[index], value: newValue };
-            return copy;
-        })
-    }, []);
-
-    const updateExpenseBar = useCallback((index: number, newValue: number) => {
-        setExpenseValues(prev => {
-            const copy = [...prev];
-            copy[index] = { ...copy[index], value: newValue };
-            return copy;
-        })
-    }, []);
+export default function FixedBudgetDashboard({
+    incomeValues,
+    expenseValues,
+    onUpdateIncome,
+    onUpdateExpense,
+    onAddClick
+}: FixedBudgetDashboardProps) {
 
     return (
         <div className="bg-white flex flex-col justify-center items-center gap-4 ">
@@ -47,6 +35,7 @@ export default function FixedBudgetDashboard() {
                     </div>
                     {/* 추가 버튼 */}
                     <button
+                        onClick={onAddClick}
                         className="
                         w-6 h-6 
                         flex items-center justify-center
@@ -69,13 +58,13 @@ export default function FixedBudgetDashboard() {
                     title="수입"
                     description="급여를 제외한 매달 고정 수입을 추가해주세요"
                     values={incomeValues}
-                    updateBar={(i, newValue) => updateIncomeBar(i, newValue)}
+                    updateBar={onUpdateIncome}
                 />
                 <FixedBudgetBox
                     title="지출"
                     description="매달 고정 지출을 추가해주세요"
                     values={expenseValues}
-                    updateBar={(i, newValue) => updateExpenseBar(i, newValue)}
+                    updateBar={onUpdateExpense}
                 />
             </div>
         </div>
