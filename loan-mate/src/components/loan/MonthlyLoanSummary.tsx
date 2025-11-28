@@ -7,27 +7,13 @@ import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
 import type { LoanSummary } from '@/../types/loan/LoanDetail';
 
+import { RISK_LEVEL_MAP, RISK_COLOR_MAP } from '@/consts/loan';
+
 type MonthlyLoanSummaryProps = {
     loans?: LoanSummary[],
     totalLoanRate: number,
     peerAverageLoanRatio: number,
 }
-
-const RISK_LEVEL_MAP: Record<string, string> = {
-    ONE: "매우 양호",
-    TWO: "양호",
-    THREE: "보통",
-    FOUR: "주의",
-    FIVE: "위험",
-};
-
-const RISK_COLOR_MAP: Record<string, string> = {
-    ONE: "text-green-600",
-    TWO: "text-green-500",
-    THREE: "text-yellow-500",
-    FOUR: "text-orange-500",
-    FIVE: "text-red-500",
-};
 
 export default function MonthlyLoanSummary({
     loans,
@@ -35,7 +21,7 @@ export default function MonthlyLoanSummary({
     peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
     return (
-        <div className="w-full max-w-2xl space-y-4">
+        <div className="w-full space-y-4">
             {/* 타이틀 */}
             <SectionHeading className="inline-block">
                 이번달 나의 위험도 요약

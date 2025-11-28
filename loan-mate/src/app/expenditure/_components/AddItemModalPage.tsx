@@ -48,7 +48,7 @@ export default function AddItemModalPage({
           <label className="text-sm font-medium text-gray-700">예상 최대 금액</label>
           <input
             value={amount}
-            onChange={(e) => setAmount(e.target.value as any)}
+            onChange={(e) => setAmount(Number(e.target.value))}
             placeholder="예: 3,000,000"
             type="number"
             className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"

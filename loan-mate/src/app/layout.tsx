@@ -6,6 +6,19 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Loan Mate",
   description: "모바일 웹앱 레이아웃",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Loan Mate",
+  },
+  icons: {
+    icon: [
+      { url: "/icon/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/icon/icon-192x192.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -35,14 +48,9 @@ export default function RootLayout({
               lg:max-w-[780px]       
               min-h-screen
               bg-[#f0f4f5]
-              border-x
-              border-neutral-800
               shadow-[0_0_40px_rgba(0,0,0,0.8)]
               relative
             ">
-
-            {/* 상단 노치 */}
-            <MobileNotch />
 
             {/* 실제 페이지 */}
             <ClientProviders>

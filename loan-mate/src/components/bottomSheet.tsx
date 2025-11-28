@@ -6,24 +6,28 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function BottomSheet({
   open,
   onClose,
-  children,
-  height = "auto", 
+  children
 }: {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  height?: "auto" | number;
 }) {
   // 배경 스크롤 방지
   useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "auto";
+    if (!open) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
   }, [open]);
 
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-50">
+        <div className="absolute inset-0 z-50 flex flex-col justify-end">
           {/* 배경 */}
           <motion.div
             className="absolute inset-0 bg-black/40"
@@ -35,14 +39,11 @@ export default function BottomSheet({
 
           {/* 시트 */}
           <motion.div
-            className="absolute bottom-0 left-0 w-full bg-white rounded-t-2xl shadow-xl p-5"
-            style={{
-              height: height === "auto" ? "auto" : `${height}px`,
-            }}
+            className="w-full bg-white rounded-t-2xl shadow-xl p-5 z-50 max-h-[85vh] overflow-y-auto"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            transition={{ type: "spring", damping: 32, stiffness: 320 }}
           >
             {/* 상단 핸들 */}
             <div className="w-full flex justify-center mb-3">
