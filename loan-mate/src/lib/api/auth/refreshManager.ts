@@ -9,8 +9,8 @@ export async function refreshToken() {
 
   // 브로드캐스트: refresh 시작
   bc.postMessage("refresh-start");
-
-  refreshPromise = fetch("/api/auth/refresh", {
+  const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
+  refreshPromise = fetch(`${BASE_URL}/api/auth/refresh`, {
     method: "POST",
     credentials: "include",
   }).finally(() => {
