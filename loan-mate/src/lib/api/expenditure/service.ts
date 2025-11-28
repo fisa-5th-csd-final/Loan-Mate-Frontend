@@ -35,7 +35,7 @@ export async function updateExpenditure(
   id: ExpenditureId,
   payload: UpdateExpenditurePayload
 ): Promise<ExpenditureItem> {
-  const { data } = await apiClient.patch<SuccessBody<ExpenditureItem>>(
+  const { data } = await apiClient.put<SuccessBody<ExpenditureItem>>(
     `${BASE_PATH}/${id}`,
     payload
   );
