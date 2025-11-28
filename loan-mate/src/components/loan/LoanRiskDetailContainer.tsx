@@ -58,8 +58,8 @@ export default function LoanDetailContainer({
 
   if (error || !data) {
     return (
-      <div className="w-full rounded-3xl bg-white px-5 py-8 text-center text-sm text-red-500">
-        {error ?? "대출 정보를 불러오지 못했습니다."}
+      <div className="w-full rounded-3xl bg-white px-5 py-8 text-center">
+        <p className="text-sm text-gray-600">데이터를 불러오지 못했습니다</p>
       </div>
     );
   }
