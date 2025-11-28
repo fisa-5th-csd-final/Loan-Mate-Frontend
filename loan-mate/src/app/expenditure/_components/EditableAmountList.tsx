@@ -70,9 +70,15 @@ export default function EditableAmountList({ items, onAdd, onDelete, onEdit }: P
                 transform: `translateX(${isActive ? dragX : 0}px)`,
                 transition: dragging.current ? "none" : "transform 0.2s ease",
               }}
-              onPointerDown={(e) => handlePointerDown(item.id, e.clientX)}
+              onPointerDown={(e) => {
+                (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+                handlePointerDown(item.id, e.clientX);
+              }}
               onPointerMove={(e) => handlePointerMove(e.clientX)}
-              onPointerUp={() => handlePointerUp(item)}
+              onPointerUp={(e) => {
+                (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+                handlePointerUp(item);
+              }}
               onPointerLeave={() => (dragging.current = false)}
             >
               <span>{item.name}</span>
