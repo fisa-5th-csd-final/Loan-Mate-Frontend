@@ -13,6 +13,7 @@ import {
   useExpenditureListQuery,
   useUpdateExpenditureMutation,
 } from "@/lib/api/expenditure/hooks";
+import { useSwipeDeleteHint } from "@/hooks/useSwipeDeleteHint";
 
 export default function IncomePage() {
   const [open, setOpen] = useState(false);
@@ -29,6 +30,7 @@ export default function IncomePage() {
       amount: income.amount,
     })) ?? [];
 
+  useSwipeDeleteHint(); // swipe로 삭제 가능하단는 것을 알려주는 토스트 메시지 띄우기 
 
   const createMutation = useCreateExpenditureMutation({
     onSuccess: () => setOpen(false),
@@ -58,16 +60,18 @@ export default function IncomePage() {
   };
 
   const handleEditItem = (data: AddItem & { id?: string | number }) => {
-    if (!editing) return;
+  if (!editing) return;
 
-    updateMutation.mutate({
-      id: Number(editing.id),
-      data: {
-        amount: data.amount,
-        description: data.name,
-      },
-    });
-  };
+  updateMutation.mutate({
+    id: Number(editing.id),
+    data: {
+      type: pageType,          
+      amount: data.amount,
+      description: data.name,
+    },
+  });
+};
+
 
   const handleDelete = (id: Item["id"]) => {
     deleteMutation.mutate(id as number);
