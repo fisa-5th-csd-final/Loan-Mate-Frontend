@@ -10,7 +10,7 @@ type ProgressBarProps = {
     onChange?: (value: number) => void;
 };
 
-export default function ProgressBar({ progress, min, max, label, onChange }: ProgressBarProps) {
+export default function FixedBudgetProgressBar({ progress, min, max, label, onChange }: ProgressBarProps) {
     const barRef = useRef<HTMLDivElement | null>(null);
     const [isDragging, setIsDragging] = useState(false);
 

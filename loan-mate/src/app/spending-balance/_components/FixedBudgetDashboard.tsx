@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import FixedBudgetBox from "./FixedBudgetBox";
 
 export type FixedBudgetItem = {
@@ -20,21 +20,21 @@ export default function FixedBudgetDashboard() {
         { id: 'exp-2', label: '교통비', value: 30, max: 100 }
     ]);
 
-    const updateIncomeBar = (index: number, newValue: number) => {
+    const updateIncomeBar = useCallback((index: number, newValue: number) => {
         setIncomeValues(prev => {
             const copy = [...prev];
             copy[index] = { ...copy[index], value: newValue };
             return copy;
         })
-    }
+    }, []);
 
-    const updateExpenseBar = (index: number, newValue: number) => {
+    const updateExpenseBar = useCallback((index: number, newValue: number) => {
         setExpenseValues(prev => {
             const copy = [...prev];
             copy[index] = { ...copy[index], value: newValue };
             return copy;
         })
-    }
+    }, []);
 
     return (
         <div className="bg-white flex flex-col justify-center items-center gap-4 ">

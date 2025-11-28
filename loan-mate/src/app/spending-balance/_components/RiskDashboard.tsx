@@ -1,14 +1,7 @@
-// RiskDashboard.tsx (Updated with API Logic)
 import React, { useMemo } from 'react';
 import RiskIndicator from './RiskIndicator';
 import RiskGaugeMeter from './RiskGaugeMeter';
-// API 응답 구조 정의
-interface RiskAPIResponse {
-    base_risk_score: number;       // 0.0 ~ 1.0
-    simulated_risk_score: number;  // 0.0 ~ 1.0 (시뮬레이션 후 값, 0일 수 있음)
-    delta: number;                 // 변화량 (줄어든/늘어난 위험도)
-    explanation: string;           // 하단 설명 텍스트
-}
+import { AiSimulationResponse } from "../../../../types/ai/AiSimulationResponse";
 
 // 5단계 위험도 분류 로직 (0.0~1.0 기준)
 function getRiskClassification(level: number) {
@@ -26,7 +19,7 @@ function getRiskClassification(level: number) {
 }
 
 interface RiskDashboardProps {
-    apiResponse: RiskAPIResponse;
+    apiResponse: AiSimulationResponse;
 }
 
 export default function RiskDashboard({
@@ -62,7 +55,7 @@ export default function RiskDashboard({
     const { riskText, emoji } = useMemo(() => getRiskClassification(finalRiskScore), [finalRiskScore]);
 
     return (
-        <div className="flex justify-center items-center bg-white">
+        <div className="flex justify-center items-center">
             <div className="flex flex-col justify-center items-center p-4 gap-8 w-full">
 
                 {/* 상단 텍스트 영역 */}
@@ -79,7 +72,6 @@ export default function RiskDashboard({
                 </div>
 
                 {/* 게이지 및 지표 영역 (시각화) */}
-                {/* <div className="relative flex justify-center items-center" style={{ height: `${containerWidth / 2}px`, width: `${containerWidth}px` }}> */}
                 <div className='-space-y-12'>
                     {/* 1. GaugeMeter */}
                     <RiskGaugeMeter riskLevel={riskLevelPercent} />
@@ -87,7 +79,6 @@ export default function RiskDashboard({
                     {/* 2. 위험 지표 */}
                     <RiskIndicator emoji={emoji} riskText={riskText} />
                 </div>
-                {/* </div> */}
 
                 {/* 하단 정보 영역 */}
                 <div className="w-full p-2.5 text-center bg-[#D1EAFF] rounded-4xl text-[#2E393D] font-semibold">
