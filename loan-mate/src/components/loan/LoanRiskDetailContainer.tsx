@@ -24,14 +24,13 @@ const REPAYMENT_TYPE_MAP: Record<string, string> = {
 const formatCurrency = (value: number | null | undefined): string =>
   value != null ? `${value.toLocaleString()}원` : "-";
 
-const formatDate = (dateStr: string | null | undefined): string => {
+const formatDate = (dateStr: string | null | undefined) => {
   if (!dateStr) return "-";
-  try {
-    const date = new Date(dateStr);
-    return `${date.getMonth() + 1}/${date.getDate()}`;
-  } catch {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
     return "-";
   }
+  return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
 type LoanDetailContainerProps = {
