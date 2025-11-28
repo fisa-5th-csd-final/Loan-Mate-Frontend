@@ -40,7 +40,7 @@ export default function InstitutionList({
       <div className="flex flex-col">
         {items.map((item, idx) => (
           <InstitutionItem
-            key={item.name}
+             key={`${item.name}-${idx}`}
             {...item}
             onToggle={() => onToggle && onToggle(idx)}
           />
