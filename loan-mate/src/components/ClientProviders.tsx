@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import { useAuthNavigation } from "@/lib/api/auth/navigation";
 import { setAuthFailHandler } from "@/lib/api/client";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 interface Props {
   children: ReactNode;
@@ -15,5 +16,5 @@ export default function ClientProviders({ children }: Props) {
     setAuthFailHandler(() => goLogin());
   }, []);
 
-  return <>{children}</>;
+  return <ReactQueryProvider>{children}</ReactQueryProvider>;
 }
