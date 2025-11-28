@@ -1,6 +1,6 @@
 export enum AddItemType {
-  INCOME = "income",
-  EXPENSE = "expense",
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
 }
 
 export type AddItem = {
