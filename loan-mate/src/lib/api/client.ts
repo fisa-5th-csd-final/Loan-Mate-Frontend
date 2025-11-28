@@ -99,8 +99,9 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     if (!refreshResponse.ok) {
       if (authFailHandler) authFailHandler();
       else window.location.href = "/login";
-      return;
+      throw new Error("Refresh token expired. Redirecting to login.");
     }
+
     // refresh 성공 → 원래 요청 재시도
     response = await fetch(url, {
       ...fetchOptions,
