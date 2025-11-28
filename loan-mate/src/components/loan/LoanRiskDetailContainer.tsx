@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import type { LoanDetail } from "@/../types/loan/LoanDetail";
 import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
+import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
@@ -15,6 +16,7 @@ export default function LoanDetailContainer({
   loanId,
 }: LoanDetailContainerProps) {
   const [data, setData] = useState<LoanDetail | null>(null);
+  const [comment, setComment] = useState<string>("이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,9 +28,15 @@ export default function LoanDetailContainer({
         setLoading(true);
         setError(null);
 
-        const result = await fetchLoanDetail(loanId);
+        // 병렬로 detail과 comment를 가져옴
+        const [detailResult, commentResult] = await Promise.all([
+          fetchLoanDetail(loanId),
+          fetchLoanComment(loanId).catch(() => "이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.")
+        ]);
+
         if (!cancelled) {
-          setData(result);
+          setData(detailResult);
+          setComment(commentResult);
         }
       } catch (e) {
         if (!cancelled) {
@@ -92,7 +100,7 @@ export default function LoanDetailContainer({
 
   return (
     <LoanRiskDetails
-      message="이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다."
+      message={comment}
       progress={data.progress ?? 0}
       interestPayment={formatCurrency(data.interestPayment)}
       nextRepaymentDate={formatDate(data.nextRepaymentDate)}

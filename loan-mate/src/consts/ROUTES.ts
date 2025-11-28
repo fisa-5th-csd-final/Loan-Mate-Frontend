@@ -15,6 +15,7 @@ export const API = {
     LOAN: {
         LIST: '/api/loans/ledgers',
         DETAIL: (loanId: number) => `/api/loans/ledger/${loanId}`,
+        COMMENT: (loanId: number) => `/api/loans/ledger/${loanId}/comment`,
         AUTO_DEPOSIT: (loanId: number) => `/api/loans/ledgers/${loanId}/auto-deposit`,
         DELETE: (loanId: number) => `/api/loans/${loanId}`,
         PREPAYMENT_INFOS: '/api/loans/prepayment-infos',
