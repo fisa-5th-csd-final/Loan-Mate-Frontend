@@ -103,7 +103,9 @@ export async function request<T = unknown>(path: string, options: RequestOptions
     const retryUrl = `${url}?_t=${Math.random()}`;
 
     response = await fetch(retryUrl, {
+      ...fetchOptions,
       method,
+      headers,
       credentials: 'include',
       body: preparedBody,
       cache: 'no-store', 
