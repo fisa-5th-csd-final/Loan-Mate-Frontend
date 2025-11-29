@@ -12,7 +12,7 @@ export async function refreshToken() {
   isRefreshing = true;
   bc.postMessage("refresh-start");
 
-  const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
+  const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "").replace(/\/$/, "");
 
   refreshPromise = fetch(`${BASE_URL}/api/auth/refresh`, {
     method: "POST",
