@@ -28,7 +28,7 @@ export default function AutoDepositAmountPage() {
 
   // input에 표시할 값 (콤마 포맷)
   const formattedAmount =
-  amount !== "" ? amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+  amount !== "" ? amount.toLocaleString("ko-KR") : "";
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -142,7 +142,6 @@ export default function AutoDepositAmountPage() {
           })
         }
       />
-
       
       <CommonButton
         label="확인"
@@ -152,7 +151,6 @@ export default function AutoDepositAmountPage() {
         className="rounded-xl text-lg font-medium"                 
         onClick={() => router.push(`/auto-deposit/confirm?amount=${amount}`)}
       />
-
 
     </div>
   );
