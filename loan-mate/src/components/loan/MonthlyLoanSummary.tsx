@@ -1,11 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import ProgressBar from '../ProgressBar';
 import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
-import type { LoanSummary } from '@/../types/loan';
+import type { LoanSummary, TotalLoanRiskResponse } from '@/../types/loan';
+import { fetchTotalLoanRisk } from '@/lib/api/loan/RiskFetch';
 
 import { RISK_LEVEL_MAP, RISK_COLOR_MAP } from '@/consts/loan';
 
@@ -15,11 +17,35 @@ type MonthlyLoanSummaryProps = {
     peerAverageLoanRatio: number,
 }
 
+const RISK_LEVEL_TEXT_MAP: Record<string, string> = {
+    ONE: "매우 안정",
+    TWO: "안정",
+    THREE: "보통",
+    FOUR: "주의",
+    FIVE: "위험",
+};
+
+const RISK_EMOJI_MAP: Record<string, string> = {
+    ONE: "😄",
+    TWO: "🙂",
+    THREE: "😐",
+    FOUR: "😨",
+    FIVE: "😱",
+};
+
 export default function MonthlyLoanSummary({
     loans,
     totalLoanRate,
     peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
+    const [totalRisk, setTotalRisk] = useState<TotalLoanRiskResponse | null>(null);
+
+    useEffect(() => {
+        fetchTotalLoanRisk()
+            .then(setTotalRisk)
+            .catch(console.error);
+    }, []);
+
     return (
         <div className="w-full space-y-4">
             {/* 타이틀 */}
@@ -30,9 +56,9 @@ export default function MonthlyLoanSummary({
             <div className="flex flex-col w-full justify-center p-4 gap-5 rounded-xl space-y-4 bg-white shadow-md">
                 {/* 전체 대출 평균 위험도 박스 */}
                 <LoanRiskAverageBox
-                    percentage={10.2}
-                    levelText="보통 수준"
-                    emoji="😐"
+                    percentage={totalRisk ? Math.round(totalRisk.risk * 1000) / 10 : 0}
+                    levelText={totalRisk ? RISK_LEVEL_TEXT_MAP[totalRisk.riskLevel] : "-"}
+                    emoji={totalRisk ? RISK_EMOJI_MAP[totalRisk.riskLevel] : "😐"}
                     label="평균"
                 />
 
