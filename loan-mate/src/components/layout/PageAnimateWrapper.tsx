@@ -27,7 +27,7 @@ function FrozenRouter(props: { children: React.ReactNode }) {
 }
 
 export default function PageAnimateWrapper({ children }: { children: React.ReactNode }) {
-    const { direction } = useNavigation();
+    const { direction, setDirection } = useNavigation();
     const pathname = usePathname();
 
     const variants = {
@@ -64,7 +64,12 @@ export default function PageAnimateWrapper({ children }: { children: React.React
     };
 
     return (
-        <AnimatePresence mode="popLayout" custom={direction} initial={false}>
+        <AnimatePresence
+            mode="popLayout"
+            custom={direction}
+            initial={false}
+            onExitComplete={() => setDirection('none')}
+        >
             <motion.div
                 key={pathname}
                 custom={direction}

@@ -9,6 +9,7 @@ interface NavigationContextType {
     direction: Direction;
     push: (href: string) => void;
     back: () => void;
+    setDirection: React.Dispatch<React.SetStateAction<Direction>>;
 }
 
 const NavigationContext = createContext<NavigationContextType | null>(null);
@@ -17,12 +18,6 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
     const [direction, setDirection] = useState<Direction>('none');
-
-    // 경로가 변경되면 잠시 후 방향을 초기화 (애니메이션 완료 후)
-    useEffect(() => {
-        const timer = setTimeout(() => setDirection('none'), 1000);
-        return () => clearTimeout(timer);
-    }, [pathname]);
 
     const push = (href: string) => {
         setDirection('forward');
@@ -47,7 +42,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <NavigationContext.Provider value={{ direction, push, back }}>
+        <NavigationContext.Provider value={{ direction, push, back, setDirection }}>
             {children}
         </NavigationContext.Provider>
     );
