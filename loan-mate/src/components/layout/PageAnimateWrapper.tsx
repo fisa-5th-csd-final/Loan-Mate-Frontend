@@ -16,7 +16,7 @@ import { useContext, useRef } from 'react';
  * 공식적인 View Transitions API 지원이 안정화되면 교체하는 것을 권장합니다.
  */
 function FrozenRouter(props: { children: React.ReactNode }) {
-    const context = useContext(LayoutRouterContext ?? {});
+    const context = useContext(LayoutRouterContext);
     const frozen = useRef(context).current;
 
     return (
