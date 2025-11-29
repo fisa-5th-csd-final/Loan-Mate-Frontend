@@ -10,12 +10,12 @@ const actions = [
   {
     title: "나의 지출 한도 정하기",
     description: "나의 소비 내역을 카테고리 별로 보고 AI가 지출 한도를 제안해줘요",
-    path: "/spending/limit", // 이동할 경로 예시
+    path: "/expenditure/limit",
   },
   {
     title: "나의 소비 밸런스 맞추기",
     description: "나의 수익/지출에 따라 대출 상환에 대한 위험도를 보여줘요",
-    path: "/spending/balance",
+    path: "/spending-balance",
   },
   {
     title: "자동 예치 등록/선납하기",
