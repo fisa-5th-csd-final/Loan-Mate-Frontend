@@ -2,7 +2,7 @@
 "use client";
 
 import ProgressBar from "@/components/ProgressBar";
-import AiCommentBox from "../AiCommentBox";
+import AiCommentBox from "@/components/box/AiCommentBox";
 
 type LoanRiskDetailsProps = {
   message: string;
