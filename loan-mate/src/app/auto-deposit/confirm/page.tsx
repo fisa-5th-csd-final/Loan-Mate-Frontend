@@ -1,11 +1,20 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
+
+type AccountDetail = {
+  accountId: number;
+  accountNumber: string;
+  bankCode: string;
+  balance: number;
+  createdAt: string;
+  isForIncome: boolean;
+};
 
 function ConfirmInner() {
   const params = useSearchParams();
@@ -13,6 +22,9 @@ function ConfirmInner() {
   const formatted = Number(amount).toLocaleString();
 
   const router = useRouter();
+
+  const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
+  const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
