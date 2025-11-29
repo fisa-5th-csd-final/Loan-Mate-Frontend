@@ -56,7 +56,6 @@ export default function QuickActionLoanFunctionList() {
             leading={action.leading}
             onClick={() => {
               router.push(action.path);
-              console.log(`${action.title} 클릭됨`);
             }}
           />
         ))}
