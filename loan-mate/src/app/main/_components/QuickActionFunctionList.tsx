@@ -1,21 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import QuickActionButton from "@/components/button/QuickActionButton"; // 버튼 컴포넌트 경로에 맞게 수정해주세요
+import QuickActionButton from "@/components/button/QuickActionButton";
 import SectionHeading from "@/components/SectionHeading";
 import { PAGES } from "@/consts/ROUTES";
+import { useAnimatedRouter } from "@/hooks/useAnimatedRouter";
 
 // 버튼 데이터 정의
 const actions = [
   {
     title: "나의 지출 한도 정하기",
     description: "나의 소비 내역을 카테고리 별로 보고 AI가 지출 한도를 제안해줘요",
-    path: "/spending/limit", // 이동할 경로 예시
+    path: "/expenditure/limit",
   },
   {
     title: "나의 소비 밸런스 맞추기",
     description: "나의 수익/지출에 따라 대출 상환에 대한 위험도를 보여줘요",
-    path: "/spending/balance",
+    path: "/spending-balance",
   },
   {
     title: "자동 예치 등록/선납하기",
@@ -25,7 +25,7 @@ const actions = [
 ];
 
 export default function QuickActionFunctionList() {
-  const router = useRouter();
+  const router = useAnimatedRouter();
 
   return (
     <section className="w-full py-6">
