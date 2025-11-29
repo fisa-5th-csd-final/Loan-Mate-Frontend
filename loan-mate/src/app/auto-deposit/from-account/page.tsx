@@ -5,6 +5,8 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { apiClient } from "@/lib/api";
+import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
+import type { AccountDetail } from "@/lib/api/auto-deposit/types";
 
 // --------------------
 // Account Card Component
@@ -43,15 +45,6 @@ function AccountCard({
 // --------------------
 // Content: Suspense 내부에서 실행될 부분
 // --------------------
-interface AccountDetail {
-  accountId: number;
-  accountNumber: string;
-  bankCode: string;
-  balance: number;
-  createdAt: string;
-  isForIncome: boolean;
-}
-
 type AccountListResponse = AccountDetail[];
 
 function PrepaidContent() {
@@ -62,6 +55,8 @@ function PrepaidContent() {
   const mode = params.get("mode");
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { select: selectFromAccount } = useSelectFromAccount();
 
   useEffect(() => {
     if (mode === "deposit") setTitle("자동예치 신청하기");
@@ -104,11 +99,12 @@ function PrepaidContent() {
           <AccountCard
             key={acc.accountId}
             account={acc}
-            onClick={() =>
+            onClick={() => {
+              selectFromAccount(acc);
               router.push(
                 `/auto-deposit/to-account?mode=${mode}&accountId=${acc.accountId}`
-              )
-            }
+              );
+            }}
           />
         ))}
       </div>

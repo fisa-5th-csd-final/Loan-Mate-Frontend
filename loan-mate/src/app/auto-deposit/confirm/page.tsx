@@ -1,20 +1,13 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
-
-type AccountDetail = {
-  accountId: number;
-  accountNumber: string;
-  bankCode: string;
-  balance: number;
-  createdAt: string;
-  isForIncome: boolean;
-};
+import type { AccountDetail } from "@/lib/api/auto-deposit/types";
+import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 
 function ConfirmInner() {
   const params = useSearchParams();
@@ -23,8 +16,14 @@ function ConfirmInner() {
 
   const router = useRouter();
 
+  const { get: getFromAccount } = useSelectFromAccount();
+
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
   const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
+
+  useEffect(() => {
+    setFromAccount(getFromAccount());
+  }, [getFromAccount]);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -43,12 +42,16 @@ function ConfirmInner() {
           </div>
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
-            우리은행 계좌에서
+            {fromAccount
+              ? `${fromAccount.bankCode} 계좌에서`
+              : "출금 계좌 선택 안됨"}
             <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 
-        <div className="text-gray-500 text-sm">WON통장 1002-865-685398</div>
+        <div className="text-gray-500 text-sm">
+          {fromAccount ? `${fromAccount.accountNumber}` : "계좌번호 없음"}
+        </div>
       </div>
 
       {/* To Account */}
