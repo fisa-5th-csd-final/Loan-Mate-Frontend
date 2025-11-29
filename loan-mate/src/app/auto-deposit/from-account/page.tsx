@@ -9,7 +9,7 @@ import { apiClient } from "@/lib/api";
 // --------------------
 // Account Card Component
 // --------------------
-function AccountCard({ account, onClick }: { account: any; onClick: () => void }) {
+function AccountCard({ account, onClick }: { account: AccountDetail; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
