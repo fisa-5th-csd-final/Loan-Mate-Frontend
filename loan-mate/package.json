@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "rimraf public/sw*.js public/sw*.js.map public/workbox-*.js public/workbox-*.js.map && next build --webpack",
     "start": "next start",
     "lint": "eslint",
