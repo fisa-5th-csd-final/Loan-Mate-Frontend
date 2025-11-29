@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import QuickActionButton from "@/components/button/QuickActionButton"; // 버튼 컴포넌트 경로에 맞게 수정해주세요
+import QuickActionButton from "@/components/button/QuickActionButton";
 import SectionHeading from "@/components/SectionHeading";
 import { ArrowLeftRight, PiggyBank } from "lucide-react";
+import { useAnimatedRouter } from "@/hooks/useAnimatedRouter";
 
 type ActionItem = {
   title: string;
@@ -13,16 +13,31 @@ type ActionItem = {
 };
 
 // 버튼 데이터 정의
-// TODO: "대출 갈아타기", "적금 알아보기" 페이지 구현 후 추가
-const actions: ActionItem[] = [];
+const actions: ActionItem[] = [
+  {
+    title: "대출 갈아타기",
+    description: "더 좋은 조건의 대출이 있는지 확인해보세요.",
+    path: "/main", // 페이지 준비 전까지 임시로 메인으로
+    leading: (
+      <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+        <ArrowLeftRight size={20} />
+      </div>
+    ),
+  },
+  {
+    title: "적금 알아보기",
+    description: "차곡차곡 모으기",
+    path: "/main", // 페이지 준비 전까지 임시로 메인으로
+    leading: (
+      <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <PiggyBank size={20} />
+      </div>
+    ),
+  }
+];
 
 export default function QuickActionLoanFunctionList() {
-  const router = useRouter();
-
-  // 액션이 없으면 섹션 자체를 숨김
-  if (actions.length === 0) {
-    return null;
-  }
+  const router = useAnimatedRouter();
 
   return (
     <section className="w-full py-6">
