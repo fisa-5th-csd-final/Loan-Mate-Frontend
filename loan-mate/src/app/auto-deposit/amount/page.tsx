@@ -7,16 +7,28 @@ import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
 
-
 export default function AutoDepositAmountPage() {
   const router = useRouter();
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<number | "">("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // 숫자만 허용
-    const value = e.target.value.replace(/\D/g, "");
-    setAmount(value);
+    // 입력값에서 숫자만 추출됨
+    const rawValue = e.target.value.replace(/\D/g, "");
+
+    // 숫자 없으면 빈 문자열 
+    if (!rawValue) {
+    setAmount("");
+    return;
+  }
+
+  // 상태에는 number로 저장
+  setAmount(Number(rawValue));
+
   };
+
+  // input에 표시할 값 (콤마 포맷)
+  const formattedAmount =
+  amount !== "" ? amount.toLocaleString("ko-KR") : "";
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -64,7 +76,7 @@ export default function AutoDepositAmountPage() {
 
       {/* ------------------ 네이티브 키패드 입력창 ------------------ */}
       <input
-        value={amount}
+        value={formattedAmount}
         onChange={handleChange}
         placeholder="얼마를 이체하시겠어요?"
         className="
@@ -79,25 +91,56 @@ export default function AutoDepositAmountPage() {
 
       {/* ------------------ Quick Buttons------------------ */}
       <div className="flex gap-2 mb-8">
-        <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
-          onClick={() => setAmount((+amount + 10000).toString())}>+1만</button>
+        <button
+          className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
+          onClick={() => setAmount((amount || 0) + 10000)}
+        >
+          +1만
+        </button>
 
-        <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
-          onClick={() => setAmount((+amount + 50000).toString())}>+5만</button>
+        <button
+          className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
+          onClick={() => setAmount((amount || 0) + 50000)}
+        >
+          +5만
+        </button>
 
-        <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
-          onClick={() => setAmount((+amount + 100000).toString())}>+10만</button>
+        <button
+          className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
+          onClick={() => setAmount((amount || 0) + 100000)}
+        >
+          +10만
+        </button>
 
-        <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
-          onClick={() => setAmount((+amount + 1000000).toString())}>+100만</button>
+        <button
+          className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
+          onClick={() => setAmount((amount || 0) + 1000000)}
+        >
+          +100만
+        </button>
 
-        <button className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
-          onClick={() => setAmount("360588")}>전액</button>
+        <button
+          className="px-3 py-2 bg-gray-100 text-sm rounded-lg"
+          onClick={() => setAmount(360588)}
+        >
+          전액
+        </button>
       </div>
 
       <NumberKeypad
-        onDigit={(n) => setAmount((prev) => prev + n)}
-        onDelete={() => setAmount((prev) => prev.slice(0, -1))}
+        onDigit={(n) =>
+          setAmount((prev) => {
+            const str = (prev === "" ? "" : prev.toString()) + n;
+            return Number(str);
+          })
+        }
+        onDelete={() =>
+          setAmount((prev) => {
+            if (prev === "") return "";
+            const str = prev.toString().slice(0, -1);
+            return str === "" ? "" : Number(str);
+          })
+        }
       />
       
       <CommonButton
@@ -108,7 +151,6 @@ export default function AutoDepositAmountPage() {
         className="rounded-xl text-lg font-medium"                 
         onClick={() => router.push(`/auto-deposit/confirm?amount=${amount}`)}
       />
-
 
     </div>
   );
