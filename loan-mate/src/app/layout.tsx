@@ -1,7 +1,9 @@
 import MobileNotch from "@/components/layout/MobileNotch";
 import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
+import { NavigationProvider } from "@/context/NavigationContext";
 import "./globals.css";
+import PageAnimateWrapper from "@/components/layout/PageAnimateWrapper";
 
 export const metadata: Metadata = {
   title: "Loan Mate",
@@ -50,11 +52,16 @@ export default function RootLayout({
               bg-[#f0f4f5]
               shadow-[0_0_40px_rgba(0,0,0,0.8)]
               relative
+              overflow-hidden
             ">
 
             {/* 실제 페이지 */}
             <ClientProviders>
-              {children}
+              <NavigationProvider>
+                <PageAnimateWrapper>
+                  {children}
+                </PageAnimateWrapper>
+              </NavigationProvider>
             </ClientProviders>
 
           </div>

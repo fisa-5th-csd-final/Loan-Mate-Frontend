@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import QuickActionButton from "@/components/button/QuickActionButton"; // 버튼 컴포넌트 경로에 맞게 수정해주세요
+import QuickActionButton from "@/components/button/QuickActionButton";
 import SectionHeading from "@/components/SectionHeading";
 import { PAGES } from "@/consts/ROUTES";
+import { useAnimatedRouter } from "@/hooks/useAnimatedRouter";
 
 // 버튼 데이터 정의
 const actions = [
@@ -25,7 +25,7 @@ const actions = [
 ];
 
 export default function QuickActionFunctionList() {
-  const router = useRouter();
+  const router = useAnimatedRouter();
 
   return (
     <section className="w-full py-6">
