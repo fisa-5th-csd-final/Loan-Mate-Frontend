@@ -38,7 +38,7 @@ export async function proxy(req: NextRequest) {
     // 리프레시 토큰이 있다면 재발급 시도
     if (refreshToken) {
       try {
-        const backendUrl = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+        const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "").replace(/\/$/, "");
         const refreshResponse = await refreshTokenServer(refreshToken, backendUrl);
 
         if (refreshResponse.ok) {

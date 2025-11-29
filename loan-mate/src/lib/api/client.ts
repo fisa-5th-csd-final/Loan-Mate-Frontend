@@ -28,7 +28,7 @@ export class ApiError extends Error {
   }
 }
 
-const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
+const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "").replace(/\/$/, "");
 const defaultHeaders: HeadersInit = {
   Accept: "application/json",
 };
