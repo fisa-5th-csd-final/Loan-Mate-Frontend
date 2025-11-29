@@ -5,7 +5,7 @@ import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
-import type { LoanSummary } from '@/../types/loan/LoanDetail';
+import type { LoanSummary } from '@/../types/loan';
 
 import { RISK_LEVEL_MAP, RISK_COLOR_MAP } from '@/consts/loan';
 

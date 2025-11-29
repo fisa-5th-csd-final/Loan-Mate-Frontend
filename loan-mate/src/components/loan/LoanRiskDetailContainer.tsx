@@ -2,10 +2,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { LoanDetail } from "@/../types/loan/LoanDetail";
+import type { LoanDetail } from "@/../types/loan";
 import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
+import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
+
+// 상수는 컴포넌트 외부로 이동하여 리렌더링 시 재생성 방지
+const LOAN_TYPE_MAP: Record<string, string> = {
+  MORTGAGE: "전세/담보대출",
+  CREDIT: "신용대출",
+  PERSONAL: "개인대출",
+};
+
+const REPAYMENT_TYPE_MAP: Record<string, string> = {
+  EQUAL_INSTALLMENT: "원리금균등상환",
+  EQUAL_PRINCIPAL: "원금균등상환",
+  BULLET: "만기일시상환",
+};
+
+const formatCurrency = (value: number | null | undefined): string =>
+  value != null ? `${value.toLocaleString()}원` : "-";
+
+const formatDate = (dateStr: string | null | undefined) => {
+  if (!dateStr) return "-";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) {
+    return "-";
+  }
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+};
 
 type LoanDetailContainerProps = {
   loanId: number;
@@ -15,6 +41,7 @@ export default function LoanDetailContainer({
   loanId,
 }: LoanDetailContainerProps) {
   const [data, setData] = useState<LoanDetail | null>(null);
+  const [comment, setComment] = useState<string>("이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,9 +53,15 @@ export default function LoanDetailContainer({
         setLoading(true);
         setError(null);
 
-        const result = await fetchLoanDetail(loanId);
+        // 병렬로 detail과 comment를 가져옴
+        const [detailResult, commentResult] = await Promise.all([
+          fetchLoanDetail(loanId),
+          fetchLoanComment(loanId).catch(() => "이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.")
+        ]);
+
         if (!cancelled) {
-          setData(result);
+          setData(detailResult);
+          setComment(commentResult);
         }
       } catch (e) {
         if (!cancelled) {
@@ -58,26 +91,25 @@ export default function LoanDetailContainer({
 
   if (error || !data) {
     return (
-      <div className="w-full rounded-3xl bg-white px-5 py-8 text-center text-sm text-red-500">
-        {error ?? "대출 정보를 불러오지 못했습니다."}
+      <div className="w-full rounded-3xl bg-white px-5 py-8 text-center">
+        <p className="text-sm text-gray-600">데이터를 불러오지 못했습니다</p>
       </div>
     );
   }
 
-  // 데이터 정상 로드 시: LoanDetailPanel에 그대로 전달
+  // 데이터 정상 로드 시: LoanRiskDetails에 포맷팅하여 전달
   return (
     <LoanRiskDetails
-      summaryMessage={data.summaryMessage}
-      progressPercent={data.progressPercent}
-      interestRate={data.interestRate}
-      riskLevel={data.riskLevel}
-      nextDueDate={data.nextDueDate}
-      remainingPrincipal={data.remainingPrincipal}
-      principal={data.principal}
-      monthlyPayment={data.monthlyPayment}
-      repaymentAccount={data.repaymentAccount}
-      loanType={data.loanType}
-      repaymentMethod={data.repaymentMethod}
+      message={comment}
+      progress={data.progress ?? 0}
+      interestPayment={formatCurrency(data.interestPayment)}
+      nextRepaymentDate={formatDate(data.nextRepaymentDate)}
+      remainPrincipal={formatCurrency(data.remainPrincipal)}
+      principal={formatCurrency(data.principal)}
+      monthlyRepayment={formatCurrency(data.monthlyRepayment)}
+      accountNumber={data.accountNumber || "-"}
+      loanType={LOAN_TYPE_MAP[data.loanType] || data.loanType || "-"}
+      repaymentType={REPAYMENT_TYPE_MAP[data.repaymentType] || data.repaymentType || "-"}
     />
   );
 }

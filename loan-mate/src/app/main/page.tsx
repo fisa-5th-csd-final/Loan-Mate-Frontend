@@ -6,7 +6,7 @@ import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/navigation/
 import MonthlyLoanSummary from "@/components/loan/MonthlyLoanSummary";
 import QuickActionFunctionList from "./_components/QuickActionFunctionList";
 import QuickActionLoanFunctionList from "./_components/QuickActionLoanFunctionList";
-import { type LoanSummary } from "@/../types/loan/LoanDetail";
+import { type LoanSummary } from "@/../types/loan";
 import { fetchLoanList } from "@/lib/api/loan/ListFetch";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
