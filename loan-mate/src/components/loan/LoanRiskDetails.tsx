@@ -2,7 +2,7 @@
 "use client";
 
 import ProgressBar from "@/components/ProgressBar";
-import MessageBox from "../MessageBox";
+import AiCommentBox from "../AiCommentBox";
 
 type LoanRiskDetailsProps = {
   message: string;
@@ -33,10 +33,10 @@ export default function LoanRiskDetails({
 
   return (
     <div className="w-full rounded-3xl bg-white px-5 pb-8 pt-5 shadow-sm">
-      {/* 상단 안내 문구 박스 */}
-      <MessageBox className="mb-6">
+      {/* 상단 AI 코멘트 박스 */}
+      <AiCommentBox className="mb-6">
         {message}
-      </MessageBox>
+      </AiCommentBox>
 
       {/* 상환 진척률 + 공용 ProgressBar 사용 */}
       <div className="mb-6">
