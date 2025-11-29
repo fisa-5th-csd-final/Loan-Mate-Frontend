@@ -9,7 +9,13 @@ import { apiClient } from "@/lib/api";
 // --------------------
 // Account Card Component
 // --------------------
-function AccountCard({ account, onClick }: { account: AccountDetail; onClick: () => void }) {
+function AccountCard({
+  account,
+  onClick,
+}: {
+  account: AccountDetail;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
@@ -22,7 +28,9 @@ function AccountCard({ account, onClick }: { account: AccountDetail; onClick: ()
       <div className="flex flex-col text-left">
         <div className="font-semibold">{account.bankCode} 통장</div>
         <div className="text-sm text-gray-500">{account.accountNumber}</div>
-        <div className="text-sm font-medium mt-1">잔액 {Number(account.balance).toLocaleString()}원</div>
+        <div className="text-sm font-medium mt-1">
+          잔액 {Number(account.balance).toLocaleString()}원
+        </div>
 
         <span className="text-red-500 text-xs border border-red-300 px-2 py-0.5 rounded-full w-fit mt-1">
           한도제한
@@ -46,7 +54,6 @@ interface AccountDetail {
 
 type AccountListResponse = AccountDetail[];
 
-
 function PrepaidContent() {
   const router = useRouter();
   const params = useSearchParams();
@@ -63,26 +70,26 @@ function PrepaidContent() {
   }, [mode, setTitle]);
 
   useEffect(() => {
-  async function fetchAccounts() {
-    try {
-      const res = await apiClient.get<AccountListResponse>("/api/accounts");
+    async function fetchAccounts() {
+      try {
+        const res = await apiClient.get<AccountListResponse>("/api/accounts");
 
-      if (!res || !Array.isArray(res)) {
+        if (!res || !Array.isArray(res)) {
+          setAccounts([]);
+          return;
+        }
+
+        setAccounts(res);
+      } catch (error) {
+        console.error("계좌 조회 실패:", error);
         setAccounts([]);
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setAccounts(res);
-    } catch (error) {
-      console.error("계좌 조회 실패:", error);
-      setAccounts([]);
-    } finally {
-      setLoading(false);
     }
-  }
 
-  fetchAccounts();
-}, []);
+    fetchAccounts();
+  }, []);
 
   return (
     <div className="px-5 pt-4 bg-white">
@@ -90,9 +97,7 @@ function PrepaidContent() {
         <div className="text-sm text-gray-500 mt-2">01 / 07</div>
       </div>
 
-      <div className="text-xl font-semibold mb-6">
-        어디에서 이체하시겠어요?
-      </div>
+      <div className="text-xl font-semibold mb-6">어디에서 이체하시겠어요?</div>
 
       <div className="flex flex-col gap-3">
         {accounts.map((acc) => (
