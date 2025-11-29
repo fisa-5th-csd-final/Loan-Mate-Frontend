@@ -6,6 +6,15 @@ import { usePathname } from 'next/navigation';
 import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useContext, useRef } from 'react';
 
+/**
+ * 
+ * 이 컴포넌트는 Next.js의 비공개 내부 API인 LayoutRouterContext를 사용합니다.
+ * 페이지 전환 시 이전 페이지의 상태를 유지(Freeze)하여 exit 애니메이션을 구현하기 위함입니다.
+ * 
+ * Next.js 버전 업데이트 시 이 경로(next/dist/shared/lib/app-router-context.shared-runtime)나
+ * 동작 방식이 변경될 수 있으므로 주의가 필요합니다.
+ * 공식적인 View Transitions API 지원이 안정화되면 교체하는 것을 권장합니다.
+ */
 function FrozenRouter(props: { children: React.ReactNode }) {
     const context = useContext(LayoutRouterContext ?? {});
     const frozen = useRef(context).current;
