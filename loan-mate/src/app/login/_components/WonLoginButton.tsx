@@ -4,7 +4,7 @@ import { API } from "@/consts/ROUTES";
 
 export default function WonLoginButton() {
   const handleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}${API.AUTH.LOGIN}`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}${API.AUTH.LOGIN}`;
   };
 
   return (
