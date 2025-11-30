@@ -73,7 +73,6 @@ export default function OutlayPage() {
     updateMutation.mutate({
       id: Number(editing.id),
       data: {
-        type: "EXPENSE", // 고정
         amount: data.amount,
         description: data.name,
         category: data.category ?? "FOOD",

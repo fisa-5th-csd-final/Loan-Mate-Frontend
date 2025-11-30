@@ -65,7 +65,6 @@ export default function IncomePage() {
   updateMutation.mutate({
     id: Number(editing.id),
     data: {
-      type: pageType,          
       amount: data.amount,
       description: data.name,
     },
