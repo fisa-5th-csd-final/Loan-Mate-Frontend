@@ -79,7 +79,7 @@ function ConfirmInner() {
       </div>
 
       <div className="text-m text-gray-500 mb-8">
-        {formatCurrency(amount)} · 출금가능금액 360,588원
+        {formatCurrency(amount)} · 출금가능금액이 없습니다
       </div>
 
       {/* Labels */}
