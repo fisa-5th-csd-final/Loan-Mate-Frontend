@@ -1,3 +1,5 @@
+import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
+
 export type ExpenditureId = number;
 
 export interface ExpenditureItem {
@@ -6,6 +8,7 @@ export interface ExpenditureItem {
   amount: number;
   description: string;
   savedAt: string; 
+  category?: ConsumptionCategoryKey;
 }
 
 export interface CreateExpenditurePayload {
@@ -13,6 +16,7 @@ export interface CreateExpenditurePayload {
   amount: number;
   description: string;
   savedAt: string; // required
+  category?: ConsumptionCategoryKey;
 }
 
 export interface UpdateExpenditurePayload {
@@ -20,4 +24,5 @@ export interface UpdateExpenditurePayload {
   amount?: number;
   description?: string;
   savedAt?: string;
+  category?: ConsumptionCategoryKey;
 }
