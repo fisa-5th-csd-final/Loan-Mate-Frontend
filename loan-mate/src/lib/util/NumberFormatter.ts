@@ -17,8 +17,21 @@ interface AccountFormatResult {
   error: string | null;
 }
 
+// 계좌 13자리까지만  
+export function formatAccountNumber(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  const clean = digits.slice(0, 13);
+
+  if (clean.length <= 3) return clean;
+  if (clean.length <= 7) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+  return `${clean.slice(0, 3)}-${clean.slice(3, 7)}-${clean.slice(7)}`;
+}
+export function isValidAccountNumber(value: string): boolean {
+  return value.replace(/\D/g, "").length === 13;
+}
+
 // 우리은행 계좌 포맷
-export function formatAccountNumber(value: number | string | null | undefined) : AccountFormatResult{
+export function formatAccountNumberWithBar(value: number | string | null | undefined) : AccountFormatResult{
   if (value === null || value === undefined) {
     return { formatted: "", error: "계좌번호를 입력해주세요." };
   }

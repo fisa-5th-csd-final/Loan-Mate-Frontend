@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { ChevronDown } from "lucide-react";
 import { useTransferStore } from "@/stores/useTransferStore";
+import { formatAccountNumber, isValidAccountNumber } from "@/lib/util/NumberFormatter"
 
 export default function Prepaid3Page() {
   const router = useRouter();
@@ -36,10 +37,19 @@ export default function Prepaid3Page() {
       {/* 계좌번호 입력 */}
       <input
         type="text"
-        value={inputAccount}
-        onChange={(e) => setAccount(e.target.value)}
+        value={formatAccountNumber(inputAccount)}
+        onChange={(e) => {
+          const raw = e.target.value.replace(/\D/g, ""); // 숫자만 저장
+          setAccount(raw);
+        }}
         className="w-full text-xl border-b border-gray-300 pb-2 outline-none"
       />
+
+      {!isValidAccountNumber(inputAccount) && (
+        <p className="text-red-500 text-sm mt-1">
+          ⚠ 계좌번호는 13자리여야 합니다.
+        </p>
+      )}
 
       {/* 다음 버튼 */}
       {/* <CommonButton>
