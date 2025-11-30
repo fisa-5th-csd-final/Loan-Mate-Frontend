@@ -48,7 +48,7 @@ export default function AutoDepositAmountPage() {
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src="/logo/woori.svg" className="h-5" />
+            <img src="/logo/woori.svg" className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium">우리은행 계좌에서</div>
@@ -64,7 +64,7 @@ export default function AutoDepositAmountPage() {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src={ bankLogo } className="h-5" />
+            <img src={ bankLogo } className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium">박준삼님 계좌로</div>

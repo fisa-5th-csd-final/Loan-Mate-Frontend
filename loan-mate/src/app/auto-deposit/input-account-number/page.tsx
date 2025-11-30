@@ -26,7 +26,7 @@ export default function Prepaid3Page() {
       {/* 은행 선택 */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <img src={bankLogo} alt={bankName} className="h-4" />
+          <img src={bankLogo} alt={bankName} className="h-7" />
         </div>
 
         <span className="font-medium text-gray-700">{bankName}</span>

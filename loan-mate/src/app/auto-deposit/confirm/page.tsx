@@ -63,7 +63,7 @@ function ConfirmInner() {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src={bankLogo} className="h-6" />
+            <img src={bankLogo} className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
