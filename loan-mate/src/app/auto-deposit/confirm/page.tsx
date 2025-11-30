@@ -1,25 +1,23 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
+import { useTransferStore } from "@/stores/useTransferStore";
+import { formatCurrency } from "@/lib/util/NumberFormatter";
 
 function ConfirmInner() {
-  const params = useSearchParams();
-  const amount = params.get("amount") || "0";
-  const formatted = Number(amount).toLocaleString();
-
+  // const params = useSearchParams();
   const router = useRouter();
 
   const { get: getFromAccount } = useSelectFromAccount();
-
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
-  const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
+  const { inputAccount, bankName, bankLogo, amount } = useTransferStore();
 
   useEffect(() => {
     const selected = getFromAccount();
@@ -59,7 +57,7 @@ function ConfirmInner() {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src="/logo/shinhan.svg" className="h-6" />
+            <img src={bankLogo} className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
@@ -68,18 +66,20 @@ function ConfirmInner() {
           </div>
         </div>
 
-        <div className="text-gray-500 text-sm">신한 110259718376</div>
+        <div className="text-gray-500 text-sm">
+          {bankName} {inputAccount}
+        </div>
       </div>
 
       {/* Amount */}
       <div className="w-full mt-4 mb-4 text-6xl">
         <span className="inline-block text-xl font-semibold leading-tight">
-          {formatted}원
+          {formatCurrency(amount)}
         </span>
       </div>
 
       <div className="text-m text-gray-500 mb-8">
-        {formatted}원 · 출금가능금액 360,588원
+        {formatCurrency(amount)} · 출금가능금액 360,588원
       </div>
 
       {/* Labels */}

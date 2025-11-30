@@ -55,7 +55,6 @@ function PrepaidContent() {
   const mode = params.get("mode");
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { select: selectFromAccount } = useSelectFromAccount();
 
   useEffect(() => {

@@ -19,15 +19,15 @@ function Prepaid2Inner() {
     else setTitle("신청하기");
   }, [mode, setTitle]);
 
-  const [showBanks, setShowBanks] = useState(false);
+  // const [showBanks, setShowBanks] = useState(false);
   const [tab, setTab] = useState("recommended");
 
-  const banks = [
-    { name: "국민은행", logo: "/logo/kookmin.svg" },
-    { name: "신한은행", logo: "/logo/shinhan.svg" },
-    { name: "우리은행", logo: "/logo/woori.svg" },
-    { name: "하나은행", logo: "/logo/hana.svg" },
-  ];
+  // const banks = [
+  //   { name: "국민은행", logo: "/logo/kookmin.svg" },
+  //   { name: "신한은행", logo: "/logo/shinhan.svg" },
+  //   { name: "우리은행", logo: "/logo/woori.svg" },
+  //   { name: "하나은행", logo: "/logo/hana.svg" },
+  // ];
 
   const handleSelectBank = (bank: string) => {
     if (bank === "신한은행") {
@@ -48,7 +48,8 @@ function Prepaid2Inner() {
       {/* 은행/기관 선택 */}
       <button
         className="flex items-center gap-2 text-gray-700 mb-3"
-        onClick={() => setShowBanks(!showBanks)}
+        // onClick={() => setShowBanks(!showBanks)}
+        onClick={() => router.push("/auto-deposit/select-bank")}
       >
         <span className="text-lg">🏦</span>
         <span className="font-medium">은행/기관 선택</span>
@@ -56,7 +57,7 @@ function Prepaid2Inner() {
       </button>
 
       {/* 은행 목록 */}
-      {showBanks && (
+      {/* {showBanks && (
         <div className="border border-gray-200 rounded-xl p-3 mb-4 bg-white shadow-sm">
           {banks.map((bank) => (
             <button
@@ -69,7 +70,7 @@ function Prepaid2Inner() {
             </button>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* 계좌번호 입력 */}
       <div className="text-gray-500 mb-2">계좌번호 입력</div>

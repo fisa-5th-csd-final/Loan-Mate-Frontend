@@ -8,14 +8,13 @@ import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
 import { useEffect } from "react";
+import { useTransferStore } from "@/stores/useTransferStore";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
+  const {bankName, bankLogo, inputAccount, amount, setAmount} = useTransferStore();
 
   const router = useRouter();
-  const params = useSearchParams();
-  const amount = params.get("amount") || "0";
-  const formatted = Number(amount).toLocaleString();
   const [pin, setPin] = useState("");
 
   const addDigit = (num: string) => {
@@ -55,7 +54,7 @@ function TransferFinalInner() {
         </div>
 
         <div className="h-12 w-12 rounded-full bg-blue-300 flex items-center justify-center">
-          <img src="/logo/shinhan.svg" className="h-9" />
+          <img src={bankLogo} className="h-9" />
         </div>
       </div>
 
@@ -65,11 +64,13 @@ function TransferFinalInner() {
       </div>
 
       <div className="text-xl font-semibold mb-2">
-        <span className="text-blue-600">{formatted}원</span>을 이체하시겠어요?
+        <span className="text-blue-600">
+          {amount !== "" ? amount.toLocaleString("ko-KR") : ""}
+          원</span>을 이체하시겠어요?
       </div>
 
       <div className="text-gray-500 text-sm mb-8">
-        신한 110259718376 계좌로 보냅니다.
+        {bankName} {inputAccount} 계좌로 보냅니다.
       </div>
 
       {/* ---------------- Info Box ---------------- */}
