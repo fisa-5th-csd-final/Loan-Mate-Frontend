@@ -7,12 +7,14 @@ import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
 import { useAccountStore } from "@/stores/useAccountStore";
+import { useBankStore } from "@/stores/useBankStore";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
   const [amount, setAmount] = useState<number | "">("");
 
   const { inputAccount } = useAccountStore();
+  const { bankName, bankLogo } = useBankStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 입력값에서 숫자만 추출됨
@@ -65,7 +67,7 @@ export default function AutoDepositAmountPage() {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src="/logo/shinhan.svg" className="h-5" />
+            <img src={ bankLogo } className="h-5" />
           </div>
 
           <div className="text-gray-900 font-medium">박준삼님 계좌로</div>
@@ -73,7 +75,7 @@ export default function AutoDepositAmountPage() {
         </div>
 
         <div className="text-gray-500 text-sm">
-          신한 <p>{inputAccount}</p>
+         { bankName } <p>{inputAccount}</p>
         </div>
       </div>
 

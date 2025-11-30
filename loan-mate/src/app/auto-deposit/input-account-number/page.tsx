@@ -6,12 +6,15 @@ import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { ChevronDown } from "lucide-react";
 import { useAccountStore } from "@/stores/useAccountStore";
 import * as Test from "@/stores/useAccountStore";
+import { useBankStore } from "@/stores/useBankStore";
+
 console.log("TEST STORE:", Test);
 
 export default function Prepaid3Page() {
   const router = useRouter();
 
   const { inputAccount, setInputAccount } = useAccountStore();
+  const { bankName, bankLogo } = useBankStore();
 
   return (
     <div className="px-5 pt-4">
@@ -26,10 +29,10 @@ export default function Prepaid3Page() {
       {/* 은행 선택 */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-          <img src="/logo/shinhan.svg" alt="shinhan" className="h-4" />
+          <img src={bankLogo} alt={bankName} className="h-4" />
         </div>
 
-        <span className="font-medium text-gray-700">신한은행</span>
+        <span className="font-medium text-gray-700">{bankName}</span>
 
         {/* 화살표 아이콘 라이브러리 사용*/}
         <ChevronDown size={16} className="text-gray-500" />

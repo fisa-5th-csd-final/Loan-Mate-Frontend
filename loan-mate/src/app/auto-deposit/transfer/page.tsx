@@ -8,9 +8,13 @@ import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
 import { useEffect } from "react";
+import { useBankStore } from "@/stores/useBankStore";
+import { useAccountStore } from "@/stores/useAccountStore";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
+  const {bankName, bankLogo} = useBankStore();
+  const { inputAccount, setInputAccount } = useAccountStore();
 
   const router = useRouter();
   const params = useSearchParams();
@@ -57,7 +61,7 @@ function TransferFinalInner() {
         </div>
 
         <div className="h-12 w-12 rounded-full bg-blue-300 flex items-center justify-center">
-          <img src="/logo/shinhan.svg" className="h-9" />
+          <img src={bankLogo} className="h-9" />
         </div>
       </div>
 
@@ -71,7 +75,7 @@ function TransferFinalInner() {
       </div>
 
       <div className="text-gray-500 text-sm mb-8">
-        신한 110259718376 계좌로 보냅니다.
+        {bankName} {inputAccount} 계좌로 보냅니다.
       </div>
 
       {/* ---------------- Info Box ---------------- */}
