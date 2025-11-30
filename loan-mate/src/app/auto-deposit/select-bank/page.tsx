@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import TransferTabs from "@/components/TransferTabs";
 import { useState } from "react";
-import { useBankStore } from "@/stores/useBankStore";
+import { useTransferStore } from "@/stores/useTransferStore";
 
 export default function SelectBankPage() {
   const router = useRouter();
 
   const [tab, setTab] = useState("recommended");
-  const { setBank } = useBankStore();
+  const { setBank } = useTransferStore();
 
   const banks = [
     { name: "우리은행", logo: "/logo/woori.svg" },

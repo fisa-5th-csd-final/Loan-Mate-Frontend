@@ -6,15 +6,12 @@ import { useState } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
-import { useAccountStore } from "@/stores/useAccountStore";
-import { useBankStore } from "@/stores/useBankStore";
+import { useTransferStore } from "@/stores/useTransferStore";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
-  const [amount, setAmount] = useState<number | "">("");
 
-  const { inputAccount } = useAccountStore();
-  const { bankName, bankLogo } = useBankStore();
+  const { inputAccount, bankName, bankLogo, amount, setAmount } = useTransferStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 입력값에서 숫자만 추출됨
@@ -133,20 +130,22 @@ export default function AutoDepositAmountPage() {
       </div>
 
       <NumberKeypad
-        onDigit={(n) =>
-          setAmount((prev) => {
-            const str = (prev === "" ? "" : prev.toString()) + n;
-            return Number(str);
-          })
-        }
-        onDelete={() =>
-          setAmount((prev) => {
-            if (prev === "") return "";
-            const str = prev.toString().slice(0, -1);
-            return str === "" ? "" : Number(str);
-          })
-        }
+        onDigit={(n) => {
+          const prev = amount === "" ? "" : amount.toString();
+          const newNumber = Number(prev + n);
+          setAmount(newNumber);
+        }}
+        onDelete={() => {
+          if (amount === "") {
+            setAmount("");
+            return;
+          }
+
+          const str = amount.toString().slice(0, -1);
+          setAmount(str === "" ? "" : Number(str));
+        }}
       />
+
       
       <CommonButton
         label="확인"

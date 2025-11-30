@@ -1,13 +1,13 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
-import { useAccountStore } from "@/stores/useAccountStore";
-import { useBankStore } from "@/stores/useBankStore";
+import { useTransferStore } from "@/stores/useTransferStore";
+import { formatCurrency } from "@/lib/util/NumberFormatter";
 
 type AccountDetail = {
   accountId: number;
@@ -20,15 +20,19 @@ type AccountDetail = {
 
 function ConfirmInner() {
   const params = useSearchParams();
-  const amount = params.get("amount") || "0";
-  const formatted = Number(amount).toLocaleString();
-
   const router = useRouter();
+
+  const urlAmount = params.get("amount");
 
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
   const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
-  const { inputAccount } = useAccountStore();
-  const {bankName, bankLogo } = useBankStore();
+  const { inputAccount, bankName, bankLogo, amount, setAmount } = useTransferStore();
+
+   useEffect(() => {
+    if (urlAmount) {
+      setAmount(Number(urlAmount));
+    }
+  }, [urlAmount, setAmount]);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -76,12 +80,12 @@ function ConfirmInner() {
       {/* Amount */}
       <div className="w-full mt-4 mb-4 text-6xl">
         <span className="inline-block text-xl font-semibold leading-tight">
-          {formatted}원
+          {formatCurrency(amount)}
         </span>
       </div>
 
       <div className="text-m text-gray-500 mb-8">
-        {formatted}원 · 출금가능금액 360,588원
+        {formatCurrency(amount)} · 출금가능금액 360,588원
       </div>
 
       {/* Labels */}
