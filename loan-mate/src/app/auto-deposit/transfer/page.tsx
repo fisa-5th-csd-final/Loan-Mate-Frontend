@@ -25,7 +25,7 @@ function TransferFinalInner() {
 
   const deleteDigit = () => {
     setPin((prev) => prev.slice(0, -1));
-  }
+  };
 
   // const handleSubmitPin = (pin: string) => {
   //   setOpen(false);
@@ -39,10 +39,8 @@ function TransferFinalInner() {
     }
   }, [pin]);
 
-
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
-
       {/* ---------------- Header ---------------- */}
       <NavigationBar
         title=""
@@ -99,13 +97,12 @@ function TransferFinalInner() {
 
       {/* ---------------- Buttons ---------------- */}
       <div className="flex gap-3">
-
         <CommonButton
           label="추가이체"
           size="lg"
           widthClassName="w-full"
-          textColorClassName="text-blue-500"
-          className="flex-1 py-4 bg-blue-100 rounded-xl font-medium"
+          className="flex-1 py-4 rounded-xl font-medium"
+          colorClassName="bg-[#EEF5FF] !text-[#3B82F6] hover:bg-[#DCEBFF]"
           onClick={() => router.push("/auto-deposit")}
         />
 
@@ -113,43 +110,40 @@ function TransferFinalInner() {
           label="이체"
           size="lg"
           widthClassName="w-full"
-          textColorClassName="text-white"
-          className="flex-1 py-4 bg-blue-500 rounded-xl font-medium"
+          className="flex-1 py-4 rounded-xl font-medium"
+          colorClassName="bg-[#4F8BFF] hover:bg-[#3D7CFF] text-white"
           onClick={() => setOpen(true)}
         />
       </div>
 
       <BottomSheet open={open} onClose={() => setOpen(false)}>
+        <NavigationBar
+          title=""
+          showBack={false}
+          right={
+            <button
+              className="text-black text-xl"
+              onClick={() => setOpen(false)}
+            >
+              ✕
+            </button>
+          }
+        />
 
-      <NavigationBar
-        title=""
-        showBack={false}
-        right={
-          <button
-            className="text-black text-xl"
-            onClick={() => setOpen(false)}
-          >
-            ✕
-          </button>
-        }
-      />
+        {/* 타이틀 */}
+        <div className="text-center mb-6">
+          <h2 className="text-lg font-semibold">계좌 비밀번호</h2>
+        </div>
 
-      {/* 타이틀 */}
-      <div className="text-center mb-6">
-        <h2 className="text-lg font-semibold">계좌 비밀번호</h2>
-      </div>
-
-      <NumberKeypad
-        pinMode={true}
-        onDigit={addDigit}
-        onDelete={deleteDigit}
-      />
-
+        <NumberKeypad
+          pinMode={true}
+          onDigit={addDigit}
+          onDelete={deleteDigit}
+        />
       </BottomSheet>
     </div>
   );
 }
-
 
 export default function TransferFinalPage() {
   return (

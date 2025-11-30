@@ -22,8 +22,9 @@ function ConfirmInner() {
   const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
 
   useEffect(() => {
-    setFromAccount(getFromAccount());
-  }, [getFromAccount]);
+    const selected = getFromAccount();
+    setFromAccount(selected);
+  }, []);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
