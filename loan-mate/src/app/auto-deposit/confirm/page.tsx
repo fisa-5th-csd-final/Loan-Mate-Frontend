@@ -19,20 +19,20 @@ type AccountDetail = {
 };
 
 function ConfirmInner() {
-  const params = useSearchParams();
+  // const params = useSearchParams();
   const router = useRouter();
 
-  const urlAmount = params.get("amount");
+  // const urlAmount = params.get("amount");
 
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
   const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
-  const { inputAccount, bankName, bankLogo, amount, setAmount } = useTransferStore();
+  const { inputAccount, bankName, bankLogo, amount } = useTransferStore();
 
-   useEffect(() => {
-    if (urlAmount) {
-      setAmount(Number(urlAmount));
-    }
-  }, [urlAmount, setAmount]);
+  //  useEffect(() => {
+  //   if (urlAmount) {
+  //     setAmount(Number(urlAmount));
+  //   }
+  // }, [urlAmount, setAmount]);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">

@@ -153,7 +153,7 @@ export default function AutoDepositAmountPage() {
         widthClassName="w-full"            
         colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
         className="rounded-xl text-lg font-medium"                 
-        onClick={() => router.push(`/auto-deposit/confirm?amount=${amount}`)}
+        onClick={() => router.push(`/auto-deposit/confirm`)}
       />
 
     </div>
