@@ -6,33 +6,23 @@ import { useSearchParams, useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
+import type { AccountDetail } from "@/lib/api/auto-deposit/types";
+import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
-
-type AccountDetail = {
-  accountId: number;
-  accountNumber: string;
-  bankCode: string;
-  balance: number;
-  createdAt: string;
-  isForIncome: boolean;
-};
 
 function ConfirmInner() {
   // const params = useSearchParams();
   const router = useRouter();
 
-  // const urlAmount = params.get("amount");
-
+  const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
-  const [toAccount, setToAccount] = useState<AccountDetail | null>(null);
   const { inputAccount, bankName, bankLogo, amount } = useTransferStore();
 
-  //  useEffect(() => {
-  //   if (urlAmount) {
-  //     setAmount(Number(urlAmount));
-  //   }
-  // }, [urlAmount, setAmount]);
+  useEffect(() => {
+    const selected = getFromAccount();
+    setFromAccount(selected);
+  }, []);
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
@@ -51,12 +41,16 @@ function ConfirmInner() {
           </div>
 
           <div className="text-gray-900 font-medium flex items-center gap-1">
-            우리은행 계좌에서
+            {fromAccount
+              ? `${fromAccount.bankCode} 계좌에서`
+              : "출금 계좌 선택 안됨"}
             <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>
 
-        <div className="text-gray-500 text-sm">WON통장 1002-865-685398</div>
+        <div className="text-gray-500 text-sm">
+          {fromAccount ? `${fromAccount.accountNumber}` : "계좌번호 없음"}
+        </div>
       </div>
 
       {/* To Account */}
@@ -85,7 +79,7 @@ function ConfirmInner() {
       </div>
 
       <div className="text-m text-gray-500 mb-8">
-        {formatCurrency(amount)} · 출금가능금액 360,588원
+        {formatCurrency(amount)} · 출금가능금액이 없습니다
       </div>
 
       {/* Labels */}
