@@ -45,7 +45,7 @@ export default function SelectBankPage() {
             <button
             key={bank.name}
             className="flex flex-col items-center gap-2 bg-[#f5f7fa] rounded-xl p-4"
-            onClick={() => router.push("/auto-deposit/amount")}
+            onClick={() => router.push("/auto-deposit/input-account-number")}
             >
             <img src={bank.logo} className="w-10 h-10 object-contain" />
             <span className="text-sm text-center">{bank.name}</span>

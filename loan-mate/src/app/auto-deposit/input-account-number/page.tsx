@@ -48,7 +48,7 @@ export default function Prepaid3Page() {
 
       </CommonButton> */}
       <button 
-        onClick={() => router.push("/auto-deposit/select-bank")}
+        onClick={() => router.push("/auto-deposit/amount")}
         className="w-full bg-blue-500 text-white py-3 rounded-lg mt-10 font-medium">
         다음
       </button>
