@@ -19,7 +19,7 @@ function ApplyAutoDepositContent() {
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
 
-    type LoanItem = { logo: string; name: string; connected: boolean, checked: boolean };
+  type LoanItem = { loanLedgerId: number, logo: string; name: string; connected: boolean, checked: boolean };
   const [items, setItems] = useState<LoanItem[]>([]);
 
   // 화면 상단 제목 설정
@@ -35,6 +35,7 @@ function ApplyAutoDepositContent() {
       try {
         const res = await apiClient.get<{
           data: {
+            loanLedgerId: { value: number},
             loanName: string;
             accountBalance: number;
             autoDepositEnabled: boolean;
@@ -47,6 +48,7 @@ function ApplyAutoDepositContent() {
         }
         const mapped = Array.isArray(res.data)
           ? res.data.map((item) => ({
+              loanLedgerId: item.loanLedgerId?.value,
               logo: getBankLogo(item.loanName),
               name: item.loanName,
               connected: item.autoDepositEnabled,
@@ -83,12 +85,49 @@ function handleToggleAll() {
 
 async function handleSubmit() {
   if (mode === "deposit") {
-     router.push("/auto-deposit");
-     // Todo: 자동 예치 수정 api 추가해야함 
+    const selected = items.filter((i) => i.checked);
 
-  }
-  else if (mode === "prepaid") {
+    console.log("선택된 items:", selected);
+
+    if (selected.length === 0) {
+      alert("자동 예치할 대출을 하나 이상 선택해주세요.");
+      return;
+    }
+
+    try {
+      await Promise.all(
+        selected.map((item) =>
+          updateAutoDeposit(item.loanLedgerId, true)
+        )
+      );
+
+      alert("자동 예치 설정이 완료되었습니다!");
+      router.push("/auto-deposit");
+
+    } catch (error) {
+      console.error("자동 예치 수정 오류:", error);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+    }
+
+  } else if (mode === "prepaid") {
     router.push(`/auto-deposit/from-account?mode=${mode}`);
+  }
+}
+
+
+async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
+  console.log("PATCH 요청:", loanLedgerId, enabled);
+
+  try {
+    const res = await apiClient.patch(`/api/loans/ledgers/${loanLedgerId}/auto-deposit`, {
+      autoDepositEnabled: enabled
+    });
+    console.log("PATCH 성공:", res);
+    return res;
+
+  } catch (err: any) {
+    console.error("PATCH 에러:", err);
+    throw err;
   }
 }
 
@@ -125,7 +164,7 @@ function getBankLogo(name: string) {
   if (name.includes("1")) return "/logo/kookmin.svg";
   if (name.includes("2")) return "/logo/hana.svg";
   if (name.includes("테스트")) return "/logo/shinhan.svg";
-  return "/logo/default.svg";
+  return "/logo/woori.svg";
 }
 
 export default function ApplyAutoDepositPage() {
