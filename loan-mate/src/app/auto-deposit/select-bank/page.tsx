@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import TransferTabs from "@/components/TransferTabs";
 import { useState } from "react";
+import { useTransferStore } from "@/stores/useTransferStore";
 
 export default function SelectBankPage() {
   const router = useRouter();
 
   const [tab, setTab] = useState("recommended");
-  
+  const { setBank } = useTransferStore();
+
   const banks = [
     { name: "우리은행", logo: "/logo/woori.svg" },
     { name: "국민은행", logo: "/logo/kookmin.svg" },
@@ -28,9 +30,9 @@ export default function SelectBankPage() {
     showBack={true}
     right={<button className="text-black text-sm">✕</button>}
   />
-</div>
-<h1 className="text-2xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
-<TransferTabs
+  </div>
+  <h1 className="text-2xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
+  <TransferTabs
         tabs={[
           { label: "은행", value: "recommended" },
           { label: "증권사", value: "often" }
@@ -45,7 +47,11 @@ export default function SelectBankPage() {
             <button
             key={bank.name}
             className="flex flex-col items-center gap-2 bg-[#f5f7fa] rounded-xl p-4"
-            onClick={() => router.push("/auto-deposit/amount")}
+            onClick={() => {
+              setBank(bank.name, bank.logo);
+              router.push("/auto-deposit/input-account-number");
+              }
+            }
             >
             <img src={bank.logo} className="w-10 h-10 object-contain" />
             <span className="text-sm text-center">{bank.name}</span>

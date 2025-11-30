@@ -6,10 +6,12 @@ import { useState } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
+import { useTransferStore } from "@/stores/useTransferStore";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
-  const [amount, setAmount] = useState<number | "">("");
+
+  const { inputAccount, bankName, bankLogo, amount, setAmount } = useTransferStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 입력값에서 숫자만 추출됨
@@ -46,7 +48,7 @@ export default function AutoDepositAmountPage() {
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src="/logo/woori.svg" className="h-5" />
+            <img src="/logo/woori.svg" className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium">우리은행 계좌에서</div>
@@ -62,7 +64,7 @@ export default function AutoDepositAmountPage() {
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <img src="/logo/shinhan.svg" className="h-5" />
+            <img src={ bankLogo } className="h-7" />
           </div>
 
           <div className="text-gray-900 font-medium">박준삼님 계좌로</div>
@@ -70,7 +72,7 @@ export default function AutoDepositAmountPage() {
         </div>
 
         <div className="text-gray-500 text-sm">
-          신한 110259718376
+         { bankName } <p>{inputAccount}</p>
         </div>
       </div>
 
@@ -128,20 +130,22 @@ export default function AutoDepositAmountPage() {
       </div>
 
       <NumberKeypad
-        onDigit={(n) =>
-          setAmount((prev) => {
-            const str = (prev === "" ? "" : prev.toString()) + n;
-            return Number(str);
-          })
-        }
-        onDelete={() =>
-          setAmount((prev) => {
-            if (prev === "") return "";
-            const str = prev.toString().slice(0, -1);
-            return str === "" ? "" : Number(str);
-          })
-        }
+        onDigit={(n) => {
+          const prev = amount === "" ? "" : amount.toString();
+          const newNumber = Number(prev + n);
+          setAmount(newNumber);
+        }}
+        onDelete={() => {
+          if (amount === "") {
+            setAmount("");
+            return;
+          }
+
+          const str = amount.toString().slice(0, -1);
+          setAmount(str === "" ? "" : Number(str));
+        }}
       />
+
       
       <CommonButton
         label="확인"
@@ -149,7 +153,7 @@ export default function AutoDepositAmountPage() {
         widthClassName="w-full"            
         colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
         className="rounded-xl text-lg font-medium"                 
-        onClick={() => router.push(`/auto-deposit/confirm?amount=${amount}`)}
+        onClick={() => router.push(`/auto-deposit/confirm`)}
       />
 
     </div>
