@@ -6,6 +6,7 @@ import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { ChevronDown } from "lucide-react";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatAccountNumber, isValidAccountNumber } from "@/lib/util/NumberFormatter"
+import CommonButton from "@/components/button/CommonButton";
 
 export default function Prepaid3Page() {
   const router = useRouter();
@@ -52,14 +53,22 @@ export default function Prepaid3Page() {
       )}
 
       {/* 다음 버튼 */}
-      {/* <CommonButton>
+      <CommonButton
+          label="다음"
+          size="lg"
+          widthClassName="w-full"
+          colorClassName={
+            isValidAccountNumber(inputAccount)
+              ? "bg-blue-500 hover:bg-blue-600 text-white"
+              : "bg-gray-300 text-white cursor-not-allowed"
+          }
+          disabled={!isValidAccountNumber(inputAccount)}
+          onClick={() => {
+            if (!isValidAccountNumber(inputAccount)) return;
+            router.push("/auto-deposit/amount");
+          }}
+        />
 
-      </CommonButton> */}
-      <button 
-        onClick={() => router.push("/auto-deposit/amount")}
-        className="w-full bg-blue-500 text-white py-3 rounded-lg mt-10 font-medium">
-        다음
-      </button>
     </div>
   );
 }

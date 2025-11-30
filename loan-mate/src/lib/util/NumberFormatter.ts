@@ -11,14 +11,17 @@ export function formatCurrency(value: number | string | null | undefined): strin
   return `${formatNumber(value)}원`;
 }
 
-// 반환 타입 정의
-interface AccountFormatResult {
-  formatted: string;
-  error: string | null;
-}
-
 // 계좌 13자리까지만  
 export function formatAccountNumber(value: string): string {
+  const digits = value.replace(/\D/g, "");  
+  return digits.slice(0, 13);              
+}
+
+export function isValidAccountNumber(value: string): boolean {
+  return value.replace(/\D/g, "").length === 13;
+}
+
+export function formatAccountNumberWithBar(value: string): string {
   const digits = value.replace(/\D/g, "");
   const clean = digits.slice(0, 13);
 
@@ -26,29 +29,3 @@ export function formatAccountNumber(value: string): string {
   if (clean.length <= 7) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
   return `${clean.slice(0, 3)}-${clean.slice(3, 7)}-${clean.slice(7)}`;
 }
-export function isValidAccountNumber(value: string): boolean {
-  return value.replace(/\D/g, "").length === 13;
-}
-
-// 우리은행 계좌 포맷
-export function formatAccountNumberWithBar(value: number | string | null | undefined) : AccountFormatResult{
-  if (value === null || value === undefined) {
-    return { formatted: "", error: "계좌번호를 입력해주세요." };
-  }
-
-  // 숫자만 추출 (number면 string으로 변환)
-  const onlyNumbers = String(value).replace(/\D/g, "");
-
-  // 최소 길이보다 짧으면 원본 반환
-  if (onlyNumbers.length < 13) {
-      return { formatted: "", error: "계좌번호가 너무 짧습니다. 다시 입력해주세요." };
-  }
-
-  const part1 = onlyNumbers.slice(0, 4);
-  const part2 = onlyNumbers.slice(4, 7);
-  const part3 = onlyNumbers.slice(7, 13);
-
-  return { formatted: `${part1}-${part2}-${part3}`, error: null };
-}
-
-
