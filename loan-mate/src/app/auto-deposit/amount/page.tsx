@@ -6,10 +6,13 @@ import { useState } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
+import { useAccountStore } from "@/stores/useAccountStore";
 
 export default function AutoDepositAmountPage() {
   const router = useRouter();
   const [amount, setAmount] = useState<number | "">("");
+
+  const { inputAccount } = useAccountStore();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 입력값에서 숫자만 추출됨
@@ -70,7 +73,7 @@ export default function AutoDepositAmountPage() {
         </div>
 
         <div className="text-gray-500 text-sm">
-          신한 110259718376
+          신한 <p>{inputAccount}</p>
         </div>
       </div>
 

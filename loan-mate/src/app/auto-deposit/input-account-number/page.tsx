@@ -4,9 +4,14 @@ export const dynamic = "force-dynamic";
 import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { ChevronDown } from "lucide-react";
+import { useAccountStore } from "@/stores/useAccountStore";
+import * as Test from "@/stores/useAccountStore";
+console.log("TEST STORE:", Test);
 
 export default function Prepaid3Page() {
   const router = useRouter();
+
+  const { inputAccount, setInputAccount } = useAccountStore();
 
   return (
     <div className="px-5 pt-4">
@@ -33,7 +38,8 @@ export default function Prepaid3Page() {
       {/* 계좌번호 입력 */}
       <input
         type="text"
-        defaultValue="110259718376"
+        value={inputAccount}
+        onChange={(e) => setInputAccount(e.target.value)}
         className="w-full text-xl border-b border-gray-300 pb-2 outline-none"
       />
 
