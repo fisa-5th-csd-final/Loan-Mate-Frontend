@@ -2,11 +2,13 @@
 
 import { Trash2, Plus } from "lucide-react";
 import { useState, useRef } from "react";
+import type { ConsumptionCategoryKey } from "@/models/expenditure-limit";
 
 export type Item = {
   id: string | number;
   name: string;
   amount: number;
+  category?: ConsumptionCategoryKey;
 };
 
 interface Props {
