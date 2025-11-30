@@ -79,7 +79,8 @@ function ConfirmInner() {
       </div>
 
       <div className="text-m text-gray-500 mb-8">
-        {formatCurrency(amount)} · 출금가능금액이 없습니다
+        {formatCurrency(amount)} · 출금가능금액{" "}
+        {fromAccount ? formatCurrency(fromAccount.balance) : "0"}
       </div>
 
       {/* Labels */}
