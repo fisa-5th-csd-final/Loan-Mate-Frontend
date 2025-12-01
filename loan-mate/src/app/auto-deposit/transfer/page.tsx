@@ -57,7 +57,7 @@ function TransferFinalInner() {
       });
 
       router.push("/auto-deposit/complete");
-    } catch (err: any) {
+    } catch (err) {
       console.error("이체 실패", err);
       setError("이체에 실패했습니다. 다시 시도해주세요.");
       setPin(""); // 비밀번호 초기화
