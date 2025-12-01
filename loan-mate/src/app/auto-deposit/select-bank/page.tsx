@@ -14,11 +14,11 @@ export default function SelectBankPage() {
   const { setBank } = useTransferStore();
 
   const banks = [
-    { name: "우리은행", logo: "/logo/woori.svg" },
-    { name: "국민은행", logo: "/logo/kookmin.svg" },
-    { name: "신한은행", logo: "/logo/shinhan.svg" },
-    { name: "하나은행", logo: "/logo/hana.svg" },
-    { name: "기업은행", logo: "/logo/ibk.svg" }
+    { name: "우리은행", logo: "/logo/woori.svg", code: "020" },
+    { name: "국민은행", logo: "/logo/kookmin.svg", code: "004" },
+    { name: "신한은행", logo: "/logo/shinhan.svg", code: "088" },
+    { name: "하나은행", logo: "/logo/hana.svg", code: "081" },
+    { name: "기업은행", logo: "/logo/ibk.svg", code: "003" }
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function SelectBankPage() {
             key={bank.name}
             className="flex flex-col items-center gap-2 bg-[#f5f7fa] rounded-xl p-4"
             onClick={() => {
-              setBank(bank.name, bank.logo);
+              setBank(bank.name, bank.logo, bank.code);
               router.push("/auto-deposit/input-account-number");
               }
             }
