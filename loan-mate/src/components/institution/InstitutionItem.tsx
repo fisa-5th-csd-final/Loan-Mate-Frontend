@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import CheckIcon from "@/components/CheckIcon";
 
 export default function InstitutionItem({
@@ -30,7 +31,9 @@ export default function InstitutionItem({
     >
       <div className="flex items-center gap-3">
         {/* 로고 */}
-        <img src={logo} alt={name} className="w-8 h-8 rounded-full" />
+        <div className="relative w-8 h-8 rounded-full overflow-hidden">
+          <Image src={logo} alt={name} fill className="object-cover" />
+        </div>
 
         {/* 이름 & 연결됨 배지 */}
         <div className="flex items-center gap-2">
