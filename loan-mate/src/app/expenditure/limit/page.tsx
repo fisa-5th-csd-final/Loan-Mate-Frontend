@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import MessageBox from "@/components/MessageBox";
@@ -23,6 +23,7 @@ import {
   useMonthlySpendingQuery,
   useSpendingRecommendQuery,
 } from "@/lib/api/expenditure/hooks";
+import BottomSheet from "@/components/bottomSheet";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
@@ -51,28 +52,7 @@ export default function ExpenditureLimitPage() {
   // 추천 비율 API 호출
   const { data: recommend } = useSpendingRecommendQuery({ year, month });
   const { data: spending } = useMonthlySpendingQuery({ year, month });
-
-  const recommendedAmountByCategory = useMemo(
-    () =>
-      new Map(
-        Object.entries(recommend?.categoryRecommendation ?? {}).map(
-          ([key, amount]) => [key.toUpperCase(), amount]
-        )
-      ),
-    [recommend?.categoryRecommendation]
-  );
-
-  // 추천 예산이 없으면 카테고리 합계로 대체
-  const budget = useMemo(() => {
-    const total = recommend?.variableSpendingBudget ?? 0;
-    if (total) return total;
-
-    let sum = 0;
-    recommendedAmountByCategory.forEach((value) => {
-      if (typeof value === "number") sum += value;
-    });
-    return sum;
-  }, [recommend?.variableSpendingBudget, recommendedAmountByCategory]);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   // 프론트에서 사용할 카테고리 정의
   const FRONT_USE_KEYS: ConsumptionCategoryKey[] = [
@@ -81,6 +61,43 @@ export default function ExpenditureLimitPage() {
     "SHOPPING",
     "ENTERTAINMENT",
   ];
+
+  const baseRecommended = useMemo(
+    () =>
+      FRONT_USE_KEYS.reduce((acc, key) => {
+        const raw = recommend?.categoryRecommendation?.[key];
+        acc[key] = typeof raw === "number" ? raw : 0;
+        return acc;
+      }, {} as Record<ConsumptionCategoryKey, number>),
+    [recommend?.categoryRecommendation]
+  );
+
+  const [editedRecommended, setEditedRecommended] =
+    useState<Record<ConsumptionCategoryKey, number>>(baseRecommended);
+
+  useEffect(() => {
+    setEditedRecommended(baseRecommended);
+  }, [baseRecommended]);
+
+  const [draftRecommended, setDraftRecommended] =
+    useState<Record<ConsumptionCategoryKey, number>>(baseRecommended);
+
+  useEffect(() => {
+    if (sheetOpen) {
+      setDraftRecommended(editedRecommended);
+    }
+  }, [editedRecommended, sheetOpen]);
+
+  // 추천 예산이 없으면 카테고리 합계로 대체
+  const budget = useMemo(() => {
+    const total = recommend?.variableSpendingBudget ?? 0;
+    if (total) return total;
+
+    return FRONT_USE_KEYS.reduce(
+      (sum, key) => sum + (editedRecommended[key] ?? 0),
+      0
+    );
+  }, [recommend?.variableSpendingBudget, editedRecommended]);
 
   const categoriesWithRecommendation = useMemo(() => {
     const spendingByCategory = new Map(
@@ -91,7 +108,7 @@ export default function ExpenditureLimitPage() {
     );
 
     return FRONT_USE_KEYS.map((key) => {
-      const recommendedAmount = recommendedAmountByCategory.get(key) ?? 0;
+      const recommendedAmount = editedRecommended[key] ?? 0;
       const ratioFromSpending = spendingPercentByCategory.get(key);
       const ratioPercent =
         typeof ratioFromSpending === "number"
@@ -109,7 +126,7 @@ export default function ExpenditureLimitPage() {
         icon: ConsumptionCategoryMeta[key].icon,
       };
     });
-  }, [budget, recommend, spending, recommendedAmountByCategory]);
+  }, [budget, recommend, spending, editedRecommended]);
 
   // totalSpent 계산
   const totalSpent = useMemo(
@@ -122,6 +139,17 @@ export default function ExpenditureLimitPage() {
 
   // 총 사용 가능 금액 계산
   const availableTotal = Math.max(0, Math.round(budget - totalSpent));
+
+  const handleDraftChange = (key: ConsumptionCategoryKey, value: string) => {
+    const parsed = Number(value);
+    const safe = Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+    setDraftRecommended((prev) => ({ ...prev, [key]: safe }));
+  };
+
+  const handleApplyDraft = () => {
+    setEditedRecommended(draftRecommended);
+    setSheetOpen(false);
+  };
 
   return (
     <PageWithCTA
@@ -136,11 +164,85 @@ export default function ExpenditureLimitPage() {
 
         <button
           className="px-3 py-1 text-[12px] rounded-full bg-gray-100 text-gray-700 border border-gray-300"
-          onClick={() => console.log("수정하기 클릭")}
+          onClick={() => setSheetOpen(true)}
         >
           수정하기
         </button>
       </div>
+
+      <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)}>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="text-[17px] font-semibold text-gray-900">추천 금액 수정</p>
+            <p className="text-sm text-gray-500 mt-1">
+              카테고리별 추천 지출 한도를 직접 입력하세요.
+            </p>
+          </div>
+          <button
+            className="text-sm text-gray-500 px-3 py-1 rounded-full hover:bg-gray-100"
+            onClick={() => setSheetOpen(false)}
+          >
+            닫기
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {FRONT_USE_KEYS.map((key) => {
+            const meta = ConsumptionCategoryMeta[key];
+            const Icon = meta.icon;
+            const value = draftRecommended[key] ?? 0;
+
+            return (
+              <div
+                key={key}
+                className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-3 shadow-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: meta.hex + "20" }}
+                  >
+                    <Icon size={20} color={meta.hex} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-gray-900">
+                      {ConsumptionCategoryLabelMap[key]}
+                    </span>
+                    <span className="text-xs text-gray-500">추천 금액</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    className="w-28 rounded-lg border border-gray-200 px-3 py-2 text-right text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                    value={value}
+                    onChange={(e) => handleDraftChange(key, e.target.value)}
+                  />
+                  <span className="text-sm text-gray-500">원</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex gap-3 mt-6">
+          <button
+            className="w-1/2 rounded-lg border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            onClick={() => setSheetOpen(false)}
+          >
+            취소
+          </button>
+          <CommonButton
+            label="적용하기"
+            onClick={handleApplyDraft}
+            widthClassName="w-1/2"
+            size="lg"
+          />
+        </div>
+      </BottomSheet>
 
       {/* 설명 박스 */}
       <MessageBox>{summaryMessage}</MessageBox>
