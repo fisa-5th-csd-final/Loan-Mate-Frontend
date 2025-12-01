@@ -78,9 +78,12 @@ function ApplyAutoDepositContent() {
 // 전체 선택/해제
 function handleToggleAll() {
   setItems((prev) => {
-    const availableItems = prev.filter(i => !i.connected);
-    const allChecked = availableItems.every((item) => item.checked); // 모두 체크되어 있는지 확인
-    return prev.map((item) => ({ ...item, checked: !allChecked }));
+    const availableItems = prev.filter((i) => !i.connected);
+    const allChecked =
+      availableItems.length > 0 && availableItems.every((item) => item.checked);
+    return prev.map((item) =>
+      item.connected ? item : { ...item, checked: !allChecked }
+    );
   });
 }
 
