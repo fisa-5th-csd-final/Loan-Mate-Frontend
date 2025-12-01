@@ -23,11 +23,22 @@ export default function MonthlyLoanSummary({
     peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
     const [totalRisk, setTotalRisk] = useState<TotalLoanRiskResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchTotalLoanRisk()
-            .then(setTotalRisk)
-            .catch(console.error);
+        async function loadTotalRisk() {
+            try {
+                const data = await fetchTotalLoanRisk();
+                setTotalRisk(data);
+            } catch (e) {
+                console.error(e);
+                setError("종합 위험도 정보를 불러오는데 실패했습니다.");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadTotalRisk();
     }, []);
 
     return (
@@ -39,12 +50,20 @@ export default function MonthlyLoanSummary({
 
             <div className="flex flex-col w-full justify-center p-4 gap-5 rounded-xl space-y-4 bg-white shadow-md">
                 {/* 전체 대출 평균 위험도 박스 */}
-                <LoanRiskAverageBox
-                    percentage={totalRisk ? Math.round(totalRisk.risk * 1000) / 10 : 0}
-                    levelText={totalRisk ? RISK_LEVEL_TEXT_MAP[totalRisk.riskLevel] : "-"}
-                    emoji={totalRisk ? RISK_EMOJI_MAP[totalRisk.riskLevel] : "😐"}
-                    label="평균"
-                />
+                {isLoading ? (
+                    <div className="w-full h-[88px] rounded-[28px] bg-gray-100 animate-pulse" />
+                ) : error ? (
+                    <div className="w-full p-4 text-center text-red-500 bg-red-50 rounded-xl text-sm">
+                        {error}
+                    </div>
+                ) : (
+                    <LoanRiskAverageBox
+                        percentage={totalRisk ? Math.round(totalRisk.risk * 1000) / 10 : 0}
+                        levelText={totalRisk ? RISK_LEVEL_TEXT_MAP[totalRisk.riskLevel] : "-"}
+                        emoji={totalRisk ? RISK_EMOJI_MAP[totalRisk.riskLevel] : "😐"}
+                        label="평균"
+                    />
+                )}
 
                 {/* 전체 대출 비율 프로그레스바 */}
                 <div className="flex flex-col gap-5">
