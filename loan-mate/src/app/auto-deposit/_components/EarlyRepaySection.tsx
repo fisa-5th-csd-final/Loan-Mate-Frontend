@@ -78,14 +78,16 @@ export default function EarlyRepaySection() {
     <section className="mt-8">
       <h2 className="font-semibold text-lg mb-2">선납할 수 있어요</h2>
 
-      <Card>
+      <Card className="flex flex-col justify-center min-h-[180px]">
         {loading ? (
           <div className="p-4 text-center text-gray-500">불러오는 중...</div>
         ) : (
           <>
+          {segments.length > 0 && (
             <div className="mt-3">
               <SegmentProgressBar segments={segments} />
             </div>
+          )}
 
             <p className="mt-4 text-base text-gray-700 text-center font-medium">
               {segments.length === 0 ? (
