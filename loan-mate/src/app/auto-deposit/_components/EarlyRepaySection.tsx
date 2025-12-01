@@ -78,30 +78,32 @@ export default function EarlyRepaySection() {
     <section className="mt-8">
       <h2 className="font-semibold text-lg mb-2">선납할 수 있어요</h2>
 
-      <Card className="flex flex-col justify-center min-h-[180px]">
+      <Card className="p-2 h-[140px] flex items-center justify-center">
         {loading ? (
           <div className="p-4 text-center text-gray-500">불러오는 중...</div>
         ) : (
           <>
-          {segments.length > 0 && (
-            <div className="mt-3">
-              <SegmentProgressBar segments={segments} />
-            </div>
-          )}
+          {segments.length > 0 ? (
+              // 그래프 + 텍스트 있는 경우 → 두 요소 묶어서 중앙 정렬
+              <div className="flex flex-col items-center w-full">
+                <div className="w-full mb-2">
+                  <SegmentProgressBar segments={segments} />
+                </div>
 
-            <p className="mt-4 text-base text-gray-700 text-center font-medium">
-              {segments.length === 0 ? (
-                "선납 이득인 대출이 없어요"
-              ) : (
-                <>
+                <p className="text-base text-gray-700 font-medium text-center">
                   지금 선납하면{" "}
                   <strong className="font-semibold">
                     {formatCurrency(benefitTotal)}원
                   </strong>{" "}
                   이득이에요
-                </>
-              )}
-            </p>
+                </p>
+              </div>
+            ) : (
+              // 그래프 없음 → 글자만 중앙에 위치
+              <p className="text-base text-gray-700 font-medium text-center">
+                선납 이득인 대출이 없어요
+              </p>
+            )}
           </>
         )}
       </Card>
