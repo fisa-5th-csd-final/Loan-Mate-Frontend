@@ -5,4 +5,7 @@ export const expenditureKeys = {
 
   detail: (id: number | string) =>
     [...expenditureKeys.all, "detail", id] as const,
+
+  spendingRecommend: (year: number, month: number) =>
+    [...expenditureKeys.all, "spending", "recommend", year, month] as const,
 };
