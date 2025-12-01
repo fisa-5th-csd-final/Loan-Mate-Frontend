@@ -9,29 +9,13 @@ import SectionHeading from '../SectionHeading';
 import type { LoanSummary, TotalLoanRiskResponse } from '@/../types/loan';
 import { fetchTotalLoanRisk } from '@/lib/api/loan/RiskFetch';
 
-import { RISK_LEVEL_MAP, RISK_COLOR_MAP } from '@/consts/loan';
+import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP } from '@/consts/loan';
 
 type MonthlyLoanSummaryProps = {
     loans?: LoanSummary[],
     totalLoanRate: number,
     peerAverageLoanRatio: number,
 }
-
-const RISK_LEVEL_TEXT_MAP: Record<string, string> = {
-    ONE: "매우 안정",
-    TWO: "안정",
-    THREE: "보통",
-    FOUR: "주의",
-    FIVE: "위험",
-};
-
-const RISK_EMOJI_MAP: Record<string, string> = {
-    ONE: "😄",
-    TWO: "🙂",
-    THREE: "😐",
-    FOUR: "😨",
-    FIVE: "😱",
-};
 
 export default function MonthlyLoanSummary({
     loans,
