@@ -48,7 +48,7 @@ export default function RootLayout({
               sm:max-w-[390px]
               md:max-w-[430px]
               lg:max-w-[780px]       
-              h-[100dvh]
+              min-h-screen
               bg-[#f0f4f5]
               shadow-[0_0_40px_rgba(0,0,0,0.8)]
               relative
