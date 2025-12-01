@@ -37,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="bg-neutral-900 text-white">
+      <body className="bg-neutral-900 text-white overflow-hidden">
         {/* 전체 배경 */}
         <div className="min-h-screen flex items-center justify-center">
           {/* 실제 앱이 들어갈 '모바일 기기' 영역 */}
@@ -48,7 +48,7 @@ export default function RootLayout({
               sm:max-w-[390px]
               md:max-w-[430px]
               lg:max-w-[780px]       
-              min-h-screen
+              h-[100dvh]
               bg-[#f0f4f5]
               shadow-[0_0_40px_rgba(0,0,0,0.8)]
               relative

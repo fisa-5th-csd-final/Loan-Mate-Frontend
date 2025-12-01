@@ -81,9 +81,9 @@ export default function PageAnimateWrapper({ children }: { children: React.React
                     x: { type: 'spring', stiffness: 300, damping: 30, mass: 1 },
                     opacity: { duration: 0.2 },
                 }}
-                className="w-full h-full bg-[#f0f4f5] overflow-hidden absolute top-0 left-0"
+                className="absolute inset-0 w-full h-full bg-[#f0f4f5] overflow-hidden"
             >
-                <div className="w-full h-full overflow-y-auto">
+                <div className="w-full h-full overflow-y-auto overflow-x-hidden">
                     <FrozenRouter>{children}</FrozenRouter>
                 </div>
             </motion.div>
