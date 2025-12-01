@@ -6,7 +6,6 @@ export function WebVitals() {
     useReportWebVitals((metric) => {
         if (process.env.NEXT_PUBLIC_PRINT_WEB_VITALS === 'true') {
             const { name, value } = metric;
-            const isWebVital = ['FCP', 'LCP', 'CLS', 'FID', 'TTFB', 'INP'].includes(name);
             const unit = name === 'CLS' ? '' : 'ms';
             const formattedValue = name === 'CLS' ? value.toFixed(4) : value.toFixed(2);
 
