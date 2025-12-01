@@ -22,7 +22,19 @@ export type LoanSummary = {
     iconUrl?: string;
 };
 
+export type LoanRiskResponse = {
+    loanLedgerId: number;
+    risk: number;
+    comment: string;
+};
+
+export type TotalLoanRiskResponse = {
+    risk: number;
+    riskLevel: "ONE" | "TWO" | "THREE" | "FOUR" | "FIVE";
+};
+
 export type LoanAiCommentResponse = {
     loanLedgerId: number;
     comment: string;
 };
+
