@@ -82,6 +82,10 @@ export async function request<T = unknown>(
 ) {
   const { query, body, method = "GET", ...fetchOptions } = options;
   const url = buildUrl(path, query);
+
+  console.log("API BASE URL:", BASE_URL);
+  console.log("CALLING URL:", url);
+
   const headers = resolveHeaders(options);
   const preparedBody =
     body && headers.get("Content-Type") === "application/json"
