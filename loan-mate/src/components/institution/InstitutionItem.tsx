@@ -8,14 +8,16 @@ export default function InstitutionItem({
   connected,
   checked,
   onToggle,
+  mode
 }: {
   logo: string;
   name: string;
   connected?: boolean;
   checked?: boolean;
   onToggle?: () => void;
+  mode?: string;
 }) {
-  const isDisabled = connected === true;
+  const isDisabled = mode === "deposit" && connected === true;
 
   return (
     <button

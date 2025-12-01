@@ -70,7 +70,9 @@ function ApplyAutoDepositContent() {
   function handleToggle(idx: number) {
   setItems(prev =>
     prev.map((item, i) =>
-      i === idx && !item.connected? { ...item, checked: !item.checked } : item
+      i === idx && !(mode === "deposit" && item.connected)
+        ? { ...item, checked: !item.checked }
+        : item
     )
   );
 }
@@ -78,12 +80,19 @@ function ApplyAutoDepositContent() {
 // 전체 선택/해제
 function handleToggleAll() {
   setItems((prev) => {
-    const availableItems = prev.filter((i) => !i.connected);
-    const allChecked =
-      availableItems.length > 0 && availableItems.every((item) => item.checked);
-    return prev.map((item) =>
-      item.connected ? item : { ...item, checked: !allChecked }
+    const availableItems =
+      mode === "deposit"
+        ? prev.filter(i => !i.connected)
+        : prev;
+
+    const allChecked = availableItems.length > 0 && availableItems.every(item => item.checked);
+
+    return prev.map(item =>
+      mode === "deposit" && item.connected
+        ? item
+        : { ...item, checked: !allChecked }
     );
+
   });
 }
 
