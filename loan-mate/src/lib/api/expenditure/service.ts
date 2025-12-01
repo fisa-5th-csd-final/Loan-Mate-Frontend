@@ -5,6 +5,8 @@ import type {
   ExpenditureId,
   ExpenditureItem,
   UpdateExpenditurePayload,
+  SpendingRecommendParams,
+  SpendingRecommendResponse,
 } from "./types";
 
 const BASE_PATH = "/api/manual-ledgers";
@@ -44,4 +46,19 @@ export async function updateExpenditure(
 
 export async function deleteExpenditure(id: ExpenditureId): Promise<void> {
   await apiClient.delete(`${BASE_PATH}/${id}`);
+}
+
+export async function fetchSpendingRecommend(
+  params: SpendingRecommendParams
+): Promise<SpendingRecommendResponse> {
+  const res = await apiClient.get<
+    SuccessBody<SpendingRecommendResponse> | SpendingRecommendResponse
+  >(
+    "/api/spending/recommended",
+    { query: { year: params.year, month: params.month } }
+  );
+  
+  return (res as SuccessBody<SpendingRecommendResponse>)?.data
+    ? (res as SuccessBody<SpendingRecommendResponse>).data
+    : (res as SpendingRecommendResponse);
 }
