@@ -24,14 +24,14 @@ export default function SelectBankPage() {
   return (
     <div className="px-5 pt-4 pb-10 block w-full bg-white">
       {/* Header ------------------------------------------------- */}
-      <div className="relative pr-8"> 
-  <NavigationBar
-    title=""
-    showBack={true}
-    right={<button className="text-black text-sm">✕</button>}
-  />
+      <div className="relative px-5 pt-4"> 
+        <NavigationBar
+          title=""
+          showBack={true}
+          right={<button className="text-black text-sm">✕</button>}
+        />
   </div>
-  <h1 className="text-2xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
+  <h1 className="text-xl font-bold mt-6 mb-4">금융회사를 선택해주세요</h1>
   <TransferTabs
         tabs={[
           { label: "은행", value: "recommended" },

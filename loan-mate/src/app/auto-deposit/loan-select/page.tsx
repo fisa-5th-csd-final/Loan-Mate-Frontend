@@ -143,7 +143,11 @@ async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
   const buttonLabel =
     mode === "deposit" ? "자동 예치 등록하기" : "선납하기";
 
-  const submitDisabled = items.filter(i => !i.connected && i.checked).length === 0;
+  const submitDisabled =
+  mode === "deposit"
+    ? items.filter(i => !i.connected && i.checked).length === 0
+    : items.filter(i => i.checked).length === 0;
+
 
   return (
     <div className="space-y-6 pt-4">

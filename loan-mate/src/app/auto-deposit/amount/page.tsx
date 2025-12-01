@@ -49,11 +49,14 @@ export default function AutoDepositAmountPage() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* ------------------ Header ------------------ */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
+          <NavigationBar
+            showBack={true}
+            right={
+            <button 
+              className="text-blue-600 text-sm"
+              onClick={() => router.push("/auto-deposit")}>취소</button>
+            }
+          />
       <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
       {/* ------------------ From Account ------------------ */}
