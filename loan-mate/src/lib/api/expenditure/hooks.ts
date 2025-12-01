@@ -16,6 +16,7 @@ import {
   createExpenditure,
   updateExpenditure,
   deleteExpenditure,
+  fetchSpendingRecommend,
 } from "./service";
 
 import { expenditureKeys } from "./keys";
@@ -25,6 +26,8 @@ import type {
   ExpenditureId,
   CreateExpenditurePayload,
   UpdateExpenditurePayload,
+  SpendingRecommendParams,
+  SpendingRecommendResponse,
 } from "./types";
 
 // query option 타입
@@ -124,4 +127,63 @@ export function useDeleteExpenditureMutation(options?: DeleteOptions) {
       userSuccess?.(data, id, onMutateResult, context);
     },
   });
+}
+
+type RecommendOptions = Omit<
+  UseQueryOptions<
+    SpendingRecommendResponse,
+    ApiError,
+    SpendingRecommendResponse,
+    ReturnType<typeof expenditureKeys.spendingRecommend>
+  >,
+  "queryKey" | "queryFn"
+>;
+
+
+function getRecommendCache(params: SpendingRecommendParams): SpendingRecommendResponse | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem(
+      `spending-recommend-${params.year}-${params.month}`
+    );
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw) as SpendingRecommendResponse;
+
+    if (
+      typeof parsed.variableSpendingBudget === "number" &&
+      parsed.categoryRecommendation &&
+      typeof parsed.categoryRecommendation === "object"
+    ) {
+      return parsed;
+    }
+  } catch {}
+
+  return null;
+}
+
+export function useSpendingRecommendQuery(
+  params: SpendingRecommendParams,
+  userOptions?: { onSuccess?: (data: SpendingRecommendResponse) => void }
+) {
+  const queryClient = useQueryClient();
+  const cached = getRecommendCache(params);
+  const storageKey = `spending-recommend-${params.year}-${params.month}`;
+
+  const query = useQuery({
+    queryKey: expenditureKeys.spendingRecommend(params.year, params.month),
+    queryFn: () => fetchSpendingRecommend(params),
+    ...(cached ? { initialData: cached } : {}),
+  });
+
+  if (query.isSuccess) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(query.data));
+    } catch {}
+
+    userOptions?.onSuccess?.(query.data);
+  }
+
+  return query;
 }
