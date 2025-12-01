@@ -8,17 +8,25 @@ export default function InstitutionItem({
   connected,
   checked,
   onToggle,
+  mode
 }: {
   logo: string;
   name: string;
   connected?: boolean;
   checked?: boolean;
   onToggle?: () => void;
+  mode?: string;
 }) {
+  const isDisabled = mode === "deposit" && connected === true;
+
   return (
     <button
-      onClick={onToggle}
-      className="flex w-full items-center justify-between py-3 px-1"
+      onClick={() => !isDisabled && onToggle && onToggle()}
+      disabled={isDisabled}
+      className={`
+        flex w-full items-center justify-between py-3 px-1
+        ${isDisabled ? "opacity-60 cursor-not-allowed" : ""}
+      `}
     >
       <div className="flex items-center gap-3">
         {/* 로고 */}

@@ -10,6 +10,7 @@ type CommonButtonProps = {
   textColorClassName?: string;
   size?: ButtonSize;
   widthClassName?: string;
+  disabled?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**

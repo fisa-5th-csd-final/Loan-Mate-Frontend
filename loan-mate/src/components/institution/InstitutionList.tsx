@@ -6,7 +6,8 @@ export default function InstitutionList({
   title,
   items,
   onToggle,
-  onToggleAll
+  onToggleAll,
+  mode,
 }: {
   title: string;
   items: {
@@ -14,9 +15,12 @@ export default function InstitutionList({
     name: string;
     connected?: boolean;
     checked?: boolean;
+    disabled?: boolean;
   }[];
   onToggle?: (index: number) => void;
   onToggleAll?: () => void;
+  disabledKey?: string;
+  mode?: string;
 }) {
   return (
     <div className="mt-8">
@@ -42,6 +46,7 @@ export default function InstitutionList({
           <InstitutionItem
              key={`${item.name}-${idx}`}
             {...item}
+            mode={mode}
             onToggle={() => onToggle && onToggle(idx)}
           />
         ))}

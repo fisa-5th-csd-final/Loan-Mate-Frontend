@@ -14,3 +14,19 @@ export const RISK_COLOR_MAP: Record<RiskLevel, string> = {
     FOUR: "text-orange-500",
     FIVE: "text-red-500",
 };
+
+export const RISK_LEVEL_TEXT_MAP: Record<RiskLevel, string> = {
+    ONE: "매우 안정",
+    TWO: "안정",
+    THREE: "보통",
+    FOUR: "주의",
+    FIVE: "위험",
+};
+
+export const RISK_EMOJI_MAP: Record<RiskLevel, string> = {
+    ONE: "😄",
+    TWO: "🙂",
+    THREE: "😐",
+    FOUR: "😨",
+    FIVE: "😱",
+};
