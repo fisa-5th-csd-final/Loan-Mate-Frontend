@@ -7,7 +7,6 @@ export default function InstitutionList({
   items,
   onToggle,
   onToggleAll,
-  disabledKey,
 }: {
   title: string;
   items: {

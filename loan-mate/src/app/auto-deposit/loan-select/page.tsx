@@ -91,8 +91,6 @@ async function handleSubmit() {
   if (mode === "deposit") {
     const selected = items.filter((i) => i.checked);
 
-    console.log("선택된 items:", selected);
-
     if (selected.length === 0) {
       alert("자동 예치할 대출을 하나 이상 선택해주세요.");
       return;
@@ -126,11 +124,9 @@ async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
     const res = await apiClient.patch(`/api/loans/ledgers/${loanLedgerId}/auto-deposit`, {
       autoDepositEnabled: enabled
     });
-    console.log("PATCH 성공:", res);
     return res;
 
   } catch (err: any) {
-    console.error("PATCH 에러:", err);
     throw err;
   }
 }
