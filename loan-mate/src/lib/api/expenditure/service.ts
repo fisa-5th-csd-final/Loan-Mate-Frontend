@@ -7,6 +7,8 @@ import type {
   UpdateExpenditurePayload,
   SpendingRecommendParams,
   SpendingRecommendResponse,
+  MonthlySpendingParams,
+  MonthlySpendingResponse,
 } from "./types";
 
 const BASE_PATH = "/api/manual-ledgers";
@@ -61,4 +63,16 @@ export async function fetchSpendingRecommend(
   return (res as SuccessBody<SpendingRecommendResponse>)?.data
     ? (res as SuccessBody<SpendingRecommendResponse>).data
     : (res as SpendingRecommendResponse);
+}
+
+export async function fetchMonthlySpending(
+  params: MonthlySpendingParams
+): Promise<MonthlySpendingResponse> {
+  const res = await apiClient.get<
+    SuccessBody<MonthlySpendingResponse> | MonthlySpendingResponse
+  >(`/api/spending/${params.year}/${params.month}`);
+
+  return (res as SuccessBody<MonthlySpendingResponse>)?.data
+    ? (res as SuccessBody<MonthlySpendingResponse>).data
+    : (res as MonthlySpendingResponse);
 }

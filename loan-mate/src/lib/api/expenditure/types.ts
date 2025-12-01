@@ -35,13 +35,31 @@ export interface SpendingRecommendResponse {
   variableSpendingBudget: number;
 
   /**
-   * 카테고리별 추천 비율 (0~1 사이 값)
-   * e.g. { "FOOD": 0.3, "TRANSPORT": 0.1, ... }
+   * 카테고리별 추천 금액 (원 단위)
+   * e.g. { "FOOD": 480000, "TRANSPORT": 240000, ... }
    */
   categoryRecommendation: Record<string, number>;
 }
 
 export interface SpendingRecommendParams {
+  year: number;
+  month: number;
+}
+
+export interface CategorySpending {
+  category: ConsumptionCategoryKey;
+  amount: number;
+  percent?: number;
+}
+
+export interface MonthlySpendingResponse {
+  year: number;
+  month: number;
+  totalSpent: number;
+  categories: CategorySpending[];
+}
+
+export interface MonthlySpendingParams {
   year: number;
   month: number;
 }

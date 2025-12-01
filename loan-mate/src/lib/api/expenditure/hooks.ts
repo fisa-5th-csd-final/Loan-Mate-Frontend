@@ -17,6 +17,7 @@ import {
   updateExpenditure,
   deleteExpenditure,
   fetchSpendingRecommend,
+  fetchMonthlySpending,
 } from "./service";
 
 import { expenditureKeys } from "./keys";
@@ -28,6 +29,8 @@ import type {
   UpdateExpenditurePayload,
   SpendingRecommendParams,
   SpendingRecommendResponse,
+  MonthlySpendingParams,
+  MonthlySpendingResponse,
 } from "./types";
 
 // query option 타입
@@ -186,4 +189,25 @@ export function useSpendingRecommendQuery(
   }
 
   return query;
+}
+
+type MonthlySpendingOptions = Omit<
+  UseQueryOptions<
+    MonthlySpendingResponse,
+    ApiError,
+    MonthlySpendingResponse,
+    ReturnType<typeof expenditureKeys.monthlySpending>
+  >,
+  "queryKey" | "queryFn"
+>;
+
+export function useMonthlySpendingQuery(
+  params: MonthlySpendingParams,
+  options?: MonthlySpendingOptions
+) {
+  return useQuery({
+    queryKey: expenditureKeys.monthlySpending(params.year, params.month),
+    queryFn: () => fetchMonthlySpending(params),
+    ...options,
+  });
 }

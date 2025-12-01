@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import MessageBox from "@/components/MessageBox";
 import TableSection from "@/components/ui/TableSection";
 import { TableRow, TableCell } from "@/components/ui/Table";
-import { expenditureLimitSample } from "@/data/expenditure-limit.sample";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
 import PageWithCTA from "../_components/PageWithCTA";
 import {
@@ -20,7 +19,10 @@ import {
 } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 import CommonButton from "@/components/button/CommonButton";
-import { useSpendingRecommendQuery } from "@/lib/api/expenditure/hooks";
+import {
+  useMonthlySpendingQuery,
+  useSpendingRecommendQuery,
+} from "@/lib/api/expenditure/hooks";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
@@ -36,8 +38,9 @@ function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
 }
 
 export default function ExpenditureLimitPage() {
-  const data = expenditureLimitSample;
   const router = useRouter();
+  const summaryMessage =
+    "이번 달 추천 한도와 실시간 지출 데이터를 확인해 보세요.";
 
   // 현재 날짜
   const { year, month } = useMemo(() => {
@@ -47,12 +50,31 @@ export default function ExpenditureLimitPage() {
 
   // 추천 비율 API 호출
   const { data: recommend } = useSpendingRecommendQuery({ year, month });
+  const { data: spending } = useMonthlySpendingQuery({ year, month });
 
-  // 추천 예산이 없으면 샘플의 availableAmount를 사용
-  const budget =
-    recommend?.variableSpendingBudget ?? data.limit.availableAmount;
+  const recommendedAmountByCategory = useMemo(
+    () =>
+      new Map(
+        Object.entries(recommend?.categoryRecommendation ?? {}).map(
+          ([key, amount]) => [key.toUpperCase(), amount]
+        )
+      ),
+    [recommend?.categoryRecommendation]
+  );
 
-  // 프론트에서 사용할 카테고리 4개만 정의
+  // 추천 예산이 없으면 카테고리 합계로 대체
+  const budget = useMemo(() => {
+    const total = recommend?.variableSpendingBudget ?? 0;
+    if (total) return total;
+
+    let sum = 0;
+    recommendedAmountByCategory.forEach((value) => {
+      if (typeof value === "number") sum += value;
+    });
+    return sum;
+  }, [recommend?.variableSpendingBudget, recommendedAmountByCategory]);
+
+  // 프론트에서 사용할 카테고리 정의
   const FRONT_USE_KEYS: ConsumptionCategoryKey[] = [
     "FOOD",
     "TRANSPORT",
@@ -61,33 +83,41 @@ export default function ExpenditureLimitPage() {
   ];
 
   const categoriesWithRecommendation = useMemo(() => {
-    return FRONT_USE_KEYS.map((key) => {
-      const sample = data.categories.find(
-        (cat) => ConsumptionCategoryKeyMap[cat.name] === key
-      );
+    const spendingByCategory = new Map(
+      (spending?.categories ?? []).map((item) => [item.category, item.amount])
+    );
+    const spendingPercentByCategory = new Map(
+      (spending?.categories ?? []).map((item) => [item.category, item.percent])
+    );
 
-      const ratioFromApi = recommend?.categoryRecommendation?.[key];
-      const ratioDecimal =
-        typeof ratioFromApi === "number"
-          ? ratioFromApi
-          : (sample?.ratio ?? 0) / 100;
+    return FRONT_USE_KEYS.map((key) => {
+      const recommendedAmount = recommendedAmountByCategory.get(key) ?? 0;
+      const ratioFromSpending = spendingPercentByCategory.get(key);
+      const ratioPercent =
+        typeof ratioFromSpending === "number"
+          ? ratioFromSpending
+          : budget > 0
+          ? (recommendedAmount / budget) * 100
+          : 0;
 
       return {
         id: key.toLowerCase(),
         name: ConsumptionCategoryLabelMap[key],
-        ratio: Math.round(ratioDecimal * 100),
-        spent: sample?.spent ?? 0,
-        available: Math.round(budget * ratioDecimal),
-        icon: sample?.icon ?? "",
+        ratio: Math.round(ratioPercent * 100) / 100, // percent 단위 (실지출 기준)
+        spent: spendingByCategory.get(key) ?? 0,
+        available: recommendedAmount,
+        icon: ConsumptionCategoryMeta[key].icon,
       };
     });
-  }, [budget, recommend, data.categories]);
+  }, [budget, recommend, spending, recommendedAmountByCategory]);
 
   // totalSpent 계산
   const totalSpent = useMemo(
     () =>
-      categoriesWithRecommendation.reduce((sum, cat) => sum + cat.spent, 0),
-    [categoriesWithRecommendation]
+      typeof spending?.totalSpent === "number"
+        ? spending.totalSpent
+        : categoriesWithRecommendation.reduce((sum, cat) => sum + cat.spent, 0),
+    [categoriesWithRecommendation, spending?.totalSpent]
   );
 
   // 총 사용 가능 금액 계산
@@ -113,7 +143,7 @@ export default function ExpenditureLimitPage() {
       </div>
 
       {/* 설명 박스 */}
-      <MessageBox>{data.limit.summaryMessage}</MessageBox>
+      <MessageBox>{summaryMessage}</MessageBox>
 
       {/* 예외 수입/지출 */}
       <div className="mt-6 mb-4 px-1">
@@ -164,7 +194,7 @@ export default function ExpenditureLimitPage() {
           <>
             <span className="text-center">카테고리</span>
             <span className="text-center">지출 금액</span>
-            <span className="text-center">사용 가능 금액</span>
+            <span className="text-center">추천 지출 한도</span>
           </>
         }
         rows={

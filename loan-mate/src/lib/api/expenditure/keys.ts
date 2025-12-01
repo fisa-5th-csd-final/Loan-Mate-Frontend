@@ -8,4 +8,7 @@ export const expenditureKeys = {
 
   spendingRecommend: (year: number, month: number) =>
     [...expenditureKeys.all, "spending", "recommend", year, month] as const,
+
+  monthlySpending: (year: number, month: number) =>
+    [...expenditureKeys.all, "spending", "monthly", year, month] as const,
 };
