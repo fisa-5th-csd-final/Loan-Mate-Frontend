@@ -30,25 +30,20 @@ export default function RiskSimulationContainer() {
 
     // 1. 수입/지출 값 변경 시
     const handleUpdateIncome = useCallback((index: number, newValue: number) => {
-        setIncomeValues(prev => {
-            const copy = [...prev];
-            copy[index] = { ...copy[index], value: newValue };
-            return copy;
-        });
+        setIncomeValues(prev =>
+            prev.map((item, i) => i === index ? { ...item, value: newValue } : item)
+        );
     }, []);
 
     const handleUpdateExpense = useCallback((index: number, newValue: number) => {
-        setExpenseValues(prev => {
-            const copy = [...prev];
-            copy[index] = { ...copy[index], value: newValue };
-            return copy;
-        });
+        setExpenseValues(prev =>
+            prev.map((item, i) => i === index ? { ...item, value: newValue } : item));
     }, []);
 
     // 2. 새로운 항목 추가
     const handleAddItem = (data: { type: "income" | "expense"; name: string; amount: number }) => {
         const newItem: FixedBudgetItem = {
-            id: `${data.type}-${Date.now()}`,
+            id: `${data.type}-${crypto.randomUUID()}`,
             label: data.name,
             value: 0,
             max: data.amount
@@ -98,6 +93,13 @@ export default function RiskSimulationContainer() {
             {isLoading && (
                 <div className="absolute top-10 right-10 z-10">
                     <LoadingSpinner size="sm" />
+                </div>
+            )}
+
+            {/* 에러 메시지 (오버레이 형태) */}
+            {error && (
+                <div className="absolute top-10 left-1/2 -translate-x-1/2 z-10 bg-red-50 text-red-500 px-4 py-2 rounded-lg shadow-sm text-sm font-medium border border-red-100">
+                    {error}
                 </div>
             )}
 
