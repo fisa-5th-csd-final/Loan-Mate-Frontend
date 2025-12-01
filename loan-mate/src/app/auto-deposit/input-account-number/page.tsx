@@ -20,8 +20,8 @@ export default function Prepaid3Page() {
         <NavigationBar
               title="계좌번호를 입력해주세요"
               showBack={true}
-              right={<button className="absolute right-0 text-2xl">✕</button>}
-              />
+              right={<button className="text-black text-sm">✕</button>}
+        />
 
       {/* 은행 선택 */}
       <div className="flex items-center gap-2 mb-4">
