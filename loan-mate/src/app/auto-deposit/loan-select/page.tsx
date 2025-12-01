@@ -70,7 +70,7 @@ function ApplyAutoDepositContent() {
   function handleToggle(idx: number) {
   setItems(prev =>
     prev.map((item, i) =>
-      i === idx ? { ...item, checked: !item.checked } : item
+      i === idx && !item.connected? { ...item, checked: !item.checked } : item
     )
   );
 }
@@ -78,7 +78,8 @@ function ApplyAutoDepositContent() {
 // 전체 선택/해제
 function handleToggleAll() {
   setItems((prev) => {
-    const allChecked = prev.every((item) => item.checked); // 모두 체크되어 있는지 확인
+    const availableItems = prev.filter(i => !i.connected);
+    const allChecked = availableItems.every((item) => item.checked); // 모두 체크되어 있는지 확인
     return prev.map((item) => ({ ...item, checked: !allChecked }));
   });
 }
@@ -134,6 +135,8 @@ async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
   const buttonLabel =
     mode === "deposit" ? "자동 예치 등록하기" : "선납하기";
 
+  const submitDisabled = items.filter(i => !i.connected && i.checked).length === 0;
+
   return (
     <div className="space-y-6 pt-4">
       <h2 className="text-lg font-semibold">
@@ -147,13 +150,19 @@ async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
       <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
       {/* API로 불러온 items 들어감 */}
-      <InstitutionList title="은행 목록" items={items} onToggle={handleToggle} onToggleAll={handleToggleAll}/>
+      <InstitutionList 
+        title="은행 목록" 
+        items={items} 
+        onToggle={handleToggle} 
+        onToggleAll={handleToggleAll}
+        disabledKey="connected"/>
 
       <CommonButton
         label={buttonLabel}
         size="lg"
         widthClassName="w-full"
         onClick={handleSubmit}
+        disabled={submitDisabled}
       />
     </div>
   );

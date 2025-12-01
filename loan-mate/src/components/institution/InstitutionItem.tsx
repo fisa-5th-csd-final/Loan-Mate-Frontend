@@ -15,10 +15,16 @@ export default function InstitutionItem({
   checked?: boolean;
   onToggle?: () => void;
 }) {
+  const isDisabled = connected === true;
+
   return (
     <button
-      onClick={onToggle}
-      className="flex w-full items-center justify-between py-3 px-1"
+      onClick={() => !isDisabled && onToggle && onToggle()}
+      disabled={isDisabled}
+      className={`
+        flex w-full items-center justify-between py-3 px-1
+        ${isDisabled ? "opacity-60 cursor-not-allowed" : ""}
+      `}
     >
       <div className="flex items-center gap-3">
         {/* 로고 */}
