@@ -19,6 +19,7 @@ import {
   fetchSpendingRecommend,
   fetchMonthlySpending,
   updateSpendingLimit,
+  fetchExpenditureAiMessage,
 } from "./service";
 
 import { expenditureKeys } from "./keys";
@@ -33,6 +34,8 @@ import type {
   MonthlySpendingParams,
   MonthlySpendingResponse,
   SpendingLimitPayload,
+  ExpenditureAiMessageParams,
+  ExpenditureAiMessageResponse,
 } from "./types";
 
 // query option 타입
@@ -180,6 +183,47 @@ export function useSpendingRecommendQuery(
     queryKey: expenditureKeys.spendingRecommend(params.year, params.month),
     queryFn: () => fetchSpendingRecommend(params),
     ...(cached ? { initialData: cached } : {}),
+  });
+
+  if (query.isSuccess) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(query.data));
+    } catch {}
+
+    userOptions?.onSuccess?.(query.data);
+  }
+
+  return query;
+}
+
+function getAiMessageCache(params: ExpenditureAiMessageParams): ExpenditureAiMessageResponse | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = localStorage.getItem(
+      `ai-expenditure-${params.year}-${params.month}`
+    );
+    if (!raw) return null;
+
+    return JSON.parse(raw) as ExpenditureAiMessageResponse;
+  } catch {}
+
+  return null;
+}
+
+export function useExpenditureAiMessageQuery(
+  params: ExpenditureAiMessageParams,
+  userOptions?: { onSuccess?: (data: ExpenditureAiMessageResponse) => void }
+) {
+  const cached = getAiMessageCache(params);
+  const storageKey = `ai-expenditure-${params.year}-${params.month}`;
+
+  const query = useQuery({
+    queryKey: expenditureKeys.aiMessage(params.year, params.month),
+    queryFn: () => fetchExpenditureAiMessage(params),
+    ...(cached ? { initialData: cached } : {}),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 
   if (query.isSuccess) {

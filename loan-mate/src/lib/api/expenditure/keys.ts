@@ -11,4 +11,7 @@ export const expenditureKeys = {
 
   monthlySpending: (year: number, month: number) =>
     [...expenditureKeys.all, "spending", "monthly", year, month] as const,
+
+  aiMessage: (year: number, month: number) =>
+    [...expenditureKeys.all, "ai", "message", year, month] as const,
 };

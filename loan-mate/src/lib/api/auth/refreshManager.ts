@@ -14,7 +14,7 @@ export async function refreshToken() {
 
   const BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "").replace(/\/$/, "");
 
-  refreshPromise = fetch(`${BASE_URL}/api/auth/refresh`, {
+  refreshPromise = fetch(`${BASE_URL}${API.AUTH.REFRESH}`, {
     method: "POST",
     credentials: "include",
   }).finally(() => {

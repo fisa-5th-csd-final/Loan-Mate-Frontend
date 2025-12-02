@@ -67,3 +67,10 @@ export interface MonthlySpendingParams {
 export interface SpendingLimitPayload {
   user_limit_amount: Record<ConsumptionCategoryKey, number>;
 }
+
+export interface ExpenditureAiMessageParams {
+  year: number;
+  month: number;
+}
+
+export type ExpenditureAiMessageResponse = string;

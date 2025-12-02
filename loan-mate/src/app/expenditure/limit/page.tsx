@@ -23,6 +23,7 @@ import {
   useMonthlySpendingQuery,
   useSpendingRecommendQuery,
   useUpdateSpendingLimitMutation,
+  useExpenditureAiMessageQuery,
 } from "@/lib/api/expenditure/hooks";
 import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
 import BottomSheet from "@/components/bottomSheet";
@@ -52,10 +53,11 @@ function formatNextRepaymentDate(dateStr: string | null | undefined) {
   return `${year}.${month}.${date}`;
 }
 
+const DEFAULT_SUMMARY_MESSAGE =
+  "이번 달 추천 한도와 실시간 지출 데이터를 확인해 보세요.";
+
 export default function ExpenditureLimitPage() {
   const router = useRouter();
-  const summaryMessage =
-    "이번 달 추천 한도와 실시간 지출 데이터를 확인해 보세요.";
 
   // 현재 날짜
   const { year, month } = useMemo(() => {
@@ -71,8 +73,10 @@ export default function ExpenditureLimitPage() {
     isLoading: isLedgerLoading,
     error: ledgerError,
   } = useLoanLedgerDetailsQuery();
+  const { data: aiMessage } = useExpenditureAiMessageQuery({ year, month });
   const updateLimitMutation = useUpdateSpendingLimitMutation();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const summaryMessage = aiMessage ?? DEFAULT_SUMMARY_MESSAGE;
 
   // 프론트에서 사용할 카테고리 정의
   const FRONT_USE_KEYS: ConsumptionCategoryKey[] = [
