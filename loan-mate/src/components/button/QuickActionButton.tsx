@@ -3,11 +3,14 @@
 import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
+import Link from "next/link";
+
 interface QuickActionButtonProps {
   title: string;
   description: string;
   onClick?: () => void;
   leading?: ReactNode;
+  href?: string;
 }
 
 /**
@@ -19,13 +22,10 @@ export default function QuickActionButton({
   description,
   onClick,
   leading,
+  href,
 }: QuickActionButtonProps) {
-  return (
-    <button
-        type="button"
-      onClick={onClick}
-      className="w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition"
-    >
+  const content = (
+    <div className="w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition cursor-pointer">
       <div className="flex items-start gap-3 flex-1">
         {/* 왼쪽 아이콘/이미지 */}
         {leading && (
@@ -43,6 +43,24 @@ export default function QuickActionButton({
 
       {/* 아이콘 */}
       <ChevronRight className="w-5 h-5 text-gray-400 mt-1" />
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} onClick={onClick} className="block w-full">
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full text-left"
+    >
+      {content}
     </button>
   );
 }

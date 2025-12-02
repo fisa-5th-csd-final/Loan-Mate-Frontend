@@ -3,7 +3,7 @@
 import QuickActionButton from "@/components/button/QuickActionButton";
 import SectionHeading from "@/components/SectionHeading";
 import { ArrowLeftRight, PiggyBank } from "lucide-react";
-import { useAnimatedRouter } from "@/hooks/useAnimatedRouter";
+import { useNavigation } from "@/context/NavigationContext";
 
 type ActionItem = {
   title: string;
@@ -37,7 +37,7 @@ const actions: ActionItem[] = [
 ];
 
 export default function QuickActionLoanFunctionList() {
-  const router = useAnimatedRouter();
+  const { setDirection } = useNavigation();
 
   return (
     <section className="w-full py-6">
@@ -54,8 +54,9 @@ export default function QuickActionLoanFunctionList() {
             title={action.title}
             description={action.description}
             leading={action.leading}
+            href={action.path}
             onClick={() => {
-              router.push(action.path);
+              setDirection('forward');
             }}
           />
         ))}

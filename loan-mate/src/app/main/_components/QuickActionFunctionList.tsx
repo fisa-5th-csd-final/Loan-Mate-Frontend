@@ -3,7 +3,7 @@
 import QuickActionButton from "@/components/button/QuickActionButton";
 import SectionHeading from "@/components/SectionHeading";
 import { PAGES } from "@/consts/ROUTES";
-import { useAnimatedRouter } from "@/hooks/useAnimatedRouter";
+import { useNavigation } from "@/context/NavigationContext";
 
 // 버튼 데이터 정의
 const actions = [
@@ -25,7 +25,7 @@ const actions = [
 ];
 
 export default function QuickActionFunctionList() {
-  const router = useAnimatedRouter();
+  const { setDirection } = useNavigation();
 
   return (
     <section className="w-full py-6">
@@ -41,9 +41,9 @@ export default function QuickActionFunctionList() {
             key={index}
             title={action.title}
             description={action.description}
+            href={action.path}
             onClick={() => {
-              // 실제 경로 이동 로직 (필요시 활성화)
-              router.push(action.path);
+              setDirection('forward');
               console.log(`${action.title} 클릭됨`);
             }}
           />
