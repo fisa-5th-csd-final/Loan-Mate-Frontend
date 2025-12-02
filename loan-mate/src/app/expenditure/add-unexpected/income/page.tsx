@@ -6,7 +6,6 @@ import AddItemModalPage from "@/app/expenditure/_components/AddItemModalPage";
 import PageWithCTA from "@/app/expenditure/_components/PageWithCTA";
 import EditableAmountList, { Item } from "@/app/expenditure/_components/EditableAmountList";
 import { AddItem, AddItemType } from "@/consts/add-item";
-import { useRouter } from "next/navigation";
 import {
   useCreateExpenditureMutation,
   useDeleteExpenditureMutation,
@@ -19,7 +18,6 @@ export default function IncomePage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const pageType: AddItemType = AddItemType.INCOME;
-  const router = useRouter();
 
   const listQuery = useExpenditureListQuery("INCOME");
 
@@ -60,17 +58,17 @@ export default function IncomePage() {
   };
 
   const handleEditItem = (data: AddItem & { id?: string | number }) => {
-  if (!editing) return;
+    if (!editing) return;
 
-  updateMutation.mutate({
-    id: Number(editing.id),
-    data: {
-      type: pageType,          
-      amount: data.amount,
-      description: data.name,
-    },
-  });
-};
+    updateMutation.mutate({
+      id: Number(editing.id),
+      data: {
+        type: pageType,
+        amount: data.amount,
+        description: data.name,
+      },
+    });
+  };
 
 
   const handleDelete = (id: Item["id"]) => {
@@ -81,7 +79,7 @@ export default function IncomePage() {
   return (
     <PageWithCTA
       ctaLabel="수입 저장하기"
-      onClick={() => router.push("/expenditure/add-unexpected/outlay")}
+      href="/expenditure/add-unexpected/outlay"
     >
       <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
         이번 달 예상하지 못한{" "}
@@ -118,10 +116,10 @@ export default function IncomePage() {
           initialData={
             editing
               ? {
-                  id: editing.id,
-                  name: editing.name,
-                  amount: editing.amount,
-                }
+                id: editing.id,
+                name: editing.name,
+                amount: editing.amount,
+              }
               : undefined
           }
           onCancel={() => {

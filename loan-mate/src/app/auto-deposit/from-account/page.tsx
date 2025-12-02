@@ -4,9 +4,11 @@ export const dynamic = "force-dynamic";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
 import { apiClient } from "@/lib/api";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 // --------------------
 // Account Card Component
@@ -50,18 +52,27 @@ type AccountListResponse = AccountDetail[];
 function PrepaidContent() {
   const router = useRouter();
   const params = useSearchParams();
-  const { setTitle } = useNavigation();
+  const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
 
   const mode = params.get("mode");
   const [accounts, setAccounts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // State for modal
   const { select: selectFromAccount } = useSelectFromAccount();
 
   useEffect(() => {
-    if (mode === "deposit") setTitle("자동예치 신청하기");
-    else if (mode === "prepaid") setTitle("선납하기");
-    else setTitle("신청하기");
-  }, [mode, setTitle]);
+    setTitle("계좌 선택하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-600 text-sm"
+        onClick={() => setIsCancelModalOpen(true)} // Open modal on click
+      >
+        취소
+      </button>
+    );
+  }, [mode, setTitle, setShowBack, setRight]); // Removed router from dependency array as it's not directly used in setRight's JSX
 
   useEffect(() => {
     async function fetchAccounts() {
@@ -107,6 +118,15 @@ function PrepaidContent() {
           />
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
+      />
     </div>
   );
 }

@@ -30,7 +30,7 @@ function AgreementContent() {
     <div className="relative min-h-screen bg-white overflow-y-auto">
 
       {/* 스크롤되는 메인 영역 */}
-      <div className="px-2 pb-15 pt-6">
+      <div className="pb-15 pt-4">
         <h2 className="text-[20px] font-bold text-gray-900 whitespace-nowrap truncate">
           자산 연결을 위해 동의해 주세요
         </h2>

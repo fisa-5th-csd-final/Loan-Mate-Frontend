@@ -44,13 +44,6 @@ export default function ConnectPage() {
     check();
   }, [router]);
 
-  const handleConnect = async () => {
-    const selected = items.filter(i => i.checked).map(i => i.name);
-    const params = new URLSearchParams();
-    params.set("banks", JSON.stringify(selected));
-    // 홈으로 이동
-    router.push(`/connect/consent?${params.toString()}`);
-  };
 
   const toggleItem = (index: number) => {
     setItems(prev =>
@@ -74,7 +67,7 @@ export default function ConnectPage() {
 
   return (
     <div>
-      <h2 className="text-[18px] font-semibold mt-7">
+      <h2 className="text-[18px] font-semibold mt-4">
         연결할 기관을 선택해 주세요
       </h2>
 
@@ -96,7 +89,7 @@ export default function ConnectPage() {
 
       <BottomCTA
         label={`${items.filter(i => i.checked).length}개 기관 연결하기`}
-        onClick={handleConnect}
+        href={`/connect/consent?banks=${JSON.stringify(items.filter(i => i.checked).map(i => i.name))}`}
       />
     </div>
   );

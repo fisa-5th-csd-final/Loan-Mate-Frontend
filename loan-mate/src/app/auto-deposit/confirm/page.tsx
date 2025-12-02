@@ -3,21 +3,40 @@ export const dynamic = "force-dynamic";
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
+import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 function ConfirmInner() {
   // const params = useSearchParams();
   const router = useRouter();
+  const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
 
   const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
   const { inputAccount, bankName, bankLogo, amount } = useTransferStore();
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
+  useEffect(() => {
+    setTitle("금액 입력하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-500 text-sm"
+        onClick={() => setIsCancelModalOpen(true)}
+      >
+        취소
+      </button>
+    );
+  }, [setTitle, setShowBack, setRight]);
 
   useEffect(() => {
     const selected = getFromAccount();
@@ -27,11 +46,7 @@ function ConfirmInner() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* Header */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
+      {/* NavigationBar removed */}
 
       {/* From Account */}
       <div className="mb-4">
@@ -113,6 +128,15 @@ function ConfirmInner() {
         colorClassName="bg-blue-500 hover:bg-blue-600 text-white"
         className="rounded-xl text-lg font-medium"
         onClick={() => router.push("/auto-deposit/transfer")}
+      />
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
       />
     </div>
   );

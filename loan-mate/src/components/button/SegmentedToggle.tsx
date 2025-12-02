@@ -5,6 +5,7 @@ import { useMemo } from "react";
 type Option<T extends string | number> = {
   label: string;
   value: T;
+  disabled?: boolean;
 };
 
 type Props<T extends string | number> = {
@@ -53,15 +54,20 @@ export default function SegmentedToggle<T extends string | number>({
       {/* 옵션 렌더 */}
       {options.map((opt) => {
         const isActive = opt.value === value;
+        const isDisabled = opt.disabled;
+
         return (
           <button
             key={opt.value}
             type="button"
-            onClick={() => onChange(opt.value)}
+            onClick={() => !isDisabled && onChange(opt.value)}
+            disabled={isDisabled}
             className={`
               relative z-10 flex-1 text-center text-sm font-medium
               transition-colors duration-200
-              ${isActive ? "text-white" : "text-[#6d7379]"}
+              ${isActive ? "text-white" : ""}
+              ${!isActive && !isDisabled ? "text-[#6d7379]" : ""}
+              ${isDisabled ? "text-gray-300 cursor-not-allowed" : "cursor-pointer"}
             `}
           >
             {opt.label}

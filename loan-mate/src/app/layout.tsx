@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
 import { NavigationProvider } from "@/context/NavigationContext";
 import "./globals.css";
-import PageAnimateWrapper from "@/components/layout/PageAnimateWrapper";
 import { WebVitals } from "@/components/vitals/WebVitals";
 import { Inter } from "next/font/google";
 
@@ -65,9 +64,7 @@ export default function RootLayout({
             {/* 실제 페이지 */}
             <ClientProviders>
               <NavigationProvider>
-                <PageAnimateWrapper>
-                  {children}
-                </PageAnimateWrapper>
+                {children}
               </NavigationProvider>
             </ClientProviders>
 
