@@ -30,9 +30,6 @@ import {
 import BudgetEditorContent from "../_components/modal/BudgetEditorModalPage";
 import WarningConfirmContent from "../_components/modal/WarningConfirmModalPage";
 
-const DEFAULT_SUMMARY_MESSAGE =
-  "이번 달 추천 한도와 실시간 지출 데이터를 확인해 보세요.";
-
 /**
  * 카테고리 → SegmentProgressBar용 segment 변환
  */
@@ -76,16 +73,17 @@ export default function ExpenditureLimitPage() {
   }, []);
 
   /** API */
-  const { data: recommend } = useSpendingRecommendQuery({ year, month });
-  const { data: spending } = useMonthlySpendingQuery({ year, month });
-  const { data: aiMessage } = useExpenditureAiMessageQuery({ year, month });
+  const { data: recommend, isLoading: isRecommendLoading } =
+    useSpendingRecommendQuery({ year, month });
+  const { data: spending, isLoading: isSpendingLoading } =
+    useMonthlySpendingQuery({ year, month });
+  const { data: aiMessage, isLoading: isAiLoading } =
+    useExpenditureAiMessageQuery({ year, month });
   const {
     data: loanLedgerDetails,
     isLoading: ledgerLoading,
     error: ledgerError,
   } = useLoanLedgerDetailsQuery();
-
-  const summaryMessage = aiMessage ?? DEFAULT_SUMMARY_MESSAGE;
 
   /** 추천 한도 / 수정 로직 (custom hook) */
   const {
@@ -144,6 +142,14 @@ export default function ExpenditureLimitPage() {
     setSheetOpen(true);
   };
 
+  if (isRecommendLoading || isSpendingLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center text-gray-700">
+        로딩 중입니다...
+      </div>
+    );
+  }
+
   return (
     <PageWithCTA
       ctaLabel="상환금 납부하러 가기"
@@ -183,8 +189,11 @@ export default function ExpenditureLimitPage() {
         />
       </BottomSheet>
 
-      {/* 설명 박스 */}
-      <MessageBox>{summaryMessage}</MessageBox>
+      {(isAiLoading || aiMessage) && (
+        <MessageBox>
+          {isAiLoading ? "AI 메시지를 불러오는 중입니다..." : aiMessage}
+        </MessageBox>
+      )}
 
       {/* 예외 수입/지출 */}
       <div className="mt-6 mb-4 px-1">
