@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import { useRouter } from "next/navigation";
 import {
   NavigationProvider,
   useNavigation,
@@ -9,12 +10,14 @@ import {
 
 function LayoutNavigationBar() {
   const { title } = useNavigation();
+  const router = useRouter();
 
   return (
     <NavigationBar
       title={title}
       showBack={true}
-      right={<button className="text-blue-600 text-sm">취소</button>}
+      right={<button className="text-blue-600 text-sm"
+      onClick={() => router.push("/auto-deposit")}>취소</button>}
     />
   );
 }

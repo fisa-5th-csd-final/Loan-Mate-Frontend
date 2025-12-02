@@ -77,7 +77,7 @@ export default function AutoDepositTable() {
                   >
                     <td className="py-3 text-left">{row.loanName}</td>
                     <td>{row.accountBalance.toLocaleString()}원</td>
-                    <td>{row.autoDepositEnabled ? "O" : "X"}</td>
+                    <td>{row.autoDepositEnabled ? "⭘" : "✕"}</td>
                   </tr>
                 ))
               )}
