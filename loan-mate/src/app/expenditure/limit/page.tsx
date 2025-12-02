@@ -24,6 +24,7 @@ import {
   useSpendingRecommendQuery,
   useUpdateSpendingLimitMutation,
 } from "@/lib/api/expenditure/hooks";
+import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
 import BottomSheet from "@/components/bottomSheet";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
@@ -37,6 +38,18 @@ function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
       color: meta.bg,
     };
   });
+}
+
+function formatNextRepaymentDate(dateStr: string | null | undefined) {
+  if (!dateStr) return "-";
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed.getTime())) return "-";
+
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, "0");
+  const date = String(parsed.getDate()).padStart(2, "0");
+
+  return `${year}.${month}.${date}`;
 }
 
 export default function ExpenditureLimitPage() {
@@ -53,6 +66,11 @@ export default function ExpenditureLimitPage() {
   // 추천 비율 API 호출
   const { data: recommend } = useSpendingRecommendQuery({ year, month });
   const { data: spending } = useMonthlySpendingQuery({ year, month });
+  const {
+    data: loanLedgerDetails,
+    isLoading: isLedgerLoading,
+    error: ledgerError,
+  } = useLoanLedgerDetailsQuery();
   const updateLimitMutation = useUpdateSpendingLimitMutation();
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -349,6 +367,72 @@ export default function ExpenditureLimitPage() {
                 </TableRow>
               );
             })}
+          </>
+        }
+      />
+
+      {/* 상환 일정 */}
+      <div className="mt-8 px-1">
+        <p className="text-[18px] font-semibold text-gray-900">대출 상환 일정</p>
+        <p className="text-[14px] text-gray-600 mt-1">
+          이번 달 예정된 상환금과 납부일을 확인하세요.
+        </p>
+      </div>
+
+      <TableSection
+        columns="0.8fr 1.8fr 1.2fr 1.3fr"
+        header={
+          <>
+            <span className="text-center">우선순위</span>
+            <span className="text-left pl-2">대출명</span>
+            <span className="text-center">월 상환금</span>
+            <span className="text-center">다음 상환일</span>
+          </>
+        }
+        rows={
+          <>
+            {isLedgerLoading && (
+              <TableRow>
+                <TableCell className="col-span-4 text-center text-gray-500">
+                  대출 상환 일정을 불러오는 중입니다.
+                </TableCell>
+              </TableRow>
+            )}
+
+            {ledgerError && !isLedgerLoading && (
+              <TableRow>
+                <TableCell className="col-span-4 text-center text-red-600">
+                  상환 일정을 불러오지 못했어요.
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!isLedgerLoading &&
+              !ledgerError &&
+              (loanLedgerDetails?.length ?? 0) === 0 && (
+                <TableRow>
+                  <TableCell className="col-span-4 text-center text-gray-500">
+                    예정된 상환 일정이 없습니다.
+                  </TableCell>
+                </TableRow>
+              )}
+
+            {loanLedgerDetails?.map((loan, index) => (
+              <TableRow key={loan.loanId ?? `${loan.loanName}-${index}`}>
+                <TableCell className="text-center text-gray-700">
+                  {index + 1}
+                </TableCell>
+                <TableCell className="text-left font-medium text-gray-900">
+                  {loan.loanName}
+                </TableCell>
+                <TableCell className="text-center font-semibold text-gray-900">
+                  {formatCurrency(loan.monthlyRepayment)}
+                </TableCell>
+                <TableCell className="text-center text-gray-800">
+                  {formatNextRepaymentDate(loan.nextRepaymentDate)}
+                </TableCell>
+              </TableRow>
+            ))}
           </>
         }
       />
