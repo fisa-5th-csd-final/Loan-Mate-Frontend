@@ -50,6 +50,14 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
 export const useNavigation = () => {
     const context = useContext(NavigationContext);
-    if (!context) throw new Error('useNavigation must be used within NavigationProvider');
+    if (!context) {
+        // Provider 외부에서 사용될 경우(예: global-error) 더미 객체 반환
+        return {
+            direction: 'none' as Direction,
+            push: (href: string) => { },
+            back: () => { },
+            setDirection: () => { },
+        };
+    }
     return context;
 };
