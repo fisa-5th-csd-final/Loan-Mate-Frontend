@@ -138,8 +138,8 @@ export default function ExpenditureLimitPage() {
         typeof ratioFromSpending === "number"
           ? ratioFromSpending
           : budget > 0
-          ? (recommendedAmount / budget) * 100
-          : 0;
+            ? (recommendedAmount / budget) * 100
+            : 0;
 
       return {
         id: key.toLowerCase(),
@@ -374,6 +374,24 @@ export default function ExpenditureLimitPage() {
           </>
         }
       />
+      {/* 이번 달 사용/잔여 금액 */}
+      <div className="flex gap-3 px-1 mt-5">
+        <MessageBox className="flex-1 text-left">
+          <span>이번 달에 총 </span>
+          <span className="font-semibold text-blue-700">
+            {formatCurrency(totalSpent)}
+          </span>
+          <span> 썼어요</span>
+        </MessageBox>
+
+        <MessageBox className="flex-1 text-left">
+          <span>이번 달에 총 </span>
+          <span className="font-semibold text-blue-700">
+            {formatCurrency(availableTotal)}
+          </span>
+          <span> 쓸 수 있어요</span>
+        </MessageBox>
+      </div>
 
       {/* 상환 일정 */}
       <div className="mt-8 px-1">
@@ -384,11 +402,9 @@ export default function ExpenditureLimitPage() {
       </div>
 
       <TableSection
-        columns="0.8fr 1.8fr 1.2fr 1.3fr"
         header={
           <>
-            <span className="text-center">우선순위</span>
-            <span className="text-left pl-2">대출명</span>
+            <span className="text-center">대출명</span>
             <span className="text-center">월 상환금</span>
             <span className="text-center">다음 상환일</span>
           </>
@@ -423,10 +439,7 @@ export default function ExpenditureLimitPage() {
 
             {loanLedgerDetails?.map((loan, index) => (
               <TableRow key={loan.loanId ?? `${loan.loanName}-${index}`}>
-                <TableCell className="text-center text-gray-700">
-                  {index + 1}
-                </TableCell>
-                <TableCell className="text-left font-medium text-gray-900">
+                <TableCell className="text-left font-medium text-gray-900 truncate">
                   {loan.loanName}
                 </TableCell>
                 <TableCell className="text-center font-semibold text-gray-900">
@@ -440,25 +453,6 @@ export default function ExpenditureLimitPage() {
           </>
         }
       />
-
-      {/* 이번 달 사용/잔여 금액 */}
-      <div className="flex gap-3 px-1 mt-5">
-        <MessageBox className="flex-1 text-left">
-          <span>이번 달에 총 </span>
-          <span className="font-semibold text-blue-700">
-            {formatCurrency(totalSpent)}
-          </span>
-          <span> 썼어요</span>
-        </MessageBox>
-
-        <MessageBox className="flex-1 text-left">
-          <span>이번 달에 총 </span>
-          <span className="font-semibold text-blue-700">
-            {formatCurrency(availableTotal)}
-          </span>
-          <span> 쓸 수 있어요</span>
-        </MessageBox>
-      </div>
     </PageWithCTA>
   );
 }
