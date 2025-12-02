@@ -5,13 +5,17 @@ import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TransferTabs from "@/components/TransferTabs";
 import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
 import { ChevronDown } from "lucide-react";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 function Prepaid2Inner() {
   const router = useRouter();
   const params = useSearchParams();
   const mode = params.get("mode");
   const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition(); // Added
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // Added
 
   useEffect(() => {
     setTitle("수신인 입력하기");
@@ -19,7 +23,7 @@ function Prepaid2Inner() {
     setRight(
       <button
         className="text-blue-600 text-sm"
-        onClick={() => router.push("/auto-deposit")}
+        onClick={() => setIsCancelModalOpen(true)} // Modified
       >
         취소
       </button>
@@ -104,6 +108,15 @@ function Prepaid2Inner() {
         </div>
         <p className="text-gray-500 text-sm mt-4">최근 이체 내역이 없어요</p>
       </div>
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
+      />
     </div>
   );
 }

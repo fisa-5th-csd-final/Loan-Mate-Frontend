@@ -6,7 +6,9 @@ import InstitutionSearchBar from "@/components/search/SearchBar";
 import InstitutionList from "@/components/institution/InstitutionList";
 import CommonButton from "@/components/button/CommonButton";
 import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
 import CategoryTabs from "@/components/CategoryTabs";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 import { useEffect, useState, Suspense } from "react";
 import { apiClient } from "@/lib/api/client";
 
@@ -14,7 +16,10 @@ function ApplyAutoDepositContent() {
   const params = useSearchParams();
   const mode = params.get("mode");
   const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
   const router = useRouter();
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
@@ -30,14 +35,24 @@ function ApplyAutoDepositContent() {
 
     setShowBack(true);
     setRight(
-      <button
-        className="text-blue-600 text-sm"
-        onClick={() => router.push("/auto-deposit")}
-      >
-        취소
-      </button>
+      <>
+        <button
+          className="text-blue-600 text-sm"
+          onClick={() => setIsCancelModalOpen(true)}
+        >
+          취소
+        </button>
+        <ConfirmModal
+          isOpen={isCancelModalOpen}
+          onClose={() => setIsCancelModalOpen(false)}
+          onConfirm={() => push("/main", "back")}
+          title="취소하시겠습니까?"
+          description="작성 중인 내용은 저장되지 않습니다."
+          confirmLabel="확인"
+        />
+      </>
     );
-  }, [mode, setTitle, setShowBack, setRight, router]);
+  }, [mode, setTitle, setShowBack, setRight, isCancelModalOpen, push]);
 
   // API 호출하여 목록 불러오기
   useEffect(() => {

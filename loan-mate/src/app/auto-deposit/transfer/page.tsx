@@ -11,6 +11,8 @@ import { useTransferStore } from "@/stores/useTransferStore";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { transferMoney } from "@/lib/api/auto-deposit/transferApi";
 import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
@@ -21,12 +23,20 @@ function TransferFinalInner() {
 
   const router = useRouter();
   const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   useEffect(() => {
     setTitle("송금하기");
     setShowBack(true);
     setRight(
-      <button className="text-blue-500 text-sm">취소</button>
+      <button
+        className="text-blue-500 text-sm"
+        onClick={() => setIsCancelModalOpen(true)}
+      >
+        취소
+      </button>
     );
   }, [setTitle, setShowBack, setRight]);
 
@@ -172,6 +182,15 @@ function TransferFinalInner() {
           onDelete={deleteDigit}
         />
       </BottomSheet>
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
+      />
     </div>
   );
 }
