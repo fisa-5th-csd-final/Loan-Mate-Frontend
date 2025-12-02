@@ -100,7 +100,10 @@ export async function request<T = unknown>(path: string, options: RequestOptions
       throw new Error("Refresh expired");
     }
 
-    const retryUrl = `${url}?_t=${Math.random()}`;
+    // 안전한 쿼리 파라미터 추가 방식
+    const retryUrlObj = new URL(url);
+    retryUrlObj.searchParams.set('_t', Math.random().toString());
+    const retryUrl = retryUrlObj.toString();
 
     response = await fetch(retryUrl, {
       ...fetchOptions,
@@ -108,9 +111,10 @@ export async function request<T = unknown>(path: string, options: RequestOptions
       headers,
       credentials: 'include',
       body: preparedBody,
-      cache: 'no-store', 
+      cache: 'no-store',
     });
   }
+
 
   const data = await parseResponse(response);
   if (!response.ok) {
