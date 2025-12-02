@@ -67,7 +67,7 @@ export default function ConnectPage() {
 
   return (
     <div>
-      <h2 className="text-[18px] font-semibold mt-7">
+      <h2 className="text-[18px] font-semibold mt-4">
         연결할 기관을 선택해 주세요
       </h2>
 
