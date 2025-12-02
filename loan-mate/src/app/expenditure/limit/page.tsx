@@ -10,6 +10,7 @@ import CommonButton from "@/components/button/CommonButton";
 import TableSection from "@/components/ui/TableSection";
 import { TableRow, TableCell } from "@/components/ui/Table";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
+import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 import {
   useMonthlySpendingQuery,
@@ -145,7 +146,7 @@ export default function ExpenditureLimitPage() {
   if (isRecommendLoading || isSpendingLoading) {
     return (
       <div className="flex h-screen items-center justify-center text-gray-700">
-        로딩 중입니다...
+        <LoadingSpinner label="추천 한도와 지출을 불러오는 중입니다..." size="md" />
       </div>
     );
   }
@@ -191,7 +192,13 @@ export default function ExpenditureLimitPage() {
 
       {(isAiLoading || aiMessage) && (
         <MessageBox>
-          {isAiLoading ? "AI 메시지를 불러오는 중입니다..." : aiMessage}
+          {isAiLoading ? (
+            <div className="flex items-center justify-center">
+              <LoadingSpinner label="AI 메시지를 불러오는 중입니다..." size="sm" />
+            </div>
+          ) : (
+            aiMessage
+          )}
         </MessageBox>
       )}
 
