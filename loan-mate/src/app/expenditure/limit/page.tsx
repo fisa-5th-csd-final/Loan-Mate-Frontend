@@ -6,7 +6,6 @@ import { TableRow, TableCell } from "@/components/ui/Table";
 import { expenditureLimitSample } from "@/data/expenditure-limit.sample";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
 import PageWithCTA from "../_components/PageWithCTA";
-import { useRouter } from "next/navigation"
 import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
@@ -27,7 +26,6 @@ function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
 
 export default function ExpenditureLimitPage() {
   const data = expenditureLimitSample;
-  const router = useRouter();
 
   return (
     <PageWithCTA
@@ -69,7 +67,7 @@ export default function ExpenditureLimitPage() {
           {/* 예외 수입 추가하기 버튼 */}
           <CommonButton
             label="예외 수입 추가하기"
-            onClick={() => router.push("/expenditure/add-unexpected/income")}
+            href="/expenditure/add-unexpected/income"
             widthClassName="w-1/2"
             size="lg"
             colorClassName="bg-[#E3F2FD] hover:bg-[#D6EBFB]"
@@ -80,7 +78,7 @@ export default function ExpenditureLimitPage() {
           {/* 예외 지출 추가하기 버튼 */}
           <CommonButton
             label="예외 지출 추가하기"
-            onClick={() => router.push("/expenditure/add-unexpected/outlay")}
+            href="/expenditure/add-unexpected/outlay"
             widthClassName="w-1/2"
             size="lg"
             colorClassName="bg-[#FFE7D9] hover:bg-[#FFDCCB]"

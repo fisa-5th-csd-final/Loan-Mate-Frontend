@@ -1,7 +1,8 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import CommonButton from "@/components/button/CommonButton";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
@@ -11,7 +12,6 @@ import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
 
 export default function AutoDepositAmountPage() {
-  const router = useRouter();
 
   const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
@@ -49,14 +49,17 @@ export default function AutoDepositAmountPage() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* ------------------ Header ------------------ */}
-          <NavigationBar
-            showBack={true}
-            right={
-            <button 
-              className="text-blue-600 text-sm"
-              onClick={() => router.push("/auto-deposit")}>취소</button>
-            }
-          />
+      <NavigationBar
+        showBack={true}
+        right={
+          <Link
+            href="/auto-deposit"
+            className="text-blue-600 text-sm"
+          >
+            취소
+          </Link>
+        }
+      />
       <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
       {/* ------------------ From Account ------------------ */}
@@ -182,10 +185,7 @@ export default function AutoDepositAmountPage() {
         }
         className="rounded-xl text-lg font-medium"
         disabled={isOverBalance}
-        onClick={() => {
-          if (isOverBalance) return;
-          router.push(`/auto-deposit/confirm`);
-        }}
+        href="/auto-deposit/confirm"
       />
     </div>
   );
