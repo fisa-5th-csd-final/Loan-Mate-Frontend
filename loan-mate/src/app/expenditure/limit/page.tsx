@@ -92,6 +92,7 @@ export default function ExpenditureLimitPage() {
     draft,
     edited,
     setDraft,
+    aiBaseline,
     applyDraft,
     isOverBaseline,
     isLoading,
@@ -99,12 +100,22 @@ export default function ExpenditureLimitPage() {
 
   /** 통계 계산 */
   const budget: number = recommend?.variableSpendingBudget ?? 0;
+  const userBudget = useMemo(
+    () => KEYS.reduce((sum, key) => sum + (edited[key] ?? 0), 0),
+    [KEYS, edited]
+  );
+  const effectiveBudget = userBudget > 0 ? userBudget : budget;
+  const isUserCustomized = useMemo(
+    () => KEYS.some((key) => (edited[key] ?? 0) !== (aiBaseline[key] ?? 0)),
+    [KEYS, aiBaseline, edited]
+  );
+  const limitHeaderLabel = isUserCustomized ? "사용자 지정 한도" : "추천 지출 한도";
 
   const { categories, totalSpent, overspent } = useSpendingMetrics(
     spending,
     edited,
     KEYS,
-    budget
+    effectiveBudget
   );
 
   /** BottomSheet 관리 */
@@ -249,7 +260,7 @@ export default function ExpenditureLimitPage() {
           <>
             <span className="text-center">카테고리</span>
             <span className="text-center">지출 금액</span>
-            <span className="text-center">추천 지출 한도</span>
+            <span className="text-center">{limitHeaderLabel}</span>
           </>
         }
         rows={
@@ -315,7 +326,7 @@ export default function ExpenditureLimitPage() {
             <>
               이번 달에 총{" "}
               <span className="font-semibold text-blue-700">
-                {(budget - totalSpent).toLocaleString()}
+                {Math.max(0, effectiveBudget - totalSpent).toLocaleString()}
               </span>
               원 쓸 수 있어요
             </>

@@ -25,7 +25,7 @@ export function useSpendingMetrics(
   spending: MonthlySpendingResponse | undefined,
   edited: Record<ConsumptionCategoryKey, number>,
   keys: ConsumptionCategoryKey[],
-  budget: number
+  totalBudget: number
 ): SpendingMetricsResult {
   const spendingMap = new Map<ConsumptionCategoryKey, number>(
     (spending?.categories ?? []).map(
@@ -47,8 +47,8 @@ export function useSpendingMetrics(
     const ratio =
       typeof percentFromSpending === "number"
         ? percentFromSpending
-        : budget > 0
-        ? (amount / budget) * 100
+        : totalBudget > 0
+        ? (amount / totalBudget) * 100
         : 0;
 
     return {
@@ -67,6 +67,6 @@ export function useSpendingMetrics(
   return {
     categories,
     totalSpent,
-    overspent: totalSpent > budget,
+    overspent: totalSpent > totalBudget,
   };
 }
