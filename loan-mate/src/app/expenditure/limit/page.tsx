@@ -1,231 +1,142 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import PageWithCTA from "../_components/PageWithCTA";
 import MessageBox from "@/components/MessageBox";
+import BottomSheet from "@/components/bottomSheet";
+import CommonButton from "@/components/button/CommonButton";
 import TableSection from "@/components/ui/TableSection";
 import { TableRow, TableCell } from "@/components/ui/Table";
-import { formatCurrency } from "@/lib/util/NumberFormatter";
-import PageWithCTA from "../_components/PageWithCTA";
-import {
-  ConsumptionCategoryKeyMap,
-  ConsumptionCategoryMeta,
-  ConsumptionCategoryLabelMap,
-} from "../_components/ConsumptionCategoryMeta";
-import {
-  ConsumptionCategoryKey,
-  ExpenditureCategory,
-} from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
-import CommonButton from "@/components/button/CommonButton";
+
 import {
   useMonthlySpendingQuery,
   useSpendingRecommendQuery,
-  useUpdateSpendingLimitMutation,
   useExpenditureAiMessageQuery,
 } from "@/lib/api/expenditure/hooks";
 import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
-import BottomSheet from "@/components/bottomSheet";
-import WarningConfirmModal from "../_components/modal/WarningConfirmModalPage";
+import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
 
-function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
-  const positive = categories.filter((cat) => cat.ratio > 0);
+import { ConsumptionCategoryLabelMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 
-  return positive.map((cat) => {
-    const key = ConsumptionCategoryKeyMap[cat.name];
-    const meta = ConsumptionCategoryMeta[key];
+import { useSpendingRecommendationManager } from "./_hooks/useSpendingRecommendationManager";
+import {
+  useSpendingMetrics,
+  type SpendingCategoryView,
+} from "./_hooks/useSpendingMetrics";
 
-    return {
-      label: cat.name,
-      percent: cat.ratio / 100,
-      color: meta.bg,
-    };
-  });
-}
-
-function formatNextRepaymentDate(dateStr: string | null | undefined) {
-  if (!dateStr) return "-";
-  const parsed = new Date(dateStr);
-  if (isNaN(parsed.getTime())) return "-";
-
-  const year = parsed.getFullYear();
-  const month = String(parsed.getMonth() + 1).padStart(2, "0");
-  const date = String(parsed.getDate()).padStart(2, "0");
-
-  return `${year}.${month}.${date}`;
-}
+import BudgetEditorContent from "../_components/modal/BudgetEditorModalPage";
+import WarningConfirmContent from "../_components/modal/WarningConfirmModalPage";
 
 const DEFAULT_SUMMARY_MESSAGE =
   "이번 달 추천 한도와 실시간 지출 데이터를 확인해 보세요.";
 
+/**
+ * 카테고리 → SegmentProgressBar용 segment 변환
+ */
+function convertCategoriesToSegments(
+  categories: SpendingCategoryView[]
+): { label: string; percent: number; color: string }[] {
+  return categories
+    .filter((c) => c.ratio > 0)
+    .map((c) => {
+      const meta = ConsumptionCategoryMeta[c.key];
+      return {
+        label: ConsumptionCategoryLabelMap[c.key],
+        percent: c.ratio / 100,
+        color: meta.bg,
+      };
+    });
+}
+
+/**
+ * yyyy.MM.dd 형식으로 날짜 포맷
+ */
+function formatNextRepaymentDate(
+  dateStr: string | null | undefined
+): string {
+  if (!dateStr) return "-";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return "-";
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}.${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export default function ExpenditureLimitPage() {
   const router = useRouter();
 
-  // 현재 날짜
+  /** 날짜 */
   const { year, month } = useMemo(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
   }, []);
 
-  // 추천 비율 API 호출
+  /** API */
   const { data: recommend } = useSpendingRecommendQuery({ year, month });
   const { data: spending } = useMonthlySpendingQuery({ year, month });
+  const { data: aiMessage } = useExpenditureAiMessageQuery({ year, month });
   const {
     data: loanLedgerDetails,
-    isLoading: isLedgerLoading,
+    isLoading: ledgerLoading,
     error: ledgerError,
   } = useLoanLedgerDetailsQuery();
-  const { data: aiMessage } = useExpenditureAiMessageQuery({ year, month });
-  const updateLimitMutation = useUpdateSpendingLimitMutation();
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [warningOpen, setWarningOpen] = useState(false);
+
   const summaryMessage = aiMessage ?? DEFAULT_SUMMARY_MESSAGE;
 
-  // 프론트에서 사용할 카테고리 정의
-  const FRONT_USE_KEYS: ConsumptionCategoryKey[] = [
-    "FOOD",
-    "TRANSPORT",
-    "SHOPPING",
-    "ENTERTAINMENT",
-  ];
+  /** 추천 한도 / 수정 로직 (custom hook) */
+  const {
+    KEYS,
+    draft,
+    edited,
+    setDraft,
+    applyDraft,
+    isOverBaseline,
+    isLoading,
+  } = useSpendingRecommendationManager(recommend);
 
-  const baseRecommended = useMemo(
-    () =>
-      FRONT_USE_KEYS.reduce((acc, key) => {
-        const raw = recommend?.categoryRecommendation?.[key];
-        acc[key] = typeof raw === "number" ? raw : 0;
-        return acc;
-      }, {} as Record<ConsumptionCategoryKey, number>),
-    [recommend?.categoryRecommendation]
+  /** 통계 계산 */
+  const budget: number = recommend?.variableSpendingBudget ?? 0;
+
+  const { categories, totalSpent, overspent } = useSpendingMetrics(
+    spending,
+    edited,
+    KEYS,
+    budget
   );
 
-  const warningRecommended = useMemo(() => {
-    const source =
-      recommend?.aiOriginalValues &&
-      Object.keys(recommend.aiOriginalValues).length > 0
-        ? recommend.aiOriginalValues
-        : recommend?.categoryRecommendation;
+  /** BottomSheet 관리 */
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [warningOpen, setWarningOpen] = useState(false);
 
-    return FRONT_USE_KEYS.reduce((acc, key) => {
-      const raw = source?.[key];
-      acc[key] = typeof raw === "number" ? raw : 0;
-      return acc;
-    }, {} as Record<ConsumptionCategoryKey, number>);
-  }, [recommend?.aiOriginalValues, recommend?.categoryRecommendation]);
-
-  const [editedRecommended, setEditedRecommended] =
-    useState<Record<ConsumptionCategoryKey, number>>(baseRecommended);
-
-  useEffect(() => {
-    setEditedRecommended(baseRecommended);
-  }, [baseRecommended]);
-
-  const [draftRecommended, setDraftRecommended] =
-    useState<Record<ConsumptionCategoryKey, number>>(baseRecommended);
-
-  useEffect(() => {
-    if (sheetOpen) {
-      setDraftRecommended(editedRecommended);
-    }
-  }, [editedRecommended, sheetOpen]);
-
-  // 추천 예산이 없으면 카테고리 합계로 대체
-  const budget = useMemo(() => {
-    const total = recommend?.variableSpendingBudget ?? 0;
-    if (total) return total;
-
-    return FRONT_USE_KEYS.reduce(
-      (sum, key) => sum + (editedRecommended[key] ?? 0),
-      0
-    );
-  }, [recommend?.variableSpendingBudget, editedRecommended]);
-
-  const categoriesWithRecommendation = useMemo(() => {
-    const spendingByCategory = new Map(
-      (spending?.categories ?? []).map((item) => [item.category, item.amount])
-    );
-    const spendingPercentByCategory = new Map(
-      (spending?.categories ?? []).map((item) => [item.category, item.percent])
-    );
-
-    return FRONT_USE_KEYS.map((key) => {
-      const recommendedAmount = editedRecommended[key] ?? 0;
-      const ratioFromSpending = spendingPercentByCategory.get(key);
-      const ratioPercent =
-        typeof ratioFromSpending === "number"
-          ? ratioFromSpending
-          : budget > 0
-            ? (recommendedAmount / budget) * 100
-            : 0;
-
-      return {
-        id: key.toLowerCase(),
-        name: ConsumptionCategoryLabelMap[key],
-        ratio: Math.round(ratioPercent * 100) / 100, // percent 단위 (실지출 기준)
-        spent: spendingByCategory.get(key) ?? 0,
-        available: recommendedAmount,
-        icon: ConsumptionCategoryMeta[key].icon,
-      };
-    });
-  }, [budget, spending, editedRecommended]);
-
-  // totalSpent 계산
-  const totalSpent = useMemo(
-    () =>
-      typeof spending?.totalSpent === "number"
-        ? spending.totalSpent
-        : categoriesWithRecommendation.reduce((sum, cat) => sum + cat.spent, 0),
-    [categoriesWithRecommendation, spending?.totalSpent]
-  );
-
-  // 총 사용 가능 금액 계산
-  const availableTotal = Math.max(0, Math.round(budget - totalSpent));
-  const isOverspent = totalSpent > budget;
-
-  const handleDraftChange = (key: ConsumptionCategoryKey, value: string) => {
-    const parsed = Number(value);
-    const safe = Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
-    setDraftRecommended((prev) => ({ ...prev, [key]: safe }));
-  };
-
-  const applyDraft = useCallback(async () => {
-    setEditedRecommended(draftRecommended);
-
-    try {
-      await updateLimitMutation.mutateAsync({
-        user_limit_amount: draftRecommended,
-      });
-      setSheetOpen(false);
-    } catch (err) {
-      console.error("사용자 지출 한도 수정 실패", err);
-    }
-  }, [draftRecommended, updateLimitMutation]);
-
-  const isDraftOverRecommended = useCallback(() => {
-    return FRONT_USE_KEYS.some((key) => {
-      const baseAmount = warningRecommended[key];
-      const draftAmount = draftRecommended[key] ?? 0;
-
-      if (!Number.isFinite(baseAmount)) return false;
-
-      return draftAmount > baseAmount;
-    });
-  }, [draftRecommended, warningRecommended]);
-
-  const handleApplyDraft = () => {
-    if (isDraftOverRecommended()) {
+  /** 수정 적용 핸들러 */
+  const handleApply = () => {
+    if (isOverBaseline()) {
       setSheetOpen(false);
       setWarningOpen(true);
       return;
     }
-
     void applyDraft();
+    setSheetOpen(false);
   };
 
+  const handleDraftChange = (
+    key: ConsumptionCategoryKey,
+    value: number
+  ) => {
+    setDraft((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+
   const handleConfirmWarning = async () => {
-    setWarningOpen(false);
     await applyDraft();
+    setWarningOpen(false);
   };
 
   const handleCancelWarning = () => {
@@ -236,14 +147,13 @@ export default function ExpenditureLimitPage() {
   return (
     <PageWithCTA
       ctaLabel="상환금 납부하러 가기"
-      onClick={() => console.log("저장")}
+      onClick={() => console.log("CTA clicked")}
     >
-      {/* 상단 영역 */}
+      {/* 상단 */}
       <div className="flex items-center justify-between mb-3 px-1">
         <p className="text-gray-900 text-[18px] font-semibold">
           한도를 수정할 수 있어요
         </p>
-
         <button
           className="px-3 py-1 text-[12px] rounded-full bg-gray-100 text-gray-700 border border-gray-300"
           onClick={() => setSheetOpen(true)}
@@ -252,87 +162,26 @@ export default function ExpenditureLimitPage() {
         </button>
       </div>
 
+      {/* 수정 BottomSheet */}
       <BottomSheet open={sheetOpen} onClose={() => setSheetOpen(false)}>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <p className="text-[17px] font-semibold text-gray-900">추천 금액 수정</p>
-            <p className="text-sm text-gray-500 mt-1">
-              카테고리별 추천 지출 한도를 직접 입력하세요.
-            </p>
-          </div>
-          <button
-            className="text-sm text-gray-500 px-3 py-1 rounded-full hover:bg-gray-100"
-            onClick={() => setSheetOpen(false)}
-          >
-            닫기
-          </button>
-        </div>
-
-        <div className="space-y-3">
-          {FRONT_USE_KEYS.map((key) => {
-            const meta = ConsumptionCategoryMeta[key];
-            const Icon = meta.icon;
-            const value = draftRecommended[key] ?? 0;
-
-            return (
-              <div
-                key={key}
-                className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-3 shadow-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: meta.hex + "20" }}
-                  >
-                    <Icon size={20} color={meta.hex} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-900">
-                      {ConsumptionCategoryLabelMap[key]}
-                    </span>
-                    <span className="text-xs text-gray-500">추천 금액</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    className="w-28 rounded-lg border border-gray-200 px-3 py-2 text-right text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
-                    value={value}
-                    onChange={(e) => handleDraftChange(key, e.target.value)}
-                  />
-                  <span className="text-sm text-gray-500">원</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex gap-3 mt-6">
-          <button
-            className="w-1/2 rounded-lg border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            onClick={() => setSheetOpen(false)}
-          >
-            취소
-          </button>
-          <CommonButton
-            label="적용하기"
-            onClick={handleApplyDraft}
-            widthClassName="w-1/2"
-            size="lg"
-            disabled={updateLimitMutation.isPending}
-          />
-        </div>
+        <BudgetEditorContent
+          KEYS={KEYS}
+          draft={draft}
+          onChange={handleDraftChange}
+          onApply={handleApply}
+          isProcessing={isLoading}
+        />
       </BottomSheet>
 
-      <WarningConfirmModal
-        open={warningOpen}
-        onConfirm={handleConfirmWarning}
-        onCancel={handleCancelWarning}
-        isProcessing={updateLimitMutation.isPending}
-      />
+
+      {/* 경고 BottomSheet */}
+      <BottomSheet open={warningOpen} onClose={handleCancelWarning}>
+        <WarningConfirmContent
+          onConfirm={handleConfirmWarning}
+          onCancel={handleCancelWarning}
+          isProcessing={isLoading}
+        />
+      </BottomSheet>
 
       {/* 설명 박스 */}
       <MessageBox>{summaryMessage}</MessageBox>
@@ -377,9 +226,7 @@ export default function ExpenditureLimitPage() {
       <TableSection
         topContent={
           <SegmentProgressBar
-            segments={convertCategoriesToSegments(
-              categoriesWithRecommendation
-            )}
+            segments={convertCategoriesToSegments(categories)}
           />
         }
         header={
@@ -391,14 +238,14 @@ export default function ExpenditureLimitPage() {
         }
         rows={
           <>
-            {categoriesWithRecommendation.map((cat) => {
-              const metaKey = ConsumptionCategoryKeyMap[cat.name];
-              const meta = ConsumptionCategoryMeta[metaKey];
+            {categories.map((cat) => {
+              const meta = ConsumptionCategoryMeta[cat.key];
               const Icon = meta.icon;
-              const overspent = cat.spent > cat.available;
+              const label = ConsumptionCategoryLabelMap[cat.key];
+              const overs = cat.spent > cat.amount;
 
               return (
-                <TableRow key={cat.id}>
+                <TableRow key={cat.key}>
                   <TableCell className="text-center font-medium">
                     <div className="flex items-center gap-3">
                       <div
@@ -407,10 +254,9 @@ export default function ExpenditureLimitPage() {
                       >
                         <Icon size={20} color={meta.hex} />
                       </div>
-
                       <div className="flex flex-col text-sm">
                         <span className="font-medium text-gray-900">
-                          {cat.name}
+                          {label}
                         </span>
                         <span className="text-gray-500 text-[11px]">
                           {cat.ratio}%
@@ -420,15 +266,14 @@ export default function ExpenditureLimitPage() {
                   </TableCell>
 
                   <TableCell
-                    className={`text-center font-medium ${
-                      overspent ? "text-red-600" : ""
-                    }`}
+                    className={`text-center font-medium ${overs ? "text-red-600" : ""
+                      }`}
                   >
-                    {formatCurrency(cat.spent)}
+                    {cat.spent.toLocaleString()}원
                   </TableCell>
 
                   <TableCell className="text-center font-medium">
-                    {formatCurrency(cat.available)}
+                    {cat.amount.toLocaleString()}원
                   </TableCell>
                 </TableRow>
               );
@@ -436,26 +281,27 @@ export default function ExpenditureLimitPage() {
           </>
         }
       />
-      {/* 이번 달 사용/잔여 금액 */}
+
+      {/* 총 사용 / 잔여 */}
       <div className="flex gap-3 px-1 mt-5">
         <MessageBox className="flex-1 text-left">
-          <span>이번 달에 총 </span>
+          이번 달에 총{" "}
           <span className="font-semibold text-blue-700">
-            {formatCurrency(totalSpent)}
+            {totalSpent.toLocaleString()}
           </span>
-          <span> 썼어요</span>
+          원 썼어요
         </MessageBox>
 
         <MessageBox className="flex-1 text-left">
-          {isOverspent ? (
+          {overspent ? (
             <span>이번 달은 이미 추천 지출을 초과했어요</span>
           ) : (
             <>
-              <span>이번 달에 총 </span>
+              이번 달에 총{" "}
               <span className="font-semibold text-blue-700">
-                {formatCurrency(availableTotal)}
+                {(budget - totalSpent).toLocaleString()}
               </span>
-              <span> 쓸 수 있어요</span>
+              원 쓸 수 있어요
             </>
           )}
         </MessageBox>
@@ -479,39 +325,29 @@ export default function ExpenditureLimitPage() {
         }
         rows={
           <>
-            {isLedgerLoading && (
+            {ledgerLoading && (
               <TableRow>
-                <TableCell className="col-span-4 text-center text-gray-500">
-                  대출 상환 일정을 불러오는 중입니다.
+                <TableCell className="text-center text-gray-500">
+                  불러오는 중입니다...
                 </TableCell>
               </TableRow>
             )}
 
-            {ledgerError && !isLedgerLoading && (
+            {ledgerError && !ledgerLoading && (
               <TableRow>
-                <TableCell className="col-span-4 text-center text-red-600">
-                  상환 일정을 불러오지 못했어요.
+                <TableCell className="text-center text-red-600">
+                  불러오지 못했어요
                 </TableCell>
               </TableRow>
             )}
 
-            {!isLedgerLoading &&
-              !ledgerError &&
-              (loanLedgerDetails?.length ?? 0) === 0 && (
-                <TableRow>
-                  <TableCell className="col-span-4 text-center text-gray-500">
-                    예정된 상환 일정이 없습니다.
-                  </TableCell>
-                </TableRow>
-              )}
-
-            {loanLedgerDetails?.map((loan, index) => (
-              <TableRow key={loan.loanId ?? `${loan.loanName}-${index}`}>
+            {loanLedgerDetails?.map((loan) => (
+              <TableRow key={loan.loanId}>
                 <TableCell className="text-left font-medium text-gray-900 truncate">
                   {loan.loanName}
                 </TableCell>
                 <TableCell className="text-center font-semibold text-gray-900">
-                  {formatCurrency(loan.monthlyRepayment)}
+                  {loan.monthlyRepayment.toLocaleString()}원
                 </TableCell>
                 <TableCell className="text-center text-gray-800">
                   {formatNextRepaymentDate(loan.nextRepaymentDate)}
