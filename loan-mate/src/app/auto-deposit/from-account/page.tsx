@@ -50,7 +50,7 @@ type AccountListResponse = AccountDetail[];
 function PrepaidContent() {
   const router = useRouter();
   const params = useSearchParams();
-  const { setTitle } = useNavigation();
+  const { setTitle, setShowBack, setRight } = useNavigation();
 
   const mode = params.get("mode");
   const [accounts, setAccounts] = useState<any[]>([]);
@@ -58,10 +58,17 @@ function PrepaidContent() {
   const { select: selectFromAccount } = useSelectFromAccount();
 
   useEffect(() => {
-    if (mode === "deposit") setTitle("자동예치 신청하기");
-    else if (mode === "prepaid") setTitle("선납하기");
-    else setTitle("신청하기");
-  }, [mode, setTitle]);
+    setTitle("계좌 선택하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-600 text-sm"
+        onClick={() => router.push("/auto-deposit")}
+      >
+        취소
+      </button>
+    );
+  }, [mode, setTitle, setShowBack, setRight, router]);
 
   useEffect(() => {
     async function fetchAccounts() {

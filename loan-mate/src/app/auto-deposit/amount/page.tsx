@@ -2,24 +2,29 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import CommonButton from "@/components/button/CommonButton";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 export default function AutoDepositAmountPage() {
 
   const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
+  const { setTitle, setShowBack, setRight } = useNavigation();
 
   const { inputAccount, bankName, bankLogo, amount, setAmount } =
     useTransferStore();
 
   useEffect(() => {
+    setTitle("금액 입력하기");
+    setShowBack(true);
+    setRight(
+      <button className="text-blue-500 text-sm">취소</button>
+    );
     const selected = getFromAccount();
     setFromAccount(selected);
   }, []);
@@ -49,17 +54,6 @@ export default function AutoDepositAmountPage() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* ------------------ Header ------------------ */}
-      <NavigationBar
-        showBack={true}
-        right={
-          <Link
-            href="/auto-deposit"
-            className="text-blue-600 text-sm"
-          >
-            취소
-          </Link>
-        }
-      />
       <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
       {/* ------------------ From Account ------------------ */}

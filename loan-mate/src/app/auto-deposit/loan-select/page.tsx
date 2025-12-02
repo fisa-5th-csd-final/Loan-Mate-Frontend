@@ -13,7 +13,7 @@ import { apiClient } from "@/lib/api/client";
 function ApplyAutoDepositContent() {
   const params = useSearchParams();
   const mode = params.get("mode");
-  const { setTitle } = useNavigation();
+  const { setTitle, setShowBack, setRight } = useNavigation();
   const router = useRouter();
 
   const tabs = ["추천", "신용", "담보", "부동산"];
@@ -24,10 +24,20 @@ function ApplyAutoDepositContent() {
 
   // 화면 상단 제목 설정
   useEffect(() => {
-    if (mode === "deposit") setTitle("자동예치 신청하기");
+    if (mode === "deposit") setTitle("자동예치 등록하기");
     else if (mode === "prepaid") setTitle("선납하기");
     else setTitle("신청하기");
-  }, [mode, setTitle]);
+
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-600 text-sm"
+        onClick={() => router.push("/auto-deposit")}
+      >
+        취소
+      </button>
+    );
+  }, [mode, setTitle, setShowBack, setRight, router]);
 
   // API 호출하여 목록 불러오기
   useEffect(() => {
@@ -35,7 +45,7 @@ function ApplyAutoDepositContent() {
       try {
         const res = await apiClient.get<{
           data: {
-            loanLedgerId: { value: number},
+            loanLedgerId: { value: number },
             loanName: string;
             accountBalance: number;
             autoDepositEnabled: boolean;
@@ -48,12 +58,12 @@ function ApplyAutoDepositContent() {
         }
         const mapped = Array.isArray(res.data)
           ? res.data.map((item) => ({
-              loanLedgerId: item.loanLedgerId?.value,
-              logo: getBankLogo(item.loanName),
-              name: item.loanName,
-              connected: item.autoDepositEnabled,
-              checked: false
-            }))
+            loanLedgerId: item.loanLedgerId?.value,
+            logo: getBankLogo(item.loanName),
+            name: item.loanName,
+            connected: item.autoDepositEnabled,
+            checked: false
+          }))
           : [];
 
         setItems(mapped);
@@ -68,85 +78,85 @@ function ApplyAutoDepositContent() {
 
   // 체크
   function handleToggle(idx: number) {
-  setItems(prev =>
-    prev.map((item, i) =>
-      i === idx && !(mode === "deposit" && item.connected)
-        ? { ...item, checked: !item.checked }
-        : item
-    )
-  );
-}
-
-// 전체 선택/해제
-function handleToggleAll() {
-  setItems((prev) => {
-    const availableItems =
-      mode === "deposit"
-        ? prev.filter(i => !i.connected)
-        : prev;
-
-    const allChecked = availableItems.length > 0 && availableItems.every(item => item.checked);
-
-    return prev.map(item =>
-      mode === "deposit" && item.connected
-        ? item
-        : { ...item, checked: !allChecked }
+    setItems(prev =>
+      prev.map((item, i) =>
+        i === idx && !(mode === "deposit" && item.connected)
+          ? { ...item, checked: !item.checked }
+          : item
+      )
     );
+  }
 
-  });
-}
+  // 전체 선택/해제
+  function handleToggleAll() {
+    setItems((prev) => {
+      const availableItems =
+        mode === "deposit"
+          ? prev.filter(i => !i.connected)
+          : prev;
 
-async function handleSubmit() {
-  if (mode === "deposit") {
-    const selected = items.filter((i) => i.checked);
+      const allChecked = availableItems.length > 0 && availableItems.every(item => item.checked);
 
-    if (selected.length === 0) {
-      alert("자동 예치할 대출을 하나 이상 선택해주세요.");
-      return;
-    }
-
-    try {
-      await Promise.all(
-        selected.map((item) =>
-          updateAutoDeposit(item.loanLedgerId, true)
-        )
+      return prev.map(item =>
+        mode === "deposit" && item.connected
+          ? item
+          : { ...item, checked: !allChecked }
       );
 
-      alert("자동 예치 설정이 완료되었습니다!");
-      router.push("/auto-deposit");
-
-    } catch (error) {
-      console.error("자동 예치 수정 오류:", error);
-      alert("오류가 발생했습니다. 다시 시도해주세요.");
-    }
-
-  } else if (mode === "prepaid") {
-    router.push(`/auto-deposit/from-account?mode=${mode}`);
-  }
-}
-
-
-async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
-  console.log("PATCH 요청:", loanLedgerId, enabled);
-
-  try {
-    const res = await apiClient.patch(`/api/loans/ledgers/${loanLedgerId}/auto-deposit`, {
-      autoDepositEnabled: enabled
     });
-    return res;
-
-  } catch (err: any) {
-    throw err;
   }
-}
+
+  async function handleSubmit() {
+    if (mode === "deposit") {
+      const selected = items.filter((i) => i.checked);
+
+      if (selected.length === 0) {
+        alert("자동 예치할 대출을 하나 이상 선택해주세요.");
+        return;
+      }
+
+      try {
+        await Promise.all(
+          selected.map((item) =>
+            updateAutoDeposit(item.loanLedgerId, true)
+          )
+        );
+
+        alert("자동 예치 설정이 완료되었습니다!");
+        router.push("/auto-deposit");
+
+      } catch (error) {
+        console.error("자동 예치 수정 오류:", error);
+        alert("오류가 발생했습니다. 다시 시도해주세요.");
+      }
+
+    } else if (mode === "prepaid") {
+      router.push(`/auto-deposit/from-account?mode=${mode}`);
+    }
+  }
+
+
+  async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
+    console.log("PATCH 요청:", loanLedgerId, enabled);
+
+    try {
+      const res = await apiClient.patch(`/api/loans/ledgers/${loanLedgerId}/auto-deposit`, {
+        autoDepositEnabled: enabled
+      });
+      return res;
+
+    } catch (err: any) {
+      throw err;
+    }
+  }
 
   const buttonLabel =
     mode === "deposit" ? "자동 예치 등록하기" : "선납하기";
 
   const submitDisabled =
-  mode === "deposit"
-    ? items.filter(i => !i.connected && i.checked).length === 0
-    : items.filter(i => i.checked).length === 0;
+    mode === "deposit"
+      ? items.filter(i => !i.connected && i.checked).length === 0
+      : items.filter(i => i.checked).length === 0;
 
 
   return (
@@ -162,12 +172,12 @@ async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
       <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
       {/* API로 불러온 items 들어감 */}
-      <InstitutionList 
-        title="은행 목록" 
-        items={items} 
-        onToggle={handleToggle} 
+      <InstitutionList
+        title="은행 목록"
+        items={items}
+        onToggle={handleToggle}
         onToggleAll={handleToggleAll}
-        disabledKey="connected"/>
+        disabledKey="connected" />
 
       <CommonButton
         label={buttonLabel}

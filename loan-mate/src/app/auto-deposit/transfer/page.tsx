@@ -1,25 +1,34 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
-import { useEffect } from "react";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { transferMoney } from "@/lib/api/auto-deposit/transferApi";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
-  const {bankName, bankLogo, bankCode, inputAccount, amount, setAmount} = useTransferStore();
+  const { bankName, bankLogo, bankCode, inputAccount, amount, setAmount } = useTransferStore();
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const router = useRouter();
+  const { setTitle, setShowBack, setRight } = useNavigation();
+
+  useEffect(() => {
+    setTitle("송금하기");
+    setShowBack(true);
+    setRight(
+      <button className="text-blue-500 text-sm">취소</button>
+    );
+  }, [setTitle, setShowBack, setRight]);
 
   const { get: getFromAccount } = useSelectFromAccount();
   const fromAccount = getFromAccount();
@@ -68,13 +77,6 @@ function TransferFinalInner() {
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
-      {/* ---------------- Header ---------------- */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
-
       {/* ---------------- Icons ---------------- */}
       <div className="flex items-center gap-4 mb-6">
         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">

@@ -1,16 +1,23 @@
 "use client";
 export const dynamic = "force-dynamic";
 
+import { useEffect } from "react";
 import AutoDepositTable from "./_components/AutoDepositTable";
 import CommonButton from "@/components/button/CommonButton";
 import EarlyRepaySection from "./_components/EarlyRepaySection";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 export default function AutoDepositPage() {
+  const { setTitle, setShowBack, setRight } = useNavigation();
+
+  useEffect(() => {
+    setTitle("자동 예치 등록/선납하기");
+    setShowBack(true);
+    setRight(null);
+  }, [setTitle, setShowBack, setRight]);
 
   return (
     <>
-      <NavigationBar title="자동 예치 등록/선납하기" />
       <AutoDepositTable />
       <div className="mt-4">
         <CommonButton

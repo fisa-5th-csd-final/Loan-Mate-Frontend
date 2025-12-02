@@ -3,21 +3,30 @@ export const dynamic = "force-dynamic";
 
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import { ChevronDown } from "lucide-react";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
+import { useNavigation } from "@/components/navigation/NavigationContext";
 
 function ConfirmInner() {
   // const params = useSearchParams();
   const router = useRouter();
+  const { setTitle, setShowBack, setRight } = useNavigation();
 
   const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
   const { inputAccount, bankName, bankLogo, amount } = useTransferStore();
+
+  useEffect(() => {
+    setTitle("금액 입력하기");
+    setShowBack(true);
+    setRight(
+      <button className="text-blue-500 text-sm">취소</button>
+    );
+  }, [setTitle, setShowBack, setRight]);
 
   useEffect(() => {
     const selected = getFromAccount();
@@ -27,11 +36,7 @@ function ConfirmInner() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* Header */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
+      {/* NavigationBar removed */}
 
       {/* From Account */}
       <div className="mb-4">

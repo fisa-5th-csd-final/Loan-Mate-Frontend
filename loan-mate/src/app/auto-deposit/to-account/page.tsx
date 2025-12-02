@@ -11,13 +11,20 @@ function Prepaid2Inner() {
   const router = useRouter();
   const params = useSearchParams();
   const mode = params.get("mode");
-  const { setTitle } = useNavigation();
+  const { setTitle, setShowBack, setRight } = useNavigation();
 
   useEffect(() => {
-    if (mode === "deposit") setTitle("자동예치 신청하기");
-    else if (mode === "prepaid") setTitle("선납하기");
-    else setTitle("신청하기");
-  }, [mode, setTitle]);
+    setTitle("수신인 입력하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-600 text-sm"
+        onClick={() => router.push("/auto-deposit")}
+      >
+        취소
+      </button>
+    );
+  }, [mode, setTitle, setShowBack, setRight, router]);
 
   // const [showBanks, setShowBanks] = useState(false);
   const [tab, setTab] = useState("recommended");

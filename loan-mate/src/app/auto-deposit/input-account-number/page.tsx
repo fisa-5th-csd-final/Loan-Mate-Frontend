@@ -2,14 +2,25 @@
 export const dynamic = "force-dynamic";
 
 import { useRouter } from "next/navigation";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import { ChevronDown } from "lucide-react";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatAccountNumber, isValidAccountNumber } from "@/lib/util/NumberFormatter"
 import CommonButton from "@/components/button/CommonButton";
 
+import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useEffect } from "react";
+
 export default function Prepaid3Page() {
   const router = useRouter();
+  const { setTitle, setShowBack, setRight } = useNavigation();
+
+  useEffect(() => {
+    setTitle("계좌번호 입력하기");
+    setShowBack(true);
+    setRight(
+      <button className="text-black text-sm">✕</button>
+    );
+  }, [setTitle, setShowBack, setRight]);
 
   const { inputAccount, setAccount, bankName, bankLogo } = useTransferStore();
 
@@ -17,11 +28,7 @@ export default function Prepaid3Page() {
     <div className="px-5 pt-4">
 
       {/* Header */}
-        <NavigationBar
-              title="계좌번호를 입력해주세요"
-              showBack={true}
-              right={<button className="text-black text-sm">✕</button>}
-        />
+      {/* NavigationBar removed */}
 
       {/* 은행 선택 */}
       <div className="flex items-center gap-2 mb-4">
@@ -54,20 +61,20 @@ export default function Prepaid3Page() {
 
       {/* 다음 버튼 */}
       <CommonButton
-          label="다음"
-          size="lg"
-          widthClassName="w-full"
-          colorClassName={
-            isValidAccountNumber(inputAccount)
-              ? "bg-blue-500 hover:bg-blue-600 text-white"
-              : "bg-gray-300 text-white cursor-not-allowed"
-          }
-          disabled={!isValidAccountNumber(inputAccount)}
-          onClick={() => {
-            if (!isValidAccountNumber(inputAccount)) return;
-            router.push("/auto-deposit/amount");
-          }}
-        />
+        label="다음"
+        size="lg"
+        widthClassName="w-full"
+        colorClassName={
+          isValidAccountNumber(inputAccount)
+            ? "bg-blue-500 hover:bg-blue-600 text-white"
+            : "bg-gray-300 text-white cursor-not-allowed"
+        }
+        disabled={!isValidAccountNumber(inputAccount)}
+        onClick={() => {
+          if (!isValidAccountNumber(inputAccount)) return;
+          router.push("/auto-deposit/amount");
+        }}
+      />
 
     </div>
   );
