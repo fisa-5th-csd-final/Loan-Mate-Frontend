@@ -30,7 +30,9 @@ import BottomSheet from "@/components/bottomSheet";
 import WarningConfirmModal from "../_components/modal/WarningConfirmModalPage";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
-  return categories.map((cat) => {
+  const positive = categories.filter((cat) => cat.ratio > 0);
+
+  return positive.map((cat) => {
     const key = ConsumptionCategoryKeyMap[cat.name];
     const meta = ConsumptionCategoryMeta[key];
 
