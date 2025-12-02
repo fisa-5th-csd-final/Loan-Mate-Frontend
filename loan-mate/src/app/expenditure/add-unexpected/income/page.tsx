@@ -80,7 +80,7 @@ export default function IncomePage() {
   return (
     <PageWithCTA
       ctaLabel="수입 저장하기"
-      onClick={() => router.push("/expenditure/add-unexpected/outlay")}
+      onClick={() => router.push("/expenditure/limit")}
     >
       <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
         이번 달 예상하지 못한{" "}
