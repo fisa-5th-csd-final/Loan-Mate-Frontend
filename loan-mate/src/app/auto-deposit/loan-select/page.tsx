@@ -19,16 +19,7 @@ function ApplyAutoDepositContent() {
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
 
-  type LoanItem = { 
-    loanLedgerId: number, 
-    logo: string; 
-    name: string; 
-    connected: boolean, 
-    checked: boolean 
-  
-    benefit?: number;
-    mustPaidAmount?: number;};
-
+  type LoanItem = { loanLedgerId: number, logo: string; name: string; connected: boolean, checked: boolean };
   const [items, setItems] = useState<LoanItem[]>([]);
 
   // 화면 상단 제목 설정
@@ -39,74 +30,41 @@ function ApplyAutoDepositContent() {
   }, [mode, setTitle]);
 
   // API 호출하여 목록 불러오기
-  // API 호출하여 목록 불러오기
-useEffect(() => {
-  async function fetchItems() {
-    try {
-      let res;
-
-      if (mode === "deposit") {
-        // 기존 API
-        res = await apiClient.get<{
+  useEffect(() => {
+    async function fetchItems() {
+      try {
+        const res = await apiClient.get<{
           data: {
-            loanLedgerId: { value: number };
+            loanLedgerId: { value: number},
             loanName: string;
             accountBalance: number;
             autoDepositEnabled: boolean;
           }[];
         }>("/api/loans/auto-deposit-summary");
-      } 
-      else if (mode === "prepaid") {
-        // 새 API
-        res = await apiClient.get<{
-          data: {
-            loanName: string;
-            benefit: number;
-            mustPaidAmount: number;
-          }[];
-        }>("/api/loans/prepayment-infos");
+
+        if (!res) {
+          console.warn("응답 없음");
+          return;   // 여기서 종료되므로 이후 res 는 무조건 정의됨
+        }
+        const mapped = Array.isArray(res.data)
+          ? res.data.map((item) => ({
+              loanLedgerId: item.loanLedgerId?.value,
+              logo: getBankLogo(item.loanName),
+              name: item.loanName,
+              connected: item.autoDepositEnabled,
+              checked: false
+            }))
+          : [];
+
+        setItems(mapped);
+      } catch (err) {
+        console.error("API 호출 오류:", err);
+        setItems([]);
       }
-
-      if (!res || !Array.isArray(res.data)) {
-        console.warn("응답 없음 또는 배열 아님");
-        return;
-      }
-
-      const mapped = res.data.map((item: any, index: number) => {
-  
-  const isDeposit = mode === "deposit";
-
-  return {
-    loanLedgerId: isDeposit 
-      ? item.loanLedgerId.value 
-      : index,
-
-    logo: getBankLogo(item.loanName),
-
-    name: item.loanName,
-
-    connected: isDeposit 
-      ? item.autoDepositEnabled 
-      : false,
-
-    checked: false,
-
-    // deposit에는 없음 → undefined 허용
-    benefit: !isDeposit ? item.benefit : undefined,
-
-    mustPaidAmount: !isDeposit ? item.mustPaidAmount : undefined
-  };
-});
-      setItems(mapped);
-
-    } catch (err) {
-      console.error("API 호출 오류:", err);
-      setItems([]);
     }
-  }
 
-  fetchItems();
-}, [mode]);
+    fetchItems();
+  }, []);
 
   // 체크
   function handleToggle(idx: number) {
@@ -155,7 +113,6 @@ async function handleSubmit() {
       );
 
       alert("자동 예치 설정이 완료되었습니다!");
-
       router.push("/auto-deposit");
 
     } catch (error) {
@@ -164,10 +121,7 @@ async function handleSubmit() {
     }
 
   } else if (mode === "prepaid") {
-    const selected = items.filter(i => i.checked);
-    const first = selected[0];  
-    router.push(`/auto-deposit/from-account?mode=${mode}&logo=${first.logo}&loanName=${first.name}&mustPaidAmount=${first.mustPaidAmount}`);
-    // router.push(`/auto-deposit/from-account?mode=${mode}`);
+    router.push(`/auto-deposit/from-account?mode=${mode}`);
   }
 }
 

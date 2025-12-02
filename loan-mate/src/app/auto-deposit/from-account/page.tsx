@@ -57,9 +57,6 @@ function PrepaidContent() {
   const [loading, setLoading] = useState(true);
   const { select: selectFromAccount } = useSelectFromAccount();
 
-  const loanName = params.get("loanName");
-  const mustPaidAmount = params.get("mustPaidAmount");
-
   useEffect(() => {
     if (mode === "deposit") setTitle("자동예치 신청하기");
     else if (mode === "prepaid") setTitle("선납하기");
@@ -104,7 +101,7 @@ function PrepaidContent() {
             onClick={() => {
               selectFromAccount(acc);
               router.push(
-                `/auto-deposit/transfer?&loanName=${loanName}&mustPaidAmount=${mustPaidAmount}`
+                `/auto-deposit/to-account?mode=${mode}&accountId=${acc.accountId}`
               );
             }}
           />
