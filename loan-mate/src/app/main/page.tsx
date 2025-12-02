@@ -14,7 +14,7 @@ const QuickActionLoanFunctionList = dynamic(() => import("./_components/QuickAct
 });
 
 import { type LoanSummary } from "@/../types/loan";
-import { fetchLoanList } from "@/lib/api/loan/ListFetch";
+import { useLoanList } from "@/hooks/loan/useLoanList";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
@@ -23,24 +23,7 @@ import CategoryCard from "@/components/card/CategoryCard";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("loan");
-  const [loans, setLoans] = useState<LoanSummary[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const data = await fetchLoanList();
-        setLoans(data);
-      } catch (error) {
-        console.error("Failed to fetch loan list:", error);
-        // 에러 처리 로직 추가 가능 (예: 토스트 메시지)
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
+  const { data: loans, isLoading } = useLoanList();
 
   const contentByCategory = useMemo<Record<CategoryId, React.ReactNode>>(
     () => {
