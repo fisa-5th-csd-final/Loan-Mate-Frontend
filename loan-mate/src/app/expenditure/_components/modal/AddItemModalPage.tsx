@@ -86,7 +86,11 @@ export default function AddItemModalPage({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="예: 아르바이트, 로또 당첨"
+            placeholder={
+              type === AddItemType.EXPENSE
+                ? "예: 옷 사기, 버스비 충전"
+                : "예: 아르바이트, 로또 당첨"
+            }
             className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"
           />
         </div>

@@ -181,6 +181,7 @@ export default function ExpenditureLimitPage() {
 
   // 총 사용 가능 금액 계산
   const availableTotal = Math.max(0, Math.round(budget - totalSpent));
+  const isOverspent = totalSpent > budget;
 
   const handleDraftChange = (key: ConsumptionCategoryKey, value: string) => {
     const parsed = Number(value);
@@ -394,6 +395,7 @@ export default function ExpenditureLimitPage() {
               const metaKey = ConsumptionCategoryKeyMap[cat.name];
               const meta = ConsumptionCategoryMeta[metaKey];
               const Icon = meta.icon;
+              const overspent = cat.spent > cat.available;
 
               return (
                 <TableRow key={cat.id}>
@@ -417,7 +419,11 @@ export default function ExpenditureLimitPage() {
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-center font-medium">
+                  <TableCell
+                    className={`text-center font-medium ${
+                      overspent ? "text-red-600" : ""
+                    }`}
+                  >
                     {formatCurrency(cat.spent)}
                   </TableCell>
 
@@ -441,11 +447,17 @@ export default function ExpenditureLimitPage() {
         </MessageBox>
 
         <MessageBox className="flex-1 text-left">
-          <span>이번 달에 총 </span>
-          <span className="font-semibold text-blue-700">
-            {formatCurrency(availableTotal)}
-          </span>
-          <span> 쓸 수 있어요</span>
+          {isOverspent ? (
+            <span>이번 달은 이미 추천 지출을 초과했어요</span>
+          ) : (
+            <>
+              <span>이번 달에 총 </span>
+              <span className="font-semibold text-blue-700">
+                {formatCurrency(availableTotal)}
+              </span>
+              <span> 쓸 수 있어요</span>
+            </>
+          )}
         </MessageBox>
       </div>
 
