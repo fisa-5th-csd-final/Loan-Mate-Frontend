@@ -9,7 +9,7 @@ import { formatCurrency } from "@/lib/util/NumberFormatter"
 
 export default function TransferCompletePage() {
   const router = useRouter();
-  const { bankName, inputAccount, amount } = useTransferStore();
+  const { bankName, inputAccount, amount, loanName, mustPaidAmount } = useTransferStore();
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="bg-white w-full rounded-2xl p-6 pt-14">
@@ -37,7 +37,7 @@ export default function TransferCompletePage() {
 
         {/* 제목 */}
         <div className="text-center text-lg font-semibold mb-6">
-          박준상 님에게<br />이체했어요
+          {loanName} 님에게<br />이체했어요
         </div>
 
         {/* 정보 카드 */}
@@ -54,7 +54,7 @@ export default function TransferCompletePage() {
 
             <div className="flex justify-between">
               <span className="text-gray-500">이체금액</span>
-              <span className="font-medium">{formatCurrency(amount)}</span>
+              <span className="font-medium">{formatCurrency(mustPaidAmount)}</span>
             </div>
 
             <div className="flex justify-between">

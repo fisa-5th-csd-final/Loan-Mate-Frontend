@@ -1,20 +1,32 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
-import { useEffect } from "react";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import { transferMoney } from "@/lib/api/auto-deposit/transferApi";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
-  const {bankName, bankLogo, bankCode, inputAccount, amount, setAmount} = useTransferStore();
+  const { 
+    bankName, 
+    bankLogo, 
+    bankCode, 
+    inputAccount, 
+    amount, 
+    loanName,
+    setAmount, 
+    setLoanName,
+    setBankLogo,
+    setBank,
+    setAccount
+  } = useTransferStore();
+
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,6 +35,22 @@ function TransferFinalInner() {
 
   const { get: getFromAccount } = useSelectFromAccount();
   const fromAccount = getFromAccount();
+
+  const params = useSearchParams();
+  const bankLogoFromQuery = params.get("logo");
+  const loanNameFromQuery = params.get("loanName");
+  const bankNameFromQuery = params.get("bankName");
+  const mustPaidAmountFromQuery = params.get("mustPaidAmount");
+
+  useEffect(() => {
+  if (loanNameFromQuery) setLoanName(loanNameFromQuery);
+  if (bankNameFromQuery) setBank( bankNameFromQuery, bankLogoFromQuery ?? "", bankCode );
+  if (bankLogoFromQuery) setBankLogo(bankLogoFromQuery);
+  if (mustPaidAmountFromQuery) setAmount(Number(mustPaidAmountFromQuery));
+  if (fromAccount) {
+    setAccount(fromAccount.accountNumber); 
+  }
+}, [loanNameFromQuery, bankNameFromQuery, bankLogoFromQuery, mustPaidAmountFromQuery, fromAccount]);
 
   const addDigit = (num: string) => {
     if (pin.length >= 6) return;
@@ -38,6 +66,7 @@ function TransferFinalInner() {
       handleTransfer();
     }
   }, [pin]);
+
 
   async function handleTransfer() {
     if (!fromAccount) {
@@ -60,7 +89,7 @@ function TransferFinalInner() {
     } catch (err) {
       console.error("이체 실패", err);
       setError("이체에 실패했습니다. 다시 시도해주세요.");
-      setPin(""); // 비밀번호 초기화
+      setPin(""); 
     } finally {
       setLoading(false);
     }
@@ -82,25 +111,23 @@ function TransferFinalInner() {
         </div>
 
         <div className="h-12 w-12 rounded-full bg-blue-300 flex items-center justify-center">
-          <img src={bankLogo} className="h-9" />
+          <img src="/logo/shinhan.svg" className="h-9" />
         </div>
       </div>
 
       {/* ---------------- Title Text ---------------- */}
       <div className="text-xl font-semibold mb-2">
-        <span className="text-blue-600 font-semibold">박준상</span> 님에게
+        <span className="text-blue-600 font-semibold">{loanName}</span> 에
       </div>
 
       <div className="text-xl font-semibold mb-2">
         <span className="text-blue-600">
-          {amount !== "" ? amount.toLocaleString("ko-KR") : ""}
-          원</span>을 이체하시겠어요?
+          {amount !== "" ? Number(amount).toLocaleString("ko-KR") : ""}
+          원
+        </span>
+        을 이체하시겠어요?
       </div>
-
-      <div className="text-gray-500 text-sm mb-8">
-        {bankName} {inputAccount} 계좌로 보냅니다.
-      </div>
-
+      
       {/* ---------------- Info Box ---------------- */}
       <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
         <div className="flex justify-between py-2">
@@ -109,13 +136,8 @@ function TransferFinalInner() {
         </div>
 
         <div className="flex justify-between py-2">
-          <span className="text-gray-600">받는 분 통장표기</span>
-          <span className="text-gray-800">박준상</span>
-        </div>
-
-        <div className="flex justify-between py-2">
           <span className="text-gray-600">내 통장표기</span>
-          <span className="text-gray-800">박준상</span>
+          <span className="text-gray-800">{inputAccount}</span>
         </div>
       </div>
 
@@ -159,7 +181,6 @@ function TransferFinalInner() {
           }
         />
 
-        {/* 타이틀 */}
         <div className="text-center mb-6">
           <h2 className="text-lg font-semibold">계좌 비밀번호</h2>
         </div>
