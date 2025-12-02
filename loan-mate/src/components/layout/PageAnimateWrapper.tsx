@@ -78,7 +78,7 @@ export default function PageAnimateWrapper({ children }: { children: React.React
                 animate="center"
                 exit="exit"
                 transition={{
-                    x: { type: 'spring', stiffness: 300, damping: 30, mass: 1 },
+                    x: { type: 'spring', stiffness: 200, damping: 30, mass: 1 },
                     opacity: { duration: 0.2 },
                 }}
                 className="absolute inset-0 w-full h-full bg-[#f0f4f5] overflow-hidden"
