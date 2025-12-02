@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import BottomSheet from "@/components/bottomSheet";
-import AddItemModalPage from "@/app/expenditure/_components/AddItemModalPage";
+import AddItemModalPage from "@/app/expenditure/_components/modal/AddItemModalPage";
 import PageWithCTA from "@/app/expenditure/_components/PageWithCTA";
 import EditableAmountList, { Item } from "@/app/expenditure/_components/EditableAmountList";
 import { AddItem, AddItemType } from "@/consts/add-item";

@@ -3,6 +3,11 @@ import type { SuccessBody } from "@/../types/response";
 import { API } from "@/consts/ROUTES";
 import { apiClient } from "@/lib/api/client";
 
+/**
+ * 
+ * /api/loans/ledgers/details로 호출하여 대출 리스트 조회하는 api hook
+ */
+
 export async function fetchLoanLedgerDetails(): Promise<LoanDetail[]> {
   const response = await apiClient.get<SuccessBody<LoanDetail[]>>(
     API.LOAN.LEDGER_DETAILS

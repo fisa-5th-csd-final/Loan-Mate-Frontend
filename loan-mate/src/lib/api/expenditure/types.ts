@@ -38,7 +38,17 @@ export interface SpendingRecommendResponse {
    * 카테고리별 추천 금액 (원 단위)
    * e.g. { "FOOD": 480000, "TRANSPORT": 240000, ... }
    */
-  categoryRecommendation: Record<string, number>;
+  categoryRecommendation: Record<ConsumptionCategoryKey, number>;
+
+  /**
+   * 사용자가 기존 추천 금액을 수정했는지 여부
+   */
+  isCustomized?: boolean;
+
+  /**
+   * 사용자 커스텀 금액이 있는 경우, AI가 제안했던 원본 금액
+   */
+  aiOriginalValues?: Record<ConsumptionCategoryKey, number>;
 }
 
 export interface SpendingRecommendParams {

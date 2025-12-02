@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AddItem, AddItemType } from "@/consts/add-item";
 import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
-import { ConsumptionCategoryMeta, ConsumptionCategoryLabelMap } from "./ConsumptionCategoryMeta";
+import { ConsumptionCategoryMeta, ConsumptionCategoryLabelMap } from "../ConsumptionCategoryMeta";
 
 type InitialData = Partial<AddItem> & { id?: string | number };
 

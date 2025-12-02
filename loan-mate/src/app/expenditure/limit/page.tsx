@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import MessageBox from "@/components/MessageBox";
@@ -27,6 +27,7 @@ import {
 } from "@/lib/api/expenditure/hooks";
 import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
 import BottomSheet from "@/components/bottomSheet";
+import WarningConfirmModal from "../_components/modal/WarningConfirmModalPage";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
@@ -76,6 +77,7 @@ export default function ExpenditureLimitPage() {
   const { data: aiMessage } = useExpenditureAiMessageQuery({ year, month });
   const updateLimitMutation = useUpdateSpendingLimitMutation();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [warningOpen, setWarningOpen] = useState(false);
   const summaryMessage = aiMessage ?? DEFAULT_SUMMARY_MESSAGE;
 
   // 프론트에서 사용할 카테고리 정의
@@ -95,6 +97,20 @@ export default function ExpenditureLimitPage() {
       }, {} as Record<ConsumptionCategoryKey, number>),
     [recommend?.categoryRecommendation]
   );
+
+  const warningRecommended = useMemo(() => {
+    const source =
+      recommend?.aiOriginalValues &&
+      Object.keys(recommend.aiOriginalValues).length > 0
+        ? recommend.aiOriginalValues
+        : recommend?.categoryRecommendation;
+
+    return FRONT_USE_KEYS.reduce((acc, key) => {
+      const raw = source?.[key];
+      acc[key] = typeof raw === "number" ? raw : 0;
+      return acc;
+    }, {} as Record<ConsumptionCategoryKey, number>);
+  }, [recommend?.aiOriginalValues, recommend?.categoryRecommendation]);
 
   const [editedRecommended, setEditedRecommended] =
     useState<Record<ConsumptionCategoryKey, number>>(baseRecommended);
@@ -170,7 +186,7 @@ export default function ExpenditureLimitPage() {
     setDraftRecommended((prev) => ({ ...prev, [key]: safe }));
   };
 
-  const handleApplyDraft = async () => {
+  const applyDraft = useCallback(async () => {
     setEditedRecommended(draftRecommended);
 
     try {
@@ -181,6 +197,37 @@ export default function ExpenditureLimitPage() {
     } catch (err) {
       console.error("사용자 지출 한도 수정 실패", err);
     }
+  }, [draftRecommended, updateLimitMutation]);
+
+  const isDraftOverRecommended = useCallback(() => {
+    return FRONT_USE_KEYS.some((key) => {
+      const baseAmount = warningRecommended[key];
+      const draftAmount = draftRecommended[key] ?? 0;
+
+      if (!Number.isFinite(baseAmount)) return false;
+
+      return draftAmount > baseAmount;
+    });
+  }, [draftRecommended, warningRecommended]);
+
+  const handleApplyDraft = () => {
+    if (isDraftOverRecommended()) {
+      setSheetOpen(false);
+      setWarningOpen(true);
+      return;
+    }
+
+    void applyDraft();
+  };
+
+  const handleConfirmWarning = async () => {
+    setWarningOpen(false);
+    await applyDraft();
+  };
+
+  const handleCancelWarning = () => {
+    setWarningOpen(false);
+    setSheetOpen(true);
   };
 
   return (
@@ -276,6 +323,13 @@ export default function ExpenditureLimitPage() {
           />
         </div>
       </BottomSheet>
+
+      <WarningConfirmModal
+        open={warningOpen}
+        onConfirm={handleConfirmWarning}
+        onCancel={handleCancelWarning}
+        isProcessing={updateLimitMutation.isPending}
+      />
 
       {/* 설명 박스 */}
       <MessageBox>{summaryMessage}</MessageBox>
