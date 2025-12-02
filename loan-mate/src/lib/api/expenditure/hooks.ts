@@ -18,6 +18,7 @@ import {
   deleteExpenditure,
   fetchSpendingRecommend,
   fetchMonthlySpending,
+  updateSpendingLimit,
 } from "./service";
 
 import { expenditureKeys } from "./keys";
@@ -31,6 +32,7 @@ import type {
   SpendingRecommendResponse,
   MonthlySpendingParams,
   MonthlySpendingResponse,
+  SpendingLimitPayload,
 } from "./types";
 
 // query option 타입
@@ -209,5 +211,17 @@ export function useMonthlySpendingQuery(
     queryKey: expenditureKeys.monthlySpending(params.year, params.month),
     queryFn: () => fetchMonthlySpending(params),
     ...options,
+  });
+}
+
+type UpdateLimitOptions = Omit<
+  UseMutationOptions<void, ApiError, SpendingLimitPayload>,
+  "mutationFn"
+>;
+
+export function useUpdateSpendingLimitMutation(options?: UpdateLimitOptions) {
+  return useMutation<void, ApiError, SpendingLimitPayload>({
+    ...options,
+    mutationFn: updateSpendingLimit,
   });
 }

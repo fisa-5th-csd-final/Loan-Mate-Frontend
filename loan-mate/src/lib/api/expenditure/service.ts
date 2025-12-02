@@ -9,6 +9,7 @@ import type {
   SpendingRecommendResponse,
   MonthlySpendingParams,
   MonthlySpendingResponse,
+  SpendingLimitPayload,
 } from "./types";
 
 const BASE_PATH = "/api/manual-ledgers";
@@ -75,4 +76,10 @@ export async function fetchMonthlySpending(
   return (res as SuccessBody<MonthlySpendingResponse>)?.data
     ? (res as SuccessBody<MonthlySpendingResponse>).data
     : (res as MonthlySpendingResponse);
+}
+
+export async function updateSpendingLimit(
+  payload: SpendingLimitPayload
+): Promise<void> {
+  await apiClient.put("/api/spending/limits", payload);
 }

@@ -22,6 +22,7 @@ import CommonButton from "@/components/button/CommonButton";
 import {
   useMonthlySpendingQuery,
   useSpendingRecommendQuery,
+  useUpdateSpendingLimitMutation,
 } from "@/lib/api/expenditure/hooks";
 import BottomSheet from "@/components/bottomSheet";
 
@@ -52,6 +53,7 @@ export default function ExpenditureLimitPage() {
   // 추천 비율 API 호출
   const { data: recommend } = useSpendingRecommendQuery({ year, month });
   const { data: spending } = useMonthlySpendingQuery({ year, month });
+  const updateLimitMutation = useUpdateSpendingLimitMutation();
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // 프론트에서 사용할 카테고리 정의
@@ -126,7 +128,7 @@ export default function ExpenditureLimitPage() {
         icon: ConsumptionCategoryMeta[key].icon,
       };
     });
-  }, [budget, recommend, spending, editedRecommended]);
+  }, [budget, spending, editedRecommended]);
 
   // totalSpent 계산
   const totalSpent = useMemo(
@@ -146,9 +148,17 @@ export default function ExpenditureLimitPage() {
     setDraftRecommended((prev) => ({ ...prev, [key]: safe }));
   };
 
-  const handleApplyDraft = () => {
+  const handleApplyDraft = async () => {
     setEditedRecommended(draftRecommended);
-    setSheetOpen(false);
+
+    try {
+      await updateLimitMutation.mutateAsync({
+        user_limit_amount: draftRecommended,
+      });
+      setSheetOpen(false);
+    } catch (err) {
+      console.error("사용자 지출 한도 수정 실패", err);
+    }
   };
 
   return (
@@ -240,6 +250,7 @@ export default function ExpenditureLimitPage() {
             onClick={handleApplyDraft}
             widthClassName="w-1/2"
             size="lg"
+            disabled={updateLimitMutation.isPending}
           />
         </div>
       </BottomSheet>

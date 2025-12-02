@@ -63,3 +63,7 @@ export interface MonthlySpendingParams {
   year: number;
   month: number;
 }
+
+export interface SpendingLimitPayload {
+  user_limit_amount: Record<ConsumptionCategoryKey, number>;
+}
