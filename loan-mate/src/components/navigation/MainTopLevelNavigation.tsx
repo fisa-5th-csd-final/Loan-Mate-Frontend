@@ -5,11 +5,11 @@ import { TopCategoryNav } from '@/components/navigation/Navigation';
 
 // 내비게이션 바에 보여줄 카테고리 리스트
 export const MAIN_NAV_ITEMS = [
-    { id: 'all', label: '전체' },
-    { id: 'deposit', label: '입출금/저축' },
+    { id: 'all', label: '전체', disabled: true },
+    { id: 'deposit', label: '입출금/저축', disabled: true },
     { id: 'loan', label: '대출' },
-    { id: 'invest', label: '투자' },
-    { id: 'pension', label: '연금/보험' },
+    { id: 'invest', label: '투자', disabled: true },
+    { id: 'pension', label: '연금/보험', disabled: true },
 ];
 
 type MainTopLevelNavigationProps = {
@@ -23,7 +23,7 @@ export default function MainTopLevelNavigation({
 }: MainTopLevelNavigationProps) {
 
     return (
-         <div className="py-2">
+        <div className="py-2">
             {/* 상단 네비게이션 바 */}
             <TopCategoryNav
                 items={MAIN_NAV_ITEMS}
