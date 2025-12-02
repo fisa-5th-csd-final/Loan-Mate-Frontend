@@ -33,15 +33,16 @@ export function TableHeader({
 }
 
 
-export function TableRow({
-  children,
-  className,
-  columns,
-}: BaseProps & { columns?: string }) {
+interface TableRowProps {
+  columns?: string;
+  children?: React.ReactNode;
+}
+
+export function TableRow({ columns = "1fr 1fr 1fr", children }: TableRowProps) {
   return (
     <div
-      className={`grid items-center py-3 px-1 ${className ?? ""}`}
-      style={{ gridTemplateColumns: columns || "1fr 1fr 1fr" }}
+      className="grid gap-2 py-3"
+      style={{ gridTemplateColumns: columns }}
     >
       {children}
     </div>
