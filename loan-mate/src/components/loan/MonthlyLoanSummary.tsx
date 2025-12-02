@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import ProgressBar from '../ProgressBar';
 import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
 import SectionHeading from '../SectionHeading';
-import type { LoanSummary, TotalLoanRiskResponse } from '@/../types/loan';
-import { fetchTotalLoanRisk } from '@/lib/api/loan/RiskFetch';
+import type { LoanSummary } from '@/../types/loan';
+import { useTotalLoanRisk } from '@/hooks/loan/useTotalLoanRisk';
 
 import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP } from '@/consts/loan';
 
@@ -22,24 +21,7 @@ export default function MonthlyLoanSummary({
     totalLoanRate,
     peerAverageLoanRatio
 }: MonthlyLoanSummaryProps) {
-    const [totalRisk, setTotalRisk] = useState<TotalLoanRiskResponse | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function loadTotalRisk() {
-            try {
-                const data = await fetchTotalLoanRisk();
-                setTotalRisk(data);
-            } catch (e) {
-                console.error(e);
-                setError("종합 위험도 정보를 불러오는데 실패했습니다.");
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        loadTotalRisk();
-    }, []);
+    const { data: totalRisk, isLoading, error } = useTotalLoanRisk();
 
     return (
         <div className="w-full space-y-4">
@@ -54,7 +36,7 @@ export default function MonthlyLoanSummary({
                     <div className="w-full h-[88px] rounded-[28px] bg-gray-100 animate-pulse" />
                 ) : error ? (
                     <div className="w-full p-4 text-center text-red-500 bg-red-50 rounded-xl text-sm">
-                        {error}
+                        {error instanceof Error ? error.message : "오류가 발생했습니다."}
                     </div>
                 ) : (
                     <LoanRiskAverageBox

@@ -1,10 +1,8 @@
 // src/components/loan/LoanRiskDetailsContainer.tsx
 "use client";
 
-import { useEffect, useState } from "react";
 import type { LoanDetail } from "@/../types/loan";
-import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
-import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
+import { useLoanDetail, useLoanComment } from "@/hooks/loan/useLoanDetail";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
@@ -40,46 +38,12 @@ type LoanDetailContainerProps = {
 export default function LoanDetailContainer({
   loanId,
 }: LoanDetailContainerProps) {
-  const [data, setData] = useState<LoanDetail | null>(null);
-  const [comment, setComment] = useState<string>("이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading: isDetailLoading, error: detailError } = useLoanDetail(loanId);
+  const { data: commentData, isLoading: isCommentLoading } = useLoanComment(loanId);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // 병렬로 detail과 comment를 가져옴
-        const [detailResult, commentResult] = await Promise.all([
-          fetchLoanDetail(loanId),
-          fetchLoanComment(loanId).catch(() => "이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.")
-        ]);
-
-        if (!cancelled) {
-          setData(detailResult);
-          setComment(commentResult);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setError(
-            e instanceof Error ? e.message : "대출 정보를 불러오지 못했습니다."
-          );
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [loanId]);
+  const comment = commentData || "이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.";
+  const loading = isDetailLoading || isCommentLoading;
+  const error = detailError ? (detailError instanceof Error ? detailError.message : "대출 정보를 불러오지 못했습니다.") : null;
 
   if (loading) {
     return (
