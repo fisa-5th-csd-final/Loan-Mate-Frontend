@@ -16,11 +16,11 @@ export default function BudgetBox({
   updateBar,
 }: FixedBudgetBoxProps) {
   return (
-    <div className="w-full flex flex-col gap-4 p-2.5 bg-white rounded-2xl">
+    <div className="w-full flex flex-col gap-4 p-2.5 bg-(--white) rounded-2xl">
       {/* 제목 + 설명 */}
       <div>
-        <h2 className="text-left font-semibold text-[17px] text-[#2E393D]">{title}</h2>
-        <p className="text-left font-semibold text-[12px] text-[#A8A9AE]">{description}</p>
+        <h2 className="text-left font-semibold text-[17px] text-(--gray-900)">{title}</h2>
+        <p className="text-left font-semibold text-[12px] text-(--gray-400)">{description}</p>
       </div>
 
       <div className="flex flex-col items-center w-full">

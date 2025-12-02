@@ -28,8 +28,8 @@ export default function IncomeExpenseSegmentedControl({ selectedType, onSelect }
              rounded-[18px]
             
             ${selectedType === type.value
-                            ? 'bg-[#2789F4] text-white border-[#2789F4] hover:bg-[#2789F4]'
-                            : 'bg-[#F0F4F5] text-[#676E74] hover:bg-[#E7EBEC]'
+                            ? 'bg-(--main) text-(--white) border-(--main) hover:bg-(--main)'
+                            : 'bg-(--gray-100) text-(--gray-700) hover:bg-[#E7EBEC]'
                         }
           `}
                 >
