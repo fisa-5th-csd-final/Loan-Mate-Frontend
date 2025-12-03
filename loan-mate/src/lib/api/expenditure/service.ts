@@ -5,6 +5,13 @@ import type {
   ExpenditureId,
   ExpenditureItem,
   UpdateExpenditurePayload,
+  SpendingRecommendParams,
+  SpendingRecommendResponse,
+  MonthlySpendingParams,
+  MonthlySpendingResponse,
+  SpendingLimitPayload,
+  ExpenditureAiMessageParams,
+  ExpenditureAiMessageResponse,
 } from "./types";
 
 const BASE_PATH = "/api/manual-ledgers";
@@ -44,4 +51,70 @@ export async function updateExpenditure(
 
 export async function deleteExpenditure(id: ExpenditureId): Promise<void> {
   await apiClient.delete(`${BASE_PATH}/${id}`);
+}
+
+export async function fetchSpendingRecommend(
+  params: SpendingRecommendParams
+): Promise<SpendingRecommendResponse> {
+  const res = await apiClient.get<
+    SuccessBody<SpendingRecommendResponse> | SpendingRecommendResponse
+  >(
+    "/api/spending/recommended",
+    { query: { year: params.year, month: params.month } }
+  );
+  
+  return (res as SuccessBody<SpendingRecommendResponse>)?.data
+    ? (res as SuccessBody<SpendingRecommendResponse>).data
+    : (res as SpendingRecommendResponse);
+}
+
+export async function fetchMonthlySpending(
+  params: MonthlySpendingParams
+): Promise<MonthlySpendingResponse> {
+  const res = await apiClient.get<
+    SuccessBody<MonthlySpendingResponse> | MonthlySpendingResponse
+  >(`/api/spending/${params.year}/${params.month}`);
+
+  return (res as SuccessBody<MonthlySpendingResponse>)?.data
+    ? (res as SuccessBody<MonthlySpendingResponse>).data
+    : (res as MonthlySpendingResponse);
+}
+
+export async function updateSpendingLimit(
+  payload: SpendingLimitPayload
+): Promise<void> {
+  await apiClient.put("/api/spending/limits", payload);
+}
+
+function extractAiMessage(body: unknown): ExpenditureAiMessageResponse {
+  if (typeof body === "string") return body;
+
+  if (body && typeof body === "object") {
+    const anyBody = body as any;
+
+    if (typeof anyBody.data === "string") return anyBody.data;
+
+    if (anyBody.data && typeof anyBody.data === "object") {
+      const recommendation = (anyBody.data as any).recommendation;
+      if (recommendation && typeof recommendation.comment === "string") {
+        return recommendation.comment;
+      }
+    }
+
+    if (typeof anyBody.message === "string") return anyBody.message;
+  }
+
+  throw new Error("Invalid response from AI expenditure API");
+}
+
+export async function fetchExpenditureAiMessage(
+  params: ExpenditureAiMessageParams
+): Promise<ExpenditureAiMessageResponse> {
+  const res = await apiClient.get<
+    SuccessBody<unknown> | ExpenditureAiMessageResponse
+  >("/api/ai/expenditure", {
+    query: { year: params.year, month: params.month },
+  });
+
+  return extractAiMessage(res);
 }

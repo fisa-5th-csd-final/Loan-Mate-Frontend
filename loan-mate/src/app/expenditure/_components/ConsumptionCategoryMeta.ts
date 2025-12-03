@@ -1,4 +1,4 @@
-import { ConsumptionCategory } from "@/models/expenditure-limit";
+import { ConsumptionCategory, ConsumptionCategoryKey } from "@/models/expenditure-limit";
 import {
   ArrowLeftRight,
   Utensils,
@@ -52,3 +52,11 @@ export const ConsumptionCategoryKeyMap: Record<ConsumptionCategory, keyof typeof
   [ConsumptionCategory.ETC]: "ETC",
 };
 
+export const ConsumptionCategoryLabelMap: Record<ConsumptionCategoryKey, ConsumptionCategory> = {
+  TRANSFER: ConsumptionCategory.TRANSFER,
+  FOOD: ConsumptionCategory.FOOD,
+  TRANSPORT: ConsumptionCategory.TRANSPORT,
+  SHOPPING: ConsumptionCategory.SHOPPING,
+  ENTERTAINMENT: ConsumptionCategory.ENTERTAINMENT,
+  ETC: ConsumptionCategory.ETC,
+};

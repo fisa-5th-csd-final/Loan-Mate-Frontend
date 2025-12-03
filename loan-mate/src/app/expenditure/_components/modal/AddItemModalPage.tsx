@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AddItem, AddItemType } from "@/consts/add-item";
+import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
+import { ConsumptionCategoryMeta, ConsumptionCategoryLabelMap } from "../ConsumptionCategoryMeta";
 
 type InitialData = Partial<AddItem> & { id?: string | number };
 
@@ -20,11 +22,30 @@ export default function AddItemModalPage({
 }: Props) {
   const [name, setName] = useState(initialData?.name ?? "");
   const [amount, setAmount] = useState<number | "">(initialData?.amount ?? "");
+  const allowedCategoryKeys: ConsumptionCategoryKey[] = ["FOOD", "TRANSPORT", "SHOPPING", "ENTERTAINMENT"];
+  const defaultCategory = allowedCategoryKeys[0];
+
+  const [category, setCategory] = useState<ConsumptionCategoryKey>(
+    allowedCategoryKeys.includes((initialData?.category as ConsumptionCategoryKey) ?? defaultCategory)
+      ? (initialData?.category as ConsumptionCategoryKey)
+      : defaultCategory
+  );
+
+  const categoryOptions = useMemo(
+    () =>
+      allowedCategoryKeys.map((key) => {
+        const meta = ConsumptionCategoryMeta[key];
+        return { key, label: ConsumptionCategoryLabelMap[key], color: meta?.hex };
+      }),
+    [allowedCategoryKeys]
+  );
 
   useEffect(() => {
     setName(initialData?.name ?? "");
     setAmount(initialData?.amount ?? "");
-  }, [initialData?.id]);
+    const next = (initialData?.category as ConsumptionCategoryKey) ?? defaultCategory;
+    setCategory(allowedCategoryKeys.includes(next) ? next : defaultCategory);
+  }, [initialData?.id, initialData?.name, initialData?.amount, initialData?.category]);
 
   const isEditMode = Boolean(initialData?.id);
   const title =
@@ -39,12 +60,19 @@ export default function AddItemModalPage({
 
   const handleSubmit = () => {
     if (!name || !amount) return;
-    onSubmit({
+
+    const payload: AddItem & { id?: string | number } = {
       id: initialData?.id,
       type,
       name,
       amount: Number(amount),
-    });
+    };
+
+    if (type === AddItemType.EXPENSE) {
+      payload.category = category;
+    }
+
+    onSubmit(payload);
   };
 
   return (
@@ -58,10 +86,37 @@ export default function AddItemModalPage({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="예: 아르바이트, 로또 당첨"
+            placeholder={
+              type === AddItemType.EXPENSE
+                ? "예: 옷 사기, 버스비 충전"
+                : "예: 아르바이트, 로또 당첨"
+            }
             className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"
           />
         </div>
+
+        {/* 카테고리 (지출 전용) */}
+        {type === AddItemType.EXPENSE && (
+          <div>
+            <label className="text-sm font-medium text-gray-700">카테고리</label>
+            <div className="space-y-1">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as ConsumptionCategoryKey)}
+                className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"
+              >
+                {categoryOptions.map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500">
+                카테고리를 선택하면 지출 분석에 활용돼요.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* 금액 */}
         <div>

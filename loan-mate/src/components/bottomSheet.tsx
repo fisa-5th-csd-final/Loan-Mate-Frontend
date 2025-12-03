@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BottomSheet({
   open,
   onClose,
-  children
+  children,
 }: {
   open: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   // 배경 스크롤 방지
   useEffect(() => {
@@ -27,9 +27,11 @@ export default function BottomSheet({
   return (
     <AnimatePresence>
       {open && (
-        <div className="absolute inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end">
           {/* 배경 */}
-          <motion.div
+          <motion.button
+            type="button"
+            aria-label="bottom sheet overlay"
             className="absolute inset-0 bg-black/40"
             onClick={onClose}
             initial={{ opacity: 0 }}
@@ -39,6 +41,8 @@ export default function BottomSheet({
 
           {/* 시트 */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
             className="w-full bg-white rounded-t-2xl shadow-xl p-5 z-50 max-h-[85vh] overflow-y-auto"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}

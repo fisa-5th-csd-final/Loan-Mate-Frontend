@@ -43,3 +43,5 @@ export enum ConsumptionCategory {
   ENTERTAINMENT = "여가",
   ETC = "기타",
 }
+
+export type ConsumptionCategoryKey = keyof typeof ConsumptionCategory;

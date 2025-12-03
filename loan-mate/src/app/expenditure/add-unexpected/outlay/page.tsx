@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import BottomSheet from "@/components/bottomSheet";
-import AddItemModalPage from "@/app/expenditure/_components/AddItemModalPage";
+import AddItemModalPage from "@/app/expenditure/_components/modal/AddItemModalPage";
 import PageWithCTA from "@/app/expenditure/_components/PageWithCTA";
 import EditableAmountList, { Item } from "@/app/expenditure/_components/EditableAmountList";
 import { AddItem, AddItemType } from "@/consts/add-item";
@@ -29,6 +29,7 @@ export default function OutlayPage() {
       id: expense.id,
       name: expense.description,
       amount: expense.amount,
+      category: expense.category,
     })) ?? [];
 
   const createMutation = useCreateExpenditureMutation({
@@ -53,6 +54,7 @@ export default function OutlayPage() {
       amount: data.amount,
       description: data.name,
       savedAt,
+      category: data.category ?? "FOOD",
     });
   };
 
@@ -69,9 +71,9 @@ export default function OutlayPage() {
     updateMutation.mutate({
       id: Number(editing.id),
       data: {
-        type: "EXPENSE", // 고정
         amount: data.amount,
         description: data.name,
+        category: data.category ?? "FOOD",
       },
     });
   };
@@ -123,6 +125,7 @@ export default function OutlayPage() {
                 id: editing.id,
                 name: editing.name,
                 amount: editing.amount,
+                category: editing.category,
               }
               : undefined
           }

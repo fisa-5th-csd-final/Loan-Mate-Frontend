@@ -21,6 +21,7 @@ export const API = {
         AUTO_DEPOSIT: (loanId: number) => `/api/loans/ledgers/${loanId}/auto-deposit`,
         DELETE: (loanId: number) => `/api/loans/${loanId}`,
         PREPAYMENT_INFOS: '/api/loans/prepayment-infos',
+        LEDGER_DETAILS: '/api/loans/ledgers/details',
         SIMULATION: '/api/loans/ai-simulation',
     },
     SPENDING: {

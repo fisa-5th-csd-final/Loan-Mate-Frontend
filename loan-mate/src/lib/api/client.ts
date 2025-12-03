@@ -8,10 +8,7 @@ export function setAuthFailHandler(fn: () => void) {
   authFailHandler = fn;
 }
 
-export type RequestOptions = Omit<
-  RequestInit,
-  "method" | "body" | "headers"
-> & {
+export type RequestOptions = Omit<RequestInit, "method" | "body" | "headers"> & {
   method?: HttpMethod;
   query?: Record<string, QueryValue>;
   body?: unknown;
@@ -76,10 +73,7 @@ async function parseResponse(response: Response) {
   return await response.text();
 }
 
-export async function request<T = unknown>(
-  path: string,
-  options: RequestOptions = {}
-) {
+export async function request<T = unknown>(path: string, options: RequestOptions = {}) {
   const { query, body, method = "GET", ...fetchOptions } = options;
   const url = buildUrl(path, query);
 
@@ -93,7 +87,7 @@ export async function request<T = unknown>(
     method,
     headers,
     credentials: "include",
-    body: preparedBody,
+    body: preparedBody
   });
 
   // 액세스 재발급 과정
@@ -107,16 +101,21 @@ export async function request<T = unknown>(
       throw new Error("Refresh expired");
     }
 
-    const retryUrl = `${url}?_t=${Math.random()}`;
-    console.log("refreshtoken 재발급 완료 ");
+    // 안전한 쿼리 파라미터 추가 방식
+    const retryUrlObj = new URL(url);
+    retryUrlObj.searchParams.set('_t', Math.random().toString());
+    const retryUrl = retryUrlObj.toString();
 
     response = await fetch(retryUrl, {
+      ...fetchOptions,
       method,
-      credentials: "include",
+      headers,
+      credentials: 'include',
       body: preparedBody,
-      cache: "no-store",
+      cache: 'no-store',
     });
   }
+
 
   const data = await parseResponse(response);
   if (!response.ok) {
@@ -126,10 +125,7 @@ export async function request<T = unknown>(
 }
 
 export const apiClient = {
-  get<T = unknown>(
-    path: string,
-    options?: Omit<RequestOptions, "method" | "body">
-  ) {
+  get<T = unknown>(path: string, options?: Omit<RequestOptions, "method" | "body">) {
     return request<T>(path, { ...options, method: "GET" });
   },
   post<T = unknown>(
@@ -153,10 +149,7 @@ export const apiClient = {
   ) {
     return request<T>(path, { ...options, method: "PATCH", body });
   },
-  delete<T = unknown>(
-    path: string,
-    options?: Omit<RequestOptions, "method" | "body">
-  ) {
+  delete<T = unknown>(path: string, options?: Omit<RequestOptions, "method" | "body">) {
     return request<T>(path, { ...options, method: "DELETE" });
   },
 };
