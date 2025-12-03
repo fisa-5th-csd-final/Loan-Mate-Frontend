@@ -4,12 +4,13 @@ export const dynamic = "force-dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import InstitutionSearchBar from "@/components/ui/search/SearchBar";
 import InstitutionList from "@/components/institution/InstitutionList";
-import CommonButton from "@/components/ui/button/CommonButton";
+import PageWithCTA from "@/components/expenditure/PageWithCTA";
 import { useNavigation } from "@/components/ui/navigation/NavigationContext";
 import CategoryTabs from "@/components/ui/tab/CategoryTabs";
 import { useEffect, useState, Suspense } from "react";
 import { apiClient } from "@/lib/api/client";
 import { useLoanStore } from "@/stores/useLoanStore";
+import { useToast } from "@/context/ToastContext";
 
 function ApplyAutoDepositContent() {
   const params = useSearchParams();
@@ -17,6 +18,7 @@ function ApplyAutoDepositContent() {
   const { setTitle } = useNavigation();
   const router = useRouter();
   const { setPrepaidLoan } = useLoanStore();
+  const { showToast } = useToast();
 
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
@@ -177,6 +179,12 @@ function ApplyAutoDepositContent() {
 
     // deposit 자동예치하기 모드 
     if (mode === "deposit") {
+      const allConnected = items.length > 0 && items.every((i) => i.connected);
+      if (allConnected) {
+        showToast("이미 모든 대출이 선납예치 처리 되었습니다.", "error");
+        return;
+      }
+
       if (selected.length === 0) {
         alert("자동 예치할 대출을 하나 이상 선택해주세요.");
         return;
@@ -258,35 +266,32 @@ function ApplyAutoDepositContent() {
       : items.filter((i) => i.checked).length === 0;
 
   return (
-    <div className="space-y-6 pt-4">
-      <h2 className="text-lg font-semibold">
-        {mode === "deposit"
-          ? "자동 예치할 대출을 선택해 주세요"
-          : mode === "repay"
-            ? "상환할 대출을 선택해 주세요"
-            : "선납할 대출을 선택해 주세요"}
-      </h2>
+    <PageWithCTA
+      ctaLabel={buttonLabel}
+      onClick={handleSubmit}
+    >
+      <div className="space-y-6 pt-4">
+        <h2 className="text-lg font-semibold">
+          {mode === "deposit"
+            ? "자동 예치할 대출을 선택해 주세요"
+            : mode === "repay"
+              ? "상환할 대출을 선택해 주세요"
+              : "선납할 대출을 선택해 주세요"}
+        </h2>
 
-      <InstitutionSearchBar />
+        <InstitutionSearchBar />
 
-      <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
+        <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
-      <InstitutionList
-        title="은행 목록"
-        items={items}
-        onToggle={handleToggle}
-        onToggleAll={handleToggleAll}
-        disabledKey="connected"
-      />
-
-      <CommonButton
-        label={buttonLabel}
-        size="lg"
-        widthClassName="w-full"
-        onClick={handleSubmit}
-        disabled={submitDisabled}
-      />
-    </div>
+        <InstitutionList
+          title="은행 목록"
+          items={items}
+          onToggle={handleToggle}
+          onToggleAll={handleToggleAll}
+          disabledKey="connected"
+        />
+      </div>
+    </PageWithCTA>
   );
 }
 

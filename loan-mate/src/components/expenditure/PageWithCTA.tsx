@@ -7,11 +7,13 @@ export default function PageWithCTA({
   ctaLabel,
   onClick,
   href,
+  disabled,
 }: {
   children: React.ReactNode;
   ctaLabel: string;
   onClick?: () => void;
   href?: string;
+  disabled?: boolean;
 }) {
   return (
     <div className="relative min-h-screen bg-white">
@@ -26,6 +28,7 @@ export default function PageWithCTA({
           label={ctaLabel}
           onClick={onClick}
           href={href}
+          disabled={disabled}
           size="lg"
           className="w-full rounded-xl text-[16px] font-semibold py-4 h-auto"
         />
