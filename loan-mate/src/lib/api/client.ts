@@ -76,6 +76,7 @@ async function parseResponse(response: Response) {
 export async function request<T = unknown>(path: string, options: RequestOptions = {}) {
   const { query, body, method = "GET", ...fetchOptions } = options;
   const url = buildUrl(path, query);
+
   const headers = resolveHeaders(options);
   const preparedBody =
     body && headers.get("Content-Type") === "application/json"

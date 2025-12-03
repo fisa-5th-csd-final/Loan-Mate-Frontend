@@ -7,9 +7,19 @@ import { ChevronDown, ChevronRight, Star } from "lucide-react";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { formatCurrency } from "@/lib/util/NumberFormatter"
 
+import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useEffect } from "react";
+
 export default function TransferCompletePage() {
   const router = useRouter();
   const { bankName, inputAccount, amount } = useTransferStore();
+  const { setIsVisible } = useNavigation();
+
+  useEffect(() => {
+    setIsVisible(false);
+    return () => setIsVisible(true);
+  }, [setIsVisible]);
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="bg-white w-full rounded-2xl p-6 pt-14">
@@ -71,7 +81,7 @@ export default function TransferCompletePage() {
               </button>
             </div>
 
-            <div className="border-t border-gray-200 pt-1"/>
+            <div className="border-t border-gray-200 pt-1" />
 
             <button className="text-gray-500 text-sm w-full text-center flex justify-center items-center gap-1">
               더보기

@@ -1,4 +1,8 @@
 "use client";
+
+import { NavigationProvider } from "@/components/navigation/NavigationContext";
+import AutoDepositLayoutContent from "./_components/AutoDepositLayoutContent";
+
 export const dynamic = "force-dynamic";
 
 export default function AutoDepositLayout({
@@ -6,5 +10,11 @@ export default function AutoDepositLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-white p-4">{children}</div>;
+  return (
+    <NavigationProvider>
+      <AutoDepositLayoutContent>
+        {children}
+      </AutoDepositLayoutContent>
+    </NavigationProvider>
+  );
 }

@@ -14,12 +14,15 @@ export const API = {
     },
     LOAN: {
         LIST: '/api/loans/ledgers',
+        RISK: (loanId: number) => `/api/loans/ledger/${loanId}/risk`,
+        TOTAL_RISK: '/api/loans/risk',
         DETAIL: (loanId: number) => `/api/loans/ledger/${loanId}`,
         COMMENT: (loanId: number) => `/api/loans/ledger/${loanId}/comment`,
         AUTO_DEPOSIT: (loanId: number) => `/api/loans/ledgers/${loanId}/auto-deposit`,
         DELETE: (loanId: number) => `/api/loans/${loanId}`,
         PREPAYMENT_INFOS: '/api/loans/prepayment-infos',
         LEDGER_DETAILS: '/api/loans/ledgers/details',
+        SIMULATION: '/api/loans/ai-simulation',
     },
     SPENDING: {
         MONTHLY: (accountId: number, year: number, month: number) => `/api/spending/${accountId}/${year}/${month}`,

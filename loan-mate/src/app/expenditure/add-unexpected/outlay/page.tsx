@@ -6,7 +6,6 @@ import AddItemModalPage from "@/app/expenditure/_components/modal/AddItemModalPa
 import PageWithCTA from "@/app/expenditure/_components/PageWithCTA";
 import EditableAmountList, { Item } from "@/app/expenditure/_components/EditableAmountList";
 import { AddItem, AddItemType } from "@/consts/add-item";
-import { useRouter } from "next/navigation";
 import {
   useCreateExpenditureMutation,
   useDeleteExpenditureMutation,
@@ -21,7 +20,6 @@ export default function OutlayPage() {
   // 이 페이지는 지출 페이지
   const pageType: AddItemType = AddItemType.EXPENSE;
 
-  const router = useRouter();
 
   // EXPENSE 데이터 불러오기
   const listQuery = useExpenditureListQuery("EXPENSE");
@@ -87,7 +85,7 @@ export default function OutlayPage() {
   return (
     <PageWithCTA
       ctaLabel="지출 저장하기"
-      onClick={() => router.push("/expenditure/limit")}
+      href="/expenditure/limit"
     >
       <p className="text-sm text-gray-900 text-[18px] font-semibold mb-5 px-1">
         이번 달 예상하지 못한{" "}

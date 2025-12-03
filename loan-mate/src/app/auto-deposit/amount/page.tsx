@@ -1,25 +1,40 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import CommonButton from "@/components/button/CommonButton";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import NumberKeypad from "../_components/NumberKeypad";
 import { useTransferStore } from "@/stores/useTransferStore";
 import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
 import type { AccountDetail } from "@/lib/api/auto-deposit/types";
+import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function AutoDepositAmountPage() {
-  const router = useRouter();
 
   const { get: getFromAccount } = useSelectFromAccount();
   const [fromAccount, setFromAccount] = useState<AccountDetail | null>(null);
+  const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
 
   const { inputAccount, bankName, bankLogo, amount, setAmount } =
     useTransferStore();
 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
   useEffect(() => {
+    setTitle("금액 입력하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-500 text-sm"
+        onClick={() => setIsCancelModalOpen(true)}
+      >
+        취소
+      </button>
+    );
     const selected = getFromAccount();
     setFromAccount(selected);
   }, []);
@@ -49,11 +64,6 @@ export default function AutoDepositAmountPage() {
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* ------------------ Header ------------------ */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
       <div className="text-sm text-gray-500 mt-2">01 / 07</div>
 
       {/* ------------------ From Account ------------------ */}
@@ -179,10 +189,16 @@ export default function AutoDepositAmountPage() {
         }
         className="rounded-xl text-lg font-medium"
         disabled={isOverBalance}
-        onClick={() => {
-          if (isOverBalance) return;
-          router.push(`/auto-deposit/confirm`);
-        }}
+        href="/auto-deposit/confirm"
+      />
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
       />
     </div>
   );

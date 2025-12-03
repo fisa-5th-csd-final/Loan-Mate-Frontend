@@ -6,7 +6,6 @@ import AddItemModalPage from "@/app/expenditure/_components/modal/AddItemModalPa
 import PageWithCTA from "@/app/expenditure/_components/PageWithCTA";
 import EditableAmountList, { Item } from "@/app/expenditure/_components/EditableAmountList";
 import { AddItem, AddItemType } from "@/consts/add-item";
-import { useRouter } from "next/navigation";
 import {
   useCreateExpenditureMutation,
   useDeleteExpenditureMutation,
@@ -19,7 +18,6 @@ export default function IncomePage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const pageType: AddItemType = AddItemType.INCOME;
-  const router = useRouter();
 
   const listQuery = useExpenditureListQuery("INCOME");
 
@@ -117,10 +115,10 @@ export default function IncomePage() {
           initialData={
             editing
               ? {
-                  id: editing.id,
-                  name: editing.name,
-                  amount: editing.amount,
-                }
+                id: editing.id,
+                name: editing.name,
+                amount: editing.amount,
+              }
               : undefined
           }
           onCancel={() => {

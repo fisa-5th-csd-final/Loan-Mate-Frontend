@@ -81,7 +81,7 @@ export default function RiskDashboard({
                 </div>
 
                 {/* 하단 정보 영역 */}
-                <div className="w-full p-2.5 text-center bg-[#D1EAFF] rounded-4xl text-[#2E393D] font-semibold">
+                <div className="w-full p-2.5 text-center bg-[#D1EAFF] rounded-4xl text-[#2E393D] font-semibold whitespace-pre-wrap">
                     {head} <br />
                     {match?.[1]}{tail}
                 </div>

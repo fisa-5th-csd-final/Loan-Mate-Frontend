@@ -9,7 +9,7 @@ export default function ConnectLayout({ children }: { children: ReactNode }) {
         title="나의 소비밸런스 맞추기" />
 
       {/* 페이지 본문 */}
-      <main className="flex flex-col gap-4 bg-white">
+      <main className="flex flex-col gap-4 bg-white px-4">
         {children}
       </main>
     </div>

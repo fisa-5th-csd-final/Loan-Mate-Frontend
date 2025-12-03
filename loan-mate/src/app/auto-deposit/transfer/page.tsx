@@ -1,21 +1,47 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
-import { useEffect } from "react";
 import { useTransferStore } from "@/stores/useTransferStore";
+import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
+import { transferMoney } from "@/lib/api/auto-deposit/transferApi";
+import { useNavigation } from "@/components/navigation/NavigationContext";
+import { useNavigation as usePageTransition } from "@/context/NavigationContext";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
-  const {bankName, bankLogo, inputAccount, amount, setAmount} = useTransferStore();
+  const { bankName, bankLogo, bankCode, inputAccount, amount, setAmount } = useTransferStore();
+  const [pin, setPin] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const router = useRouter();
-  const [pin, setPin] = useState("");
+  const { setTitle, setShowBack, setRight } = useNavigation();
+  const { push } = usePageTransition();
+
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
+  useEffect(() => {
+    setTitle("송금하기");
+    setShowBack(true);
+    setRight(
+      <button
+        className="text-blue-500 text-sm"
+        onClick={() => setIsCancelModalOpen(true)}
+      >
+        취소
+      </button>
+    );
+  }, [setTitle, setShowBack, setRight]);
+
+  const { get: getFromAccount } = useSelectFromAccount();
+  const fromAccount = getFromAccount();
 
   const addDigit = (num: string) => {
     if (pin.length >= 6) return;
@@ -26,27 +52,41 @@ function TransferFinalInner() {
     setPin((prev) => prev.slice(0, -1));
   };
 
-  // const handleSubmitPin = (pin: string) => {
-  //   setOpen(false);
-
-  //   // 실제 이체 완료 로직 넣기
-  // };
-
   useEffect(() => {
     if (pin.length === 6) {
-      router.push("/auto-deposit/complete"); // ← 원하는 화면으로 이동
+      handleTransfer();
     }
   }, [pin]);
 
+  async function handleTransfer() {
+    if (!fromAccount) {
+      setError("출금 계좌 정보가 없습니다.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await transferMoney({
+        fromAccountNumber: fromAccount.accountNumber,
+        toAccountNumber: inputAccount,
+        toBankCode: bankCode,
+        amount: Number(amount),
+      });
+
+      router.push("/auto-deposit/complete");
+    } catch (err) {
+      console.error("이체 실패", err);
+      setError("이체에 실패했습니다. 다시 시도해주세요.");
+      setPin(""); // 비밀번호 초기화
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
-      {/* ---------------- Header ---------------- */}
-      <NavigationBar
-        title=""
-        showBack={true}
-        right={<button className="text-blue-500 text-sm">취소</button>}
-      />
-
       {/* ---------------- Icons ---------------- */}
       <div className="flex items-center gap-4 mb-6">
         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
@@ -142,6 +182,15 @@ function TransferFinalInner() {
           onDelete={deleteDigit}
         />
       </BottomSheet>
+
+      <ConfirmModal
+        isOpen={isCancelModalOpen}
+        onClose={() => setIsCancelModalOpen(false)}
+        onConfirm={() => push("/main", "back")}
+        title="취소하시겠습니까?"
+        description="작성 중인 내용은 저장되지 않습니다."
+        confirmLabel="확인"
+      />
     </div>
   );
 }

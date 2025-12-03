@@ -1,6 +1,5 @@
-"use client";
-
-import type { ButtonHTMLAttributes } from "react";
+import Link from "next/link";
+import type { ButtonHTMLAttributes, AnchorHTMLAttributes } from "react";
 
 type ButtonSize = "sm" | "md" | "lg";
 
@@ -10,7 +9,9 @@ type CommonButtonProps = {
   textColorClassName?: string;
   size?: ButtonSize;
   widthClassName?: string;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
+  disabled?: boolean;
+  href?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement> & AnchorHTMLAttributes<HTMLAnchorElement>;
 
 /**
  * 모든 버튼 컴포넌트에서 공통으로 사용하는 컴포넌트
@@ -24,6 +25,8 @@ export default function CommonButton({
   size = "md",
   widthClassName = "w-full",
   className = "",
+  href,
+  disabled,
   ...props
 }: CommonButtonProps) {
   const sizeClasses: Record<ButtonSize, string> = {
@@ -35,10 +38,25 @@ export default function CommonButton({
   const colorClasses =
     colorClassName ?? "bg-blue-600 hover:bg-blue-700 focus-visible:outline-blue-500";
 
+  const baseClasses = `flex flex-col items-center justify-center gap-2 rounded-md ${widthClassName} ${sizeClasses[size]} ${textColorClassName} shadow-sm transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${colorClasses} ${className}`;
+
+  if (href && !disabled) {
+    return (
+      <Link
+        href={href}
+        className={baseClasses}
+        {...props as AnchorHTMLAttributes<HTMLAnchorElement>}
+      >
+        {label}
+      </Link>
+    );
+  }
+
   return (
     <button
-      className={`flex flex-col items-center justify-center gap-2 rounded-md ${widthClassName} ${sizeClasses[size]} ${textColorClassName} shadow-sm transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${colorClasses} ${className}`}
-      {...props}
+      className={baseClasses}
+      disabled={disabled}
+      {...props as ButtonHTMLAttributes<HTMLButtonElement>}
     >
       {label}
     </button>

@@ -5,6 +5,7 @@ import React from 'react';
 type NavItem = {
   id: string;
   label: string;
+  disabled?: boolean;
 };
 
 interface TopCategoryNavProps {
@@ -31,21 +32,27 @@ export const TopCategoryNav: React.FC<TopCategoryNavProps> = ({
     >
       {items.map((item) => {
         const isActive = item.id === activeId;
+        const isDisabled = item.disabled;
+
         return (
           <button
             key={item.id}
             type="button"
-            onClick={() => onChange?.(item.id)}
-            className="
+            onClick={() => !isDisabled && onChange?.(item.id)}
+            disabled={isDisabled}
+            className={`
               relative flex flex-col items-center
               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500
-            "
+              ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+            `}
           >
             <span
               className={`
                 text-[20px]
                 tracking-tight
-                ${isActive ? 'font-semibold text-[#3b3f43]' : 'font-normal text-[#6e7378]'}
+                ${isActive ? 'font-semibold text-[#3b3f43]' : ''}
+                ${!isActive && !isDisabled ? 'font-normal text-[#6e7378]' : ''}
+                ${isDisabled ? 'font-normal text-gray-300' : ''}
               `}
             >
               {item.label}
