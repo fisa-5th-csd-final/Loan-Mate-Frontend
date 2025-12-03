@@ -84,7 +84,7 @@ export default function FixedBudgetProgressBar({ progress, min, max, label, onCh
                         className={`
                         h-1 
                         rounded-[18px] 
-                        bg-[#0067AC]
+                        bg-(--sub-1)
                         `}
                         style={{ width: `${safeProgress}%` }}
                     />
@@ -103,7 +103,7 @@ export default function FixedBudgetProgressBar({ progress, min, max, label, onCh
                         <PercentageSpeechBubble percentage={progress} />
                         {/* 조절 원 */}
                         <div
-                            className="w-4 h-4 bg-white border-4 border-[#0067AC] rounded-full shadow-md"
+                            className="w-4 h-4 bg-(--white) border-4 border-(--sub-1) rounded-full shadow-md"
                             onMouseDown={(e) => {
                                 e.preventDefault();
                                 setIsDragging(true);
