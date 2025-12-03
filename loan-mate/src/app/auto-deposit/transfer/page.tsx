@@ -9,7 +9,7 @@ import NumberKeypad from "../_components/NumberKeypad";
 import { useLoanStore } from "@/stores/useLoanStore";
 import { useRouter } from "next/navigation";
 import { useTransferStore } from "@/stores/useTransferStore";
-import { input } from "framer-motion/client";
+import { apiClient } from "@/lib/api";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
@@ -51,46 +51,59 @@ function TransferFinalInner() {
 
   /* ---------------- 이체 요청 ---------------- */
   const handleTransfer = async () => {
-    if (!prepaidLoan) return;
-    if (insufficientBalance) {
-      alert("잔액이 부족합니다.");
-      return;
+  if (!prepaidLoan) return;
+  if (insufficientBalance) {
+    alert("잔액이 부족합니다.");
+    return;
+  }
+
+  alert("정말 이체하시겠습니까?");
+
+  try {
+    let response;
+
+    // 선납하기 
+    if (prepaidLoan.mode === "prepaid") {
+      response = await apiClient.post(
+        `/api/loans/${prepaidLoan.loanLedgerId}/prepayment`,
+        { amount: prepaidLoan.mustPaidAmount }
+      );
+
+    // 상환하기 
+    } else if (prepaidLoan.mode === "repay") {
+      response = await apiClient.post(
+        `/api/loans/${prepaidLoan.loanLedgerId}/repayment`,
+        { amount: prepaidLoan.mustPaidAmount }
+      );
     }
 
-    alert("정말 이체하시겠습니까?");
+    router.push("/auto-deposit/complete");
 
-    const response = await fetch(`/api/loans/${prepaidLoan.loanLedgerId}`, {
-      method: "DELETE",
-    });
+  } catch (err) {
+    console.error(err);
+    alert("이체 실패");
+  }
+};
 
-    if (response.status === 204) {
-      router.push("/auto-deposit/complete");
-    } else {
-      alert("이체 실패");
-    }
-  };
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
       {/* <NavigationBar title="" showBack={true} /> */}
 
-      <div className="text-xl font-semibold mb-2">
-        <span className="text-blue-600">{prepaidLoan?.loanName}</span> 에
+      <div className="text-lg items-end font-medium mb-2">
+        <span className="text-xl font-semibold">{prepaidLoan?.loanName}</span> 에
       </div>
 
-      <div className="text-xl font-semibold mb-2">
-        <span className="text-blue-600">
+      <div className="text-lg items-end font-medium mb-2">
+        <span className="text-xl font-semibold">
           {(prepaidLoan?.mustPaidAmount ?? 0).toLocaleString()}원
-        </span>
+        </span>{""}
         을 이체하시겠어요?
       </div>
 
-      {/* 잔액 부족 경고 */}
-      {insufficientBalance && (
-        <div className="text-red-500 text-sm text-center mb-4">
-          계좌 잔액이 부족합니다. 선납할 수 없습니다.
-        </div>
-      )}
+
+
+      <div className="h-6" />
 
     {/* ---------------- Info Box : 무조건 보이게 ---------------- */}
     <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
@@ -109,6 +122,13 @@ function TransferFinalInner() {
         <span className="text-gray-800">{inputAccount}</span>
       </div>
     </div>
+
+    {/* 잔액 부족 경고 */}
+      {insufficientBalance && (
+        <div className="text-red-500 text-sm text-center mb-4">
+          계좌 잔액이 부족합니다. 선납할 수 없습니다.
+        </div>
+      )}
 
       <div className="flex gap-3">
         {/* <CommonButton

@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api/client";
 
 interface PrepaymentInfo {
+  loanLedgerId: string;
+  balance: number;
   loanName: string;
   benefit: number;
+  mustPaidAmount: number;
 }
 
 interface PrepaymentInfoResponse {
