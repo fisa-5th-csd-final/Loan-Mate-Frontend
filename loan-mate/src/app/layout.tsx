@@ -1,4 +1,4 @@
-import MobileNotch from "@/components/layout/MobileNotch";
+import MobileNotch from "@/components/ui/layout/MobileNotch";
 import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
 import { NavigationProvider } from "@/context/NavigationContext";

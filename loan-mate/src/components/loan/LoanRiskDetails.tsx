@@ -1,8 +1,8 @@
 // src/components/loan/LoanRiskDetails.tsx
 "use client";
 
-import ProgressBar from "@/components/ProgressBar";
-import AiCommentBox from "@/components/box/AiCommentBox";
+import ProgressBar from "@/components/ui/progress/ProgressBar";
+import AiCommentBox from "@/components/ui/feedback/AiCommentBox";
 
 type LoanRiskDetailsProps = {
   message: string;

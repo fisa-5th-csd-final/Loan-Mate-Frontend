@@ -3,14 +3,14 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import PageWithCTA from "../_components/PageWithCTA";
-import MessageBox from "@/components/box/MessageBox"
-import BottomSheet from "@/components/bottomSheet";
-import CommonButton from "@/components/button/CommonButton";
+import PageWithCTA from "@/components/expenditure/PageWithCTA";
+import MessageBox from "@/components/ui/feedback/MessageBox";
+import BottomSheet from "@/components/ui/modal/BottomSheet";
+import CommonButton from "@/components/ui/button/CommonButton";
 import TableSection from "@/components/ui/TableSection";
 import { TableRow, TableCell } from "@/components/ui/Table";
-import SegmentProgressBar from "@/components/SegmentProgressBar";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import SegmentProgressBar from "@/components/ui/progress/SegmentProgressBar";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 import {
   useMonthlySpendingQuery,
@@ -20,7 +20,7 @@ import {
 import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
 import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
 
-import { ConsumptionCategoryLabelMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
+import { ConsumptionCategoryLabelMap, ConsumptionCategoryMeta } from "@/components/expenditure/ConsumptionCategoryMeta";
 
 import { useSpendingRecommendationManager } from "@/hooks/expenditure/useSpendingRecommendationManager";
 import {
@@ -28,8 +28,8 @@ import {
   type SpendingCategoryView,
 } from "@/hooks/expenditure/useSpendingMetrics";
 
-import BudgetEditorContent from "../_components/modal/BudgetEditorModalPage";
-import WarningConfirmContent from "../_components/modal/WarningConfirmModalPage";
+import BudgetEditorContent from "@/components/expenditure/modal/BudgetEditorModalPage";
+import WarningConfirmContent from "@/components/expenditure/modal/WarningConfirmModalPage";
 
 /**
  * 카테고리 → SegmentProgressBar용 segment 변환

@@ -2,10 +2,10 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect } from "react";
-import AutoDepositTable from "./_components/AutoDepositTable";
-import CommonButton from "@/components/button/CommonButton";
-import EarlyRepaySection from "./_components/EarlyRepaySection";
-import { useNavigation } from "@/components/navigation/NavigationContext";
+import AutoDepositTable from "@/components/auto-deposit/AutoDepositTable";
+import CommonButton from "@/components/ui/button/CommonButton";
+import EarlyRepaySection from "@/components/auto-deposit/EarlyRepaySection";
+import { useNavigation } from "@/components/ui/navigation/NavigationContext";
 
 export default function AutoDepositPage() {
   const { setTitle, setShowBack, setRight } = useNavigation();

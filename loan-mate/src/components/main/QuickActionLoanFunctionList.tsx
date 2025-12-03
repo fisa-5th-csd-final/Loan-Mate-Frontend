@@ -1,7 +1,7 @@
 "use client";
 
-import QuickActionButton from "@/components/button/QuickActionButton";
-import SectionHeading from "@/components/SectionHeading";
+import QuickActionButton from "@/components/ui/button/QuickActionButton";
+import SectionHeading from "@/components/ui/typography/SectionHeading";
 import { ArrowLeftRight, PiggyBank } from "lucide-react";
 import { useNavigation } from "@/context/NavigationContext";
 

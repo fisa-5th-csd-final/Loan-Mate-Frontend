@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import RiskIndicator from './RiskIndicator';
 import RiskGaugeMeter from './RiskGaugeMeter';
-import { AiSimulationResponse } from "../../../../types/ai/AiSimulationResponse";
+import { AiSimulationResponse } from "@/../types/ai/AiSimulationResponse";
 
 // 5단계 위험도 분류 로직 (0.0~1.0 기준)
 function getRiskClassification(level: number) {

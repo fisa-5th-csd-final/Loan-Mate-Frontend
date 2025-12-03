@@ -1,12 +1,11 @@
 "use client";
 
 import React, { Suspense } from "react";
-import BottomCTA from "@/components/BottomCTA";
-import Collapse from "@/components/Collapse";
+import Collapse from "@/components/ui/layout/Collapse";
 import { useRouter } from "next/navigation";
 import { setFlag } from "@/lib/db/userFlags"
 import { useSearchParams } from "next/navigation";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 function AgreementContent() {
   const router = useRouter();
@@ -89,12 +88,6 @@ function AgreementContent() {
           전송요구서에 기재된 전송을 요구하는 신용정보
         </Collapse>
       </div>
-
-      {/* 하단 CTA (고정) */}
-      <BottomCTA
-        label="전체 동의하기"
-        onClick={handleConnect}
-      />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 'use client';
 
-import ProgressBar from '../ProgressBar';
+import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
-import SectionHeading from '../SectionHeading';
+import SectionHeading from "@/components/ui/typography/SectionHeading";
 import type { LoanSummary } from '@/../types/loan';
 import { useTotalLoanRisk } from '@/hooks/loan/useTotalLoanRisk';
 

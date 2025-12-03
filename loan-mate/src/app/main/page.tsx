@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import AssetAndConsumeToggle from "@/components/button/AssetAndConsumeToggle";
-import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/navigation/MainTopLevelNavigation";
+import AssetAndConsumeToggle from "@/components/ui/button/AssetAndConsumeToggle";
+import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/ui/navigation/MainTopLevelNavigation";
 import MonthlyLoanSummary from "@/components/loan/MonthlyLoanSummary";
 import dynamic from "next/dynamic";
 
-const QuickActionFunctionList = dynamic(() => import("./_components/QuickActionFunctionList"), {
+const QuickActionFunctionList = dynamic(() => import("@/components/main/QuickActionFunctionList"), {
   loading: () => <div className="h-20 bg-gray-100 rounded-xl animate-pulse" />,
 });
-const QuickActionLoanFunctionList = dynamic(() => import("./_components/QuickActionLoanFunctionList"), {
+const QuickActionLoanFunctionList = dynamic(() => import("@/components/main/QuickActionLoanFunctionList"), {
   loading: () => <div className="h-20 bg-gray-100 rounded-xl animate-pulse" />,
 });
 
 import { type LoanSummary } from "@/../types/loan";
 import { useLoanListQuery } from "@/lib/api/loan/hooks";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
-import CategoryCard from "@/components/card/CategoryCard";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
+import CategoryCard from "@/components/ui/card/CategoryCard";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 

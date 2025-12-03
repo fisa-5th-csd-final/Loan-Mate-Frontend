@@ -5,9 +5,9 @@ import { simulationFetch } from "@/lib/api/ai/SimulationFetch";
 import type { AiSimulationResponse, ChangeItem } from "../../../../types/ai/AiSimulation";
 import RiskDashboard from "./RiskDashboard";
 import FixedBudgetDashboard, { FixedBudgetItem } from "./FixedBudgetDashboard";
-import BottomSheet from "@/components/bottomSheet";
+import BottomSheet from "@/components/ui/modal/BottomSheet";
 import IncomeExpenseForm from "./IncomeExpenseForm";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 const INITIAL_RISK_DATA: AiSimulationResponse = {
     base_risk_score: 0.15,

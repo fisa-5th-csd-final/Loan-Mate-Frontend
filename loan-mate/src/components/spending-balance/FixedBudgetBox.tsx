@@ -1,5 +1,5 @@
 "use client";
-import FixedBudgetProgressBar from "@/app/spending-balance/_components/FixedBudgetProgressBar"
+import FixedBudgetProgressBar from "@/components/spending-balance/FixedBudgetProgressBar"
 import { FixedBudgetItem } from "./FixedBudgetDashboard";
 
 type FixedBudgetBoxProps = {

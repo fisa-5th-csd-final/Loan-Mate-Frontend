@@ -2,10 +2,10 @@
 export const dynamic = "force-dynamic";
 
 import { useState, Suspense, useEffect } from "react";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
-import CommonButton from "@/components/button/CommonButton";
-import BottomSheet from "@/components/bottomSheet";
-import NumberKeypad from "../_components/NumberKeypad";
+import NavigationBar from "@/components/ui/navigation/BackRouteNavigation";
+import CommonButton from "@/components/ui/button/CommonButton";
+import BottomSheet from "@/components/ui/modal/BottomSheet";
+import NumberKeypad from "@/components/auto-deposit/NumberKeypad";
 import { useLoanStore } from "@/stores/useLoanStore";
 import { useRouter } from "next/navigation";
 import { useTransferStore } from "@/stores/useTransferStore";
@@ -27,7 +27,7 @@ function TransferFinalInner() {
     if (!prepaidLoan) return;
 
     if (prepaidLoan?.accountNumber) {
-      setAccount(prepaidLoan.accountNumber);  
+      setAccount(prepaidLoan.accountNumber);
     }
 
     if (prepaidLoan.balance < prepaidLoan.mustPaidAmount) {
@@ -105,23 +105,23 @@ function TransferFinalInner() {
 
       <div className="h-6" />
 
-    {/* ---------------- Info Box : 무조건 보이게 ---------------- */}
-    <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
-      <div className="flex justify-between py-2">
-        <span className="text-gray-600">수수료</span>
-        <span className="text-gray-800">면제</span>
-      </div>
+      {/* ---------------- Info Box : 무조건 보이게 ---------------- */}
+      <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
+        <div className="flex justify-between py-2">
+          <span className="text-gray-600">수수료</span>
+          <span className="text-gray-800">면제</span>
+        </div>
 
-      <div className="flex justify-between py-2">
-        <span className="text-gray-600">선납할 대출명</span>
-        <span className="text-gray-800">{prepaidLoan?.loanName}</span>
-      </div>
+        <div className="flex justify-between py-2">
+          <span className="text-gray-600">선납할 대출명</span>
+          <span className="text-gray-800">{prepaidLoan?.loanName}</span>
+        </div>
 
-      <div className="flex justify-between py-2">
-        <span className="text-gray-600">내 통장표기</span>
-        <span className="text-gray-800">{inputAccount}</span>
+        <div className="flex justify-between py-2">
+          <span className="text-gray-600">내 통장표기</span>
+          <span className="text-gray-800">{inputAccount}</span>
+        </div>
       </div>
-    </div>
 
     {/* 잔액 부족 경고 */}
       {insufficientBalance && (

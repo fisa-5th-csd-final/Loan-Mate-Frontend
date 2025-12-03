@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SearchBar from "@/components/search/SearchBar";
-import CategoryTabs from "@/components/CategoryTabs";
+import SearchBar from "@/components/ui/search/SearchBar";
+import CategoryTabs from "@/components/ui/tab/CategoryTabs";
 import InstitutionList from "@/components/institution/InstitutionList";
-import BottomCTA from "@/components/BottomCTA";
 import { getFlag, setFlag } from "@/lib/db/userFlags";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 type Institution = {
   logo: string;
@@ -87,10 +86,7 @@ export default function ConnectPage() {
         onToggleAll={toggleAll}
       />
 
-      <BottomCTA
-        label={`${items.filter(i => i.checked).length}개 기관 연결하기`}
-        href={`/connect/consent?banks=${JSON.stringify(items.filter(i => i.checked).map(i => i.name))}`}
-      />
+
     </div>
   );
 }

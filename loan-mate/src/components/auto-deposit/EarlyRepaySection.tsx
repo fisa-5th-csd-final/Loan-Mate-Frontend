@@ -1,7 +1,7 @@
 "use client";
 
-import Card from "@/components/card/Card";
-import SegmentProgressBar from "@/components/SegmentProgressBar";
+import Card from "@/components/ui/card/Card";
+import SegmentProgressBar from "@/components/ui/progress/SegmentProgressBar";
 import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api/client";
 

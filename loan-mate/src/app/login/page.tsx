@@ -1,4 +1,4 @@
-import WonLoginButton from "./_components/WonLoginButton";
+import WonLoginButton from "@/components/login/WonLoginButton";
 
 export default function LoginPage() {
   return (

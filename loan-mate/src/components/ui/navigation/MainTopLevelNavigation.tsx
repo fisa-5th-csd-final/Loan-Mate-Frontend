@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { TopCategoryNav } from '@/components/navigation/Navigation';
+import { TopCategoryNav } from '@/components/ui/navigation/Navigation';
 
 // 내비게이션 바에 보여줄 카테고리 리스트
 export const MAIN_NAV_ITEMS = [

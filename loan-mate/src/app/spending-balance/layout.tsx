@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import NavigationBar from "@/components/ui/navigation/BackRouteNavigation";
 
 export default function SpendingBalanceLayout({ children }: { children: ReactNode }) {
   return (

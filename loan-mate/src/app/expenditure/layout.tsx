@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import NavigationBar from "@/components/ui/navigation/BackRouteNavigation";
 
 export default function ExpenditureLayout({ children }: { children: ReactNode }) {
   return (

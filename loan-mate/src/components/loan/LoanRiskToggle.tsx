@@ -2,7 +2,7 @@
 "use client";
 
 import React, { PropsWithChildren } from "react";
-import ChevronToggle from "@/components/ChevronToggle";
+import ChevronToggle from "@/components/ui/utility/ChevronToggle";
 
 import Image from "next/image";
 

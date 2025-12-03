@@ -1,7 +1,7 @@
 "use client";
 
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
-import { useNavigation } from "@/components/navigation/NavigationContext";
+import NavigationBar from "@/components/ui/navigation/BackRouteNavigation";
+import { useNavigation } from "@/components/ui/navigation/NavigationContext";
 
 export default function AutoDepositLayoutContent({
     children,

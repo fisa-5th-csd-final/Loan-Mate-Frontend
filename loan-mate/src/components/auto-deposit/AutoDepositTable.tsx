@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Card from "@/components/card/Card";
+import Card from "@/components/ui/card/Card";
 import { apiClient } from "@/lib/api/client";
 
 interface AutoDeposit {

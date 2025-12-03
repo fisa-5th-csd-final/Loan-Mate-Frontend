@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import SegmentedToggle from "@/components/button/SegmentedToggle";
+import SegmentedToggle from "@/components/ui/button/SegmentedToggle";
 
 type Props = {
   className?: string;

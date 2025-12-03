@@ -3,7 +3,7 @@
 
 import { useLoanDetailQuery, useLoanCommentQuery } from "@/lib/api/loan/hooks";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 // 상수는 컴포넌트 외부로 이동하여 리렌더링 시 재생성 방지
 const LOAN_TYPE_MAP: Record<string, string> = {
