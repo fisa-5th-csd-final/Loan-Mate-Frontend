@@ -4,6 +4,7 @@ import ClientProviders from "@/components/ClientProviders";
 import { NavigationProvider } from "@/context/NavigationContext";
 import "./globals.css";
 import PageAnimateWrapper from "@/components/layout/PageAnimateWrapper";
+import { WebVitals } from "@/components/vitals/WebVitals";
 
 export const metadata: Metadata = {
   title: "Loan Mate",
@@ -57,6 +58,7 @@ export default function RootLayout({
 
             {/* 실제 페이지 */}
             <ClientProviders>
+              <WebVitals />
               <NavigationProvider>
                 <PageAnimateWrapper>
                   {children}

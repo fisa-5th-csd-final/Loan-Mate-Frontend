@@ -54,6 +54,8 @@ export default function QuickActionLoanFunctionList() {
             title={action.title}
             description={action.description}
             leading={action.leading}
+            // @ts-ignore
+            data-inp-id={`quick-action-loan-${index}`}
             onClick={() => {
               router.push(action.path);
             }}

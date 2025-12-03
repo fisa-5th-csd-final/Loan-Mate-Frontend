@@ -41,6 +41,8 @@ export default function QuickActionFunctionList() {
             key={index}
             title={action.title}
             description={action.description}
+            // @ts-ignore
+            data-inp-id={`quick-action-${index}`}
             onClick={() => {
               // 실제 경로 이동 로직 (필요시 활성화)
               router.push(action.path);

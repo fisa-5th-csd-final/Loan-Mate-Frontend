@@ -1,12 +1,11 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ReactNode, ButtonHTMLAttributes } from "react";
 
-interface QuickActionButtonProps {
+interface QuickActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   description: string;
-  onClick?: () => void;
   leading?: ReactNode;
 }
 
@@ -17,14 +16,15 @@ interface QuickActionButtonProps {
 export default function QuickActionButton({
   title,
   description,
-  onClick,
   leading,
+  className,
+  ...props
 }: QuickActionButtonProps) {
   return (
     <button
-        type="button"
-      onClick={onClick}
-      className="w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition"
+      type="button"
+      className={`w-full flex items-start justify-between p-5 bg-white rounded-2xl shadow-sm hover:bg-gray-50 transition ${className || ''}`}
+      {...props}
     >
       <div className="flex items-start gap-3 flex-1">
         {/* 왼쪽 아이콘/이미지 */}
