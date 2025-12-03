@@ -13,11 +13,13 @@ import {
   useUpdateExpenditureMutation,
 } from "@/lib/api/expenditure/hooks";
 import { useSwipeDeleteHint } from "@/hooks/useSwipeDeleteHint";
+import { useRouter } from "next/navigation";
 
 export default function IncomePage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Item | null>(null);
   const pageType: AddItemType = AddItemType.INCOME;
+  const router = useRouter();
 
   const listQuery = useExpenditureListQuery("INCOME");
 
