@@ -4,13 +4,34 @@ import { useReportWebVitals } from 'next/web-vitals';
 import { onINP } from 'web-vitals/attribution';
 import { useEffect } from 'react';
 
+// Define a type that covers both Next.js metrics and web-vitals metrics with attribution
+type WebVitalsMetric = {
+    id: string;
+    name: string;
+    startTime: number;
+    value: number;
+    label: string;
+    rating: 'good' | 'needs-improvement' | 'poor';
+    delta: number;
+    entries: any[];
+    navigationType: string;
+    attribution?: {
+        interactionTarget?: string;
+        interactionTime?: number;
+        nextPaintTime?: number;
+        loadState?: string;
+        [key: string]: any;
+    };
+    [key: string]: any;
+};
+
 export function WebVitals() {
     useEffect(() => {
         console.log('[WebVitals] Component mounted');
 
         try {
             onINP((metric) => {
-                logMetric(metric);
+                logMetric(metric as unknown as WebVitalsMetric);
             }, { reportAllChanges: true });
         } catch (e) {
             console.error('[WebVitals] Failed to initialize onINP', e);
@@ -20,15 +41,28 @@ export function WebVitals() {
     useReportWebVitals((metric) => {
         // Avoid duplicate logging for INP since we handle it explicitly above
         if (metric.name !== 'INP') {
-            logMetric(metric);
+            logMetric(metric as unknown as WebVitalsMetric);
         }
     });
 
     return null;
 }
 
-function logMetric(metric: any) {
+function logMetric(metric: WebVitalsMetric) {
     const { name, value, rating, delta, id, attribution, entries, navigationType } = metric;
+
+    // Track worst value in sessionStorage
+    const storageKey = `web-vitals-max-${name}`;
+    let worstValue = value;
+    try {
+        const stored = sessionStorage.getItem(storageKey);
+        if (stored) {
+            worstValue = Math.max(parseFloat(stored), value);
+        }
+        sessionStorage.setItem(storageKey, worstValue.toString());
+    } catch (e) {
+        // Ignore storage errors
+    }
 
     const style = {
         good: 'color: #0cce6b; font-weight: bold',
@@ -43,9 +77,10 @@ function logMetric(metric: any) {
                 rating === 'poor' ? style.poor :
                     style.default;
 
-    console.groupCollapsed(`%c[WebVitals] ${name} : ${Math.round(value)}ms (${rating})`, ratingStyle);
+    console.groupCollapsed(`%c[WebVitals] ${name} : ${Math.round(value)}ms (${rating}) | Worst: ${Math.round(worstValue)}ms`, ratingStyle);
 
     console.log(`%cValue: ${value.toFixed(2)}ms`, 'font-weight: bold');
+    console.log(`%cWorst: ${worstValue.toFixed(2)}ms`, 'font-weight: bold; color: #ff4e42');
     console.log(`Rating: ${rating}`);
     console.log(`Delta: ${delta.toFixed(2)}ms`);
     console.log(`ID: ${id}`);
