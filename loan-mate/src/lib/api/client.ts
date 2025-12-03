@@ -104,7 +104,7 @@ export async function request<T = unknown>(path: string, options: RequestOptions
       const refreshResponse = await refreshToken();
       await waitForRefresh();
 
-      if (!refreshResponse.ok) {
+      if (!refreshResponse || !refreshResponse.ok) {
         if (authFailHandler) authFailHandler();
         else window.location.href = "/login";
         throw new Error("Refresh expired");
