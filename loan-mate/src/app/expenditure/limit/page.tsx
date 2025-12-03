@@ -165,7 +165,8 @@ export default function ExpenditureLimitPage() {
   return (
     <PageWithCTA
       ctaLabel="상환금 납부하러 가기"
-      onClick={() => console.log("CTA clicked")}
+      // onClick={() => console.log("CTA clicked")}
+      onClick={() => router.push("/auto-deposit/loan-select?mode=repay")}
     >
       {/* 상단 */}
       <div className="flex items-center justify-between mb-3 px-1">
