@@ -2,49 +2,40 @@
 export const dynamic = "force-dynamic";
 
 import { useState, Suspense, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import NavigationBar from "@/components/navigation/BackRouteNavigation";
 import CommonButton from "@/components/button/CommonButton";
 import BottomSheet from "@/components/bottomSheet";
 import NumberKeypad from "../_components/NumberKeypad";
-import { useLoanStore } from "@/stores/loanStore";
-import { useSelectFromAccount } from "@/lib/api/auto-deposit/useSelectAccount";
-import { useNavigation } from "@/components/navigation/NavigationContext";
-import { useNavigation as usePageTransition } from "@/context/NavigationContext";
-import ConfirmModal from "@/components/ui/ConfirmModal";
-import { apiClient } from "@/lib/api/client";
+import { useLoanStore } from "@/stores/useLoanStore";
+import { useRouter } from "next/navigation";
+import { useTransferStore } from "@/stores/useTransferStore";
+import { input } from "framer-motion/client";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
   const [pin, setPin] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  // ⭐ loanStore 사용
-  const prepaidLoan = useLoanStore((state) => state.prepaidLoan);
-
-  if (!prepaidLoan) return <div>대출 정보를 찾을 수 없습니다.</div>;
-
-  const { loanLedgerId, balance, mustPaidAmount, loanName } = prepaidLoan;
+  const [insufficientBalance, setInsufficientBalance] = useState(false);
 
   const router = useRouter();
-  const { setTitle, setShowBack, setRight } = useNavigation();
-  const { push } = usePageTransition();
 
-  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  // Store에서 Loan 데이터 가져오기
+  const { prepaidLoan } = useLoanStore();
+  const { inputAccount, setAccount } = useTransferStore();
 
+  /* ---------------- 데이터 초기 적용 ---------------- */
   useEffect(() => {
-    setTitle("송금하기");
-    setShowBack(true);
-    setRight(
-      <button className="text-blue-500 text-sm" onClick={() => setIsCancelModalOpen(true)}>
-        취소
-      </button>
-    );
-  }, []);
+    if (!prepaidLoan) return;
 
-  const isDisabled = balance < mustPaidAmount;
+    if (prepaidLoan?.accountNumber) {
+      setAccount(prepaidLoan.accountNumber);  
+    }
 
+    if (prepaidLoan.balance < prepaidLoan.mustPaidAmount) {
+      setInsufficientBalance(true);
+    }
+  }, [prepaidLoan]);
+
+  /* ---------------- PIN 처리 ---------------- */
   const addDigit = (num: string) => {
     if (pin.length >= 6) return;
     setPin((prev) => prev + num);
@@ -55,64 +46,92 @@ function TransferFinalInner() {
   };
 
   useEffect(() => {
-    if (pin.length === 6) {
-      handleLoanDelete();
-    }
+    if (pin.length === 6) handleTransfer();
   }, [pin]);
 
-  async function handleLoanDelete() {
-    setLoading(true);
-
-    try {
-      await apiClient.delete(`/api/loans/${loanLedgerId}`);
-      router.push("/auto-deposit/complete");
-    } catch (err) {
-      console.error(err);
-      setError("대출 해지 실패. 다시 시도해주세요.");
-      setPin("");
-    } finally {
-      setLoading(false);
+  /* ---------------- 이체 요청 ---------------- */
+  const handleTransfer = async () => {
+    if (!prepaidLoan) return;
+    if (insufficientBalance) {
+      alert("잔액이 부족합니다.");
+      return;
     }
-  }
+
+    alert("정말 이체하시겠습니까?");
+
+    const response = await fetch(`/api/loans/${prepaidLoan.loanLedgerId}`, {
+      method: "DELETE",
+    });
+
+    if (response.status === 204) {
+      router.push("/auto-deposit/complete");
+    } else {
+      alert("이체 실패");
+    }
+  };
 
   return (
     <div className="px-5 pt-4 pb-10 bg-white">
+      {/* <NavigationBar title="" showBack={true} /> */}
 
       <div className="text-xl font-semibold mb-2">
-        <span className="text-blue-600">{mustPaidAmount.toLocaleString()}원</span> 선납
+        <span className="text-blue-600">{prepaidLoan?.loanName}</span> 에
       </div>
 
-      <div className="text-gray-500 text-sm mb-6">
-        잔액: {balance.toLocaleString()}원
+      <div className="text-xl font-semibold mb-2">
+        <span className="text-blue-600">
+          {(prepaidLoan?.mustPaidAmount ?? 0).toLocaleString()}원
+        </span>
+        을 이체하시겠어요?
       </div>
 
-      <CommonButton
-        label={isDisabled ? "잔액 부족" : "선납하기"}
-        size="lg"
-        widthClassName="w-full"
-        colorClassName={
-          isDisabled ? "bg-gray-300 text-gray-500" : "bg-blue-600 text-white"
-        }
-        disabled={isDisabled}
-        onClick={() => !isDisabled && setOpen(true)}
-      />
+      {/* 잔액 부족 경고 */}
+      {insufficientBalance && (
+        <div className="text-red-500 text-sm text-center mb-4">
+          계좌 잔액이 부족합니다. 선납할 수 없습니다.
+        </div>
+      )}
+
+    {/* ---------------- Info Box : 무조건 보이게 ---------------- */}
+    <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
+      <div className="flex justify-between py-2">
+        <span className="text-gray-600">수수료</span>
+        <span className="text-gray-800">면제</span>
+      </div>
+
+      <div className="flex justify-between py-2">
+        <span className="text-gray-600">선납할 대출명</span>
+        <span className="text-gray-800">{prepaidLoan?.loanName}</span>
+      </div>
+
+      <div className="flex justify-between py-2">
+        <span className="text-gray-600">내 통장표기</span>
+        <span className="text-gray-800">{inputAccount}</span>
+      </div>
+    </div>
+
+      <div className="flex gap-3">
+        {/* <CommonButton
+          label="추가이체"
+          size="lg"
+          widthClassName="w-full"
+          onClick={() => router.push("/auto-deposit")}
+        /> */}
+
+        <CommonButton
+          label="이체"
+          size="lg"
+          widthClassName="w-full"
+          disabled={insufficientBalance}
+          className={insufficientBalance ? "opacity-40 cursor-not-allowed" : ""}
+          onClick={() => {
+            if (!insufficientBalance) setOpen(true);
+          }}
+        />
+      </div>
 
       <BottomSheet open={open} onClose={() => setOpen(false)}>
-        <NavigationBar
-          title=""
-          showBack={false}
-          right={
-            <button className="text-black text-xl" onClick={() => setOpen(false)}>
-              ✕
-            </button>
-          }
-        />
-
-        <div className="text-center mb-6">
-          <h2 className="text-lg font-semibold">계좌 비밀번호</h2>
-        </div>
-
-        <NumberKeypad pinMode={true} onDigit={addDigit} onDelete={deleteDigit} />
+        <NumberKeypad pinMode onDigit={addDigit} onDelete={deleteDigit} />
       </BottomSheet>
     </div>
   );
@@ -120,7 +139,7 @@ function TransferFinalInner() {
 
 export default function TransferFinalPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>
       <TransferFinalInner />
     </Suspense>
   );
