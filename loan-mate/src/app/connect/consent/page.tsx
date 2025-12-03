@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
+import BottomCTA from "@/components/ui/button/CommonButton";
 import Collapse from "@/components/ui/layout/Collapse";
 import { useRouter } from "next/navigation";
 import { setFlag } from "@/lib/db/userFlags"
@@ -29,7 +30,7 @@ function AgreementContent() {
     <div className="relative min-h-screen bg-white overflow-y-auto">
 
       {/* 스크롤되는 메인 영역 */}
-      <div className="pb-15 pt-4">
+      <div className="pb-15 pt-4 px-6">
         <h2 className="text-[20px] font-bold text-gray-900 whitespace-nowrap truncate">
           자산 연결을 위해 동의해 주세요
         </h2>

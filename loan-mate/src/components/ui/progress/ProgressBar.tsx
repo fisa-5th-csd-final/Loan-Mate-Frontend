@@ -16,7 +16,7 @@ export default function ProgressBar({ label, value }: ProgressBarProps) {
   return (
     <div className="w-full">
       {/* 상단 라벨 */}
-      <p className="text-gray-600 text-lg mb-2">{label}</p>
+      <p className="text-gray-600 text-[15px] mb-2">{label}</p>
 
       {/* Progress Bar Wrapper */}
       <div className="w-full h-4 bg-gray-500/80 rounded-full overflow-hidden">

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import PageWithCTA from "@/components/expenditure/PageWithCTA";
-import MessageBox from "@/components/ui/feedback/MessageBox";
+import MessageBox from "@/components/ui/box/MessageBox";
 import BottomSheet from "@/components/ui/modal/BottomSheet";
 import CommonButton from "@/components/ui/button/CommonButton";
 import TableSection from "@/components/ui/TableSection";

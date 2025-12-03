@@ -28,8 +28,8 @@ export default function WonLoginButton() {
       </div>
 
       {/* Label */}
-      <span className="text-[#233A88] text-[18px] font-semibold">
-        우리WON인증 로그인
+      <span className="text-[#233A88] text-[18px] text-center font-semibold">
+        우리 WON 인증 로그인
       </span>
     </button>
   );

@@ -12,7 +12,7 @@ export default function AssetAndConsumeToggle({ className = "" }: Props) {
 
   return (
     <div
-      className={`flex w-[clamp(100px,30vw,300px)] h-[clamp(100px, 15dvh, 200px)] px-2 py-4 ${className}`}
+      className={`flex w-35 px-2 py-4 ${className}`}
     >
       <SegmentedToggle
         options={[{ label: "자산", value: "asset" }, { label: "소비", value: "consume", disabled: true }]}

@@ -80,7 +80,7 @@ export default function Home() {
     <>
       <AssetAndConsumeToggle />
       <MainTopLevelNavigation activeId={activeCategory} onChange={setActiveCategory} />
-      <div className="py-4 px-8 space-y-4 flex flex-col w-full max-w-2xl mx-auto">
+      <div className="py-4 space-y-4 flex flex-col w-full px-6">
         {contentByCategory[activeCategory]}
         <QuickActionFunctionList />
         <QuickActionLoanFunctionList />
