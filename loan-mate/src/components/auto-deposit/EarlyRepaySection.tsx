@@ -34,10 +34,10 @@ export default function EarlyRepaySection() {
         );
 
         if (!res) {
-        console.warn("응답 없음(로그인 필요)");
-        setSegments([]);
-        return;
-      }
+          console.warn("응답 없음(로그인 필요)");
+          setSegments([]);
+          return;
+        }
 
         const list = Array.isArray(res.data) ? res.data : [];
 
@@ -86,7 +86,7 @@ export default function EarlyRepaySection() {
           <div className="p-4 text-center text-gray-500">불러오는 중...</div>
         ) : (
           <>
-          {segments.length > 0 ? (
+            {segments.length > 0 ? (
               // 그래프 + 텍스트 있는 경우 → 두 요소 묶어서 중앙 정렬
               <div className="flex flex-col items-center w-full">
                 <div className="w-full mb-2">

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import SearchBar from "@/components/ui/search/SearchBar";
 import CategoryTabs from "@/components/ui/tab/CategoryTabs";
 import InstitutionList from "@/components/institution/InstitutionList";
-import BottomCTA from "@/components/ui/button/CommonButton";
 import { getFlag, setFlag } from "@/lib/db/userFlags";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
+import PageWithCTA from "@/components/expenditure/PageWithCTA";
 
 type Institution = {
   logo: string;
@@ -66,8 +66,11 @@ export default function ConnectPage() {
     );
 
   return (
-    <div>
-      <h2 className="text-[18px] font-semibold mt-4">
+    <PageWithCTA
+      ctaLabel={`${items.filter(i => i.checked).length}개 기관 연결하기`}
+      href={`/connect/consent?banks=${JSON.stringify(items.filter(i => i.checked).map(i => i.name))}`}
+    >
+      <h2 className="text-[20px] font-bold text-gray-900 mt-4 mb-6">
         연결할 기관을 선택해 주세요
       </h2>
 
@@ -86,8 +89,6 @@ export default function ConnectPage() {
         onToggle={toggleItem}
         onToggleAll={toggleAll}
       />
-
-
-    </div>
+    </PageWithCTA>
   );
 }
