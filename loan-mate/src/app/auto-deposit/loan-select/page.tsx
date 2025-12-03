@@ -33,7 +33,7 @@ function ApplyAutoDepositContent() {
     balance?: number;
     accountNumber?: string; // 계좌번호 추가
 
-    remaunPrincipal?: number;
+    remainPrincipal?: number;
     monthlyRepayment?: number;
     loanId?: number;
   };
@@ -44,7 +44,7 @@ function ApplyAutoDepositContent() {
   useEffect(() => {
     if (mode === "deposit") setTitle("자동예치 신청하기");
     else if (mode === "prepaid") setTitle("선납하기");
-    else if (mode == "repay") setTitle("상환하기"); // 상환금 납부하기 
+    else if (mode === "repay") setTitle("상환하기"); // 상환금 납부하기 
     else setTitle("신청하기");
   }, [mode, setTitle]);
 
@@ -263,7 +263,7 @@ function ApplyAutoDepositContent() {
         {mode === "deposit"
           ? "자동 예치할 대출을 선택해 주세요"
           : mode === "repay"
-          ? "상환할 대출을 선택해 주세요"   
+          ? "상환할 대출을 선택해 주세요"
           : "선납할 대출을 선택해 주세요"}
       </h2>
 
