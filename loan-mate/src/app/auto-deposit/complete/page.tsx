@@ -9,11 +9,15 @@ import { formatCurrency } from "@/lib/util/NumberFormatter"
 
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { useEffect } from "react";
+import { useLoanStore } from "@/stores/useLoanStore";
+import { input, p, pre } from "framer-motion/client";
 
 export default function TransferCompletePage() {
   const router = useRouter();
-  const { bankName, inputAccount, amount } = useTransferStore();
+  // const { bankName, inputAccount, amount } = useTransferStore();
   const { setIsVisible } = useNavigation();
+  const { prepaidLoan } = useLoanStore();
+  const { inputAccount, setAccount } = useTransferStore();
 
   useEffect(() => {
     setIsVisible(false);
@@ -23,7 +27,7 @@ export default function TransferCompletePage() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="bg-white w-full rounded-2xl p-6 pt-14">
-        {/* 체크 아이콘 */}
+
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
             <svg
@@ -47,7 +51,7 @@ export default function TransferCompletePage() {
 
         {/* 제목 */}
         <div className="text-center text-lg font-semibold mb-6">
-          박준상 님에게<br />이체했어요
+          {prepaidLoan?.loanName}에<br />상환했어요
         </div>
 
         {/* 정보 카드 */}
@@ -55,16 +59,16 @@ export default function TransferCompletePage() {
           <div className="space-y-4 text-sm">
 
             <div className="flex justify-between">
-              <span className="text-gray-500">받는 계좌</span>
+              <span className="text-gray-500">보내는 계좌</span>
               <div className="flex items-center gap-1.5">
-                <span className="font-medium">{bankName} {inputAccount}</span>
+                <span className="font-medium">{inputAccount}</span>
                 <Star size={16} className="text-gray-400" />
               </div>
             </div>
 
             <div className="flex justify-between">
               <span className="text-gray-500">이체금액</span>
-              <span className="font-medium">{formatCurrency(amount)}</span>
+              <span className="font-medium">{formatCurrency(prepaidLoan?.mustPaidAmount)}</span>
             </div>
 
             <div className="flex justify-between">
@@ -94,13 +98,13 @@ export default function TransferCompletePage() {
         {/* 하단 버튼들 */}
         <div className="flex gap-3 mt-8">
           {/* 공유 버튼: 흰색 배경 + 보더 */}
-          <CommonButton
+          {/* <CommonButton
             label="공유"
             size="lg"
             widthClassName="flex-[1]"
             colorClassName="bg-[#EEF5FF] !text-[#3B82F6] hover:bg-[#DCEBFF]"
             onClick={() => console.log("공유 클릭")}
-          />
+          /> */}
 
           {/* 확인 버튼: 파란색 버튼 */}
           <CommonButton
