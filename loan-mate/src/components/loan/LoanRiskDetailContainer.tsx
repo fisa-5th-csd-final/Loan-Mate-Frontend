@@ -1,8 +1,7 @@
 // src/components/loan/LoanRiskDetailsContainer.tsx
 "use client";
 
-import type { LoanDetail } from "@/../types/loan";
-import { useLoanDetail, useLoanComment } from "@/hooks/loan/useLoanDetail";
+import { useLoanDetailQuery, useLoanCommentQuery } from "@/lib/api/loan/hooks";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
 
@@ -38,8 +37,8 @@ type LoanDetailContainerProps = {
 export default function LoanDetailContainer({
   loanId,
 }: LoanDetailContainerProps) {
-  const { data, isLoading: isDetailLoading, error: detailError } = useLoanDetail(loanId);
-  const { data: commentData, isLoading: isCommentLoading } = useLoanComment(loanId);
+  const { data, isLoading: isDetailLoading, error: detailError } = useLoanDetailQuery(loanId);
+  const { data: commentData, isLoading: isCommentLoading } = useLoanCommentQuery(loanId);
 
   const comment = commentData || "이 대출의 상환 진행 상태가 양호합니다. 계속해서 안정적으로 관리하고 계십니다.";
   const loading = isDetailLoading || isCommentLoading;

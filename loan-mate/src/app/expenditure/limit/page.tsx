@@ -22,11 +22,11 @@ import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
 
 import { ConsumptionCategoryLabelMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 
-import { useSpendingRecommendationManager } from "./_hooks/useSpendingRecommendationManager";
+import { useSpendingRecommendationManager } from "@/hooks/expenditure/useSpendingRecommendationManager";
 import {
   useSpendingMetrics,
   type SpendingCategoryView,
-} from "./_hooks/useSpendingMetrics";
+} from "@/hooks/expenditure/useSpendingMetrics";
 
 import BudgetEditorContent from "../_components/modal/BudgetEditorModalPage";
 import WarningConfirmContent from "../_components/modal/WarningConfirmModalPage";

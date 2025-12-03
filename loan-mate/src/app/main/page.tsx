@@ -14,16 +14,15 @@ const QuickActionLoanFunctionList = dynamic(() => import("./_components/QuickAct
 });
 
 import { type LoanSummary } from "@/../types/loan";
-import { useLoanList } from "@/hooks/loan/useLoanList";
+import { useLoanListQuery } from "@/lib/api/loan/hooks";
 import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import CategoryCard from "@/components/card/CategoryCard";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
-import CategoryCard from "@/components/card/CategoryCard";
-
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("loan");
-  const { data: loans, isLoading } = useLoanList();
+  const { data: loans, isLoading } = useLoanListQuery();
 
   const contentByCategory = useMemo<Record<CategoryId, React.ReactNode>>(
     () => {

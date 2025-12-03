@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchLoanDetail } from "@/lib/api/loan/DetailFetch";
-import { fetchLoanComment } from "@/lib/api/loan/CommentFetch";
+import { fetchLoanDetail, fetchLoanComment } from "@/lib/api/loan/service";
 import type { LoanDetail } from "@/../types/loan";
 
 export const useLoanDetail = (loanId: number) => {

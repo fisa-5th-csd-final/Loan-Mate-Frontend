@@ -1,11 +1,18 @@
 import { refreshToken, waitForRefresh } from "@/lib/api/auth/refreshManager";
+import { SuccessBody } from "@/../types/response";
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 type QueryValue = string | number | boolean | null | undefined;
 
 let authFailHandler: null | (() => void) = null;
+let globalErrorHandler: null | ((error: ApiError) => void) = null;
 
 export function setAuthFailHandler(fn: () => void) {
   authFailHandler = fn;
+}
+
+export function setGlobalErrorHandler(fn: (error: ApiError) => void) {
+  globalErrorHandler = fn;
 }
 
 export type RequestOptions = Omit<RequestInit, "method" | "body" | "headers"> & {
@@ -14,6 +21,7 @@ export type RequestOptions = Omit<RequestInit, "method" | "body" | "headers"> & 
   body?: unknown;
   headers?: HeadersInit;
   token?: string;
+  skipGlobalErrorHandler?: boolean;
 };
 
 export class ApiError extends Error {
@@ -74,54 +82,62 @@ async function parseResponse(response: Response) {
 }
 
 export async function request<T = unknown>(path: string, options: RequestOptions = {}) {
-  const { query, body, method = "GET", ...fetchOptions } = options;
+  const { query, body, method = "GET", skipGlobalErrorHandler, ...fetchOptions } = options;
   const url = buildUrl(path, query);
-
   const headers = resolveHeaders(options);
   const preparedBody =
     body && headers.get("Content-Type") === "application/json"
       ? JSON.stringify(body)
       : (body as BodyInit | null | undefined);
-  let response = await fetch(url, {
-    ...fetchOptions,
-    method,
-    headers,
-    credentials: "include",
-    body: preparedBody
-  });
 
-  // 액세스 재발급 과정
-  if (response.status === 403) {
-    const refreshResponse = await refreshToken();
-    await waitForRefresh();
-
-    if (!refreshResponse.ok) {
-      if (authFailHandler) authFailHandler();
-      else window.location.href = "/login";
-      throw new Error("Refresh expired");
-    }
-
-    // 안전한 쿼리 파라미터 추가 방식
-    const retryUrlObj = new URL(url);
-    retryUrlObj.searchParams.set('_t', Math.random().toString());
-    const retryUrl = retryUrlObj.toString();
-
-    response = await fetch(retryUrl, {
+  try {
+    let response = await fetch(url, {
       ...fetchOptions,
       method,
       headers,
-      credentials: 'include',
-      body: preparedBody,
-      cache: 'no-store',
+      credentials: "include",
+      body: preparedBody
     });
-  }
 
+    // 액세스 재발급 과정
+    if (response.status === 403) {
+      const refreshResponse = await refreshToken();
+      await waitForRefresh();
 
-  const data = await parseResponse(response);
-  if (!response.ok) {
-    throw new ApiError(response.status, data);
+      if (!refreshResponse.ok) {
+        if (authFailHandler) authFailHandler();
+        else window.location.href = "/login";
+        throw new Error("Refresh expired");
+      }
+
+      // 안전한 쿼리 파라미터 추가 방식
+      const retryUrlObj = new URL(url);
+      retryUrlObj.searchParams.set('_t', Math.random().toString());
+      const retryUrl = retryUrlObj.toString();
+
+      response = await fetch(retryUrl, {
+        ...fetchOptions,
+        method,
+        headers,
+        credentials: 'include',
+        body: preparedBody,
+        cache: 'no-store',
+      });
+    }
+
+    const data = await parseResponse(response);
+
+    if (!response.ok) {
+      throw new ApiError(response.status, data);
+    }
+
+    return data as T;
+  } catch (error) {
+    if (error instanceof ApiError && !skipGlobalErrorHandler && globalErrorHandler) {
+      globalErrorHandler(error);
+    }
+    throw error;
   }
-  return data as T;
 }
 
 export const apiClient = {
@@ -152,4 +168,12 @@ export const apiClient = {
   delete<T = unknown>(path: string, options?: Omit<RequestOptions, "method" | "body">) {
     return request<T>(path, { ...options, method: "DELETE" });
   },
+  // Helper to unwrap SuccessBody automatically
+  async fetch<T>(path: string, options?: RequestOptions): Promise<T> {
+    const response = await request<SuccessBody<T> | T>(path, options);
+    if (response && typeof response === 'object' && 'data' in response) {
+      return (response as SuccessBody<T>).data;
+    }
+    return response as T;
+  }
 };

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchLoanList } from "@/lib/api/loan/ListFetch";
+import { fetchLoanList } from "@/lib/api/loan/service";
 import type { LoanSummary } from "@/../types/loan";
 
 export const useLoanList = () => {
