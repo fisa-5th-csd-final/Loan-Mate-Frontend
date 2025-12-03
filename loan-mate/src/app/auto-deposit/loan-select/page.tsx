@@ -92,7 +92,8 @@ function ApplyAutoDepositContent() {
 
             benefit: !isDeposit ? item.benefit : undefined,
             mustPaidAmount: !isDeposit ? item.mustPaidAmount : undefined,
-            balance: !isDeposit ? item.balance : undefined
+            balance: !isDeposit ? item.balance : undefined,
+            accountNumber: !isDeposit ? item.accountNumber : undefined
           };
         });
 
@@ -136,50 +137,49 @@ function ApplyAutoDepositContent() {
 
   // 제출 
   async function handleSubmit() {
-    if (mode === "deposit") {
-      const selected = items.filter((i) => i.checked);
+  if (mode === "deposit") {
+    const selected = items.filter((i) => i.checked);
 
-      if (selected.length === 0) {
-        alert("자동 예치할 대출을 하나 이상 선택해주세요.");
-        return;
-      }
+    if (selected.length === 0) {
+      alert("자동 예치할 대출을 하나 이상 선택해주세요.");
+      return;
+    }
 
-      try {
-        await Promise.all(
-          selected.map((item) =>
-            updateAutoDeposit(item.loanLedgerId, true)
-          )
-        );
+    try {
+      await Promise.all(
+        selected.map((item) => updateAutoDeposit(item.loanLedgerId, true))
+      );
 
-        alert("자동 예치 설정이 완료되었습니다!");
-        router.push("/auto-deposit");
-      } catch (error) {
-        console.error("자동 예치 수정 오류:", error);
-        alert("오류가 발생했습니다. 다시 시도해주세요.");
-      }
+      alert("자동 예치 설정이 완료되었습니다!");
+      router.push("/auto-deposit");
+    } catch (error) {
+      console.error("자동 예치 수정 오류:", error);
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  } 
+  else if (mode === "prepaid") {
+    const selected = items.filter((i) => i.checked);
 
-    } else if (mode === "prepaid") {
-  const selected = items.filter((i) => i.checked);
+    if (selected.length > 1) {
+      alert("선납은 한 개의 대출만 선택할 수 있습니다.");
+      return;
+    }
 
-  if (selected.length > 1) {
-    alert("선납은 한 개의 대출만 선택할 수 있습니다.");
-    return;
+    const loan = selected[0]; // 단일 선택 안전 확보
+
+    setPrepaidLoan({
+      loanLedgerId: loan.loanLedgerId,
+      loanName: loan.name,
+      mustPaidAmount: loan.mustPaidAmount || 0,
+      balance: loan.balance || 0,
+      accountNumber: loan.accountNumber || "",
+    });
+
+    router.push("/auto-deposit/transfer");
   }
+}
 
-  const loan = selected[0]; // 이제 안전하게 단일 선택
 
-  setPrepaidLoan({
-    loanLedgerId: loan.loanLedgerId,
-    loanName: loan.name,
-    mustPaidAmount: loan.mustPaidAmount || 0,
-    balance: loan.balance || 0,
-    accountNumber: loan.accountNumber || "",
-  });
-
-  router.push("/auto-deposit/transfer");
-  }
-
-  }
   async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
     try {
       return await apiClient.patch(

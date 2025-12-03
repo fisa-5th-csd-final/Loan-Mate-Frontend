@@ -10,7 +10,6 @@ import { formatCurrency } from "@/lib/util/NumberFormatter"
 import { useNavigation } from "@/components/navigation/NavigationContext";
 import { useEffect } from "react";
 import { useLoanStore } from "@/stores/useLoanStore";
-import { input, p, pre } from "framer-motion/client";
 
 export default function TransferCompletePage() {
   const router = useRouter();
@@ -23,6 +22,12 @@ export default function TransferCompletePage() {
     setIsVisible(false);
     return () => setIsVisible(true);
   }, [setIsVisible]);
+
+  useEffect(() => {
+    if (prepaidLoan?.accountNumber) {
+      setAccount(prepaidLoan.accountNumber);
+    }
+  }, [prepaidLoan, setAccount]);
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">

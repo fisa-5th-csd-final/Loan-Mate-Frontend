@@ -9,7 +9,7 @@ import NumberKeypad from "../_components/NumberKeypad";
 import { useLoanStore } from "@/stores/useLoanStore";
 import { useRouter } from "next/navigation";
 import { useTransferStore } from "@/stores/useTransferStore";
-import { input } from "framer-motion/client";
+import { apiClient } from "@/lib/api/client";
 
 function TransferFinalInner() {
   const [open, setOpen] = useState(false);
@@ -59,15 +59,14 @@ function TransferFinalInner() {
 
     alert("정말 이체하시겠습니까?");
 
-    const response = await fetch(`/api/loans/${prepaidLoan.loanLedgerId}`, {
-      method: "DELETE",
-    });
-
-    if (response.status === 204) {
+     try {
+      await apiClient.delete(`/api/loans/${prepaidLoan.loanLedgerId}`);
       router.push("/auto-deposit/complete");
-    } else {
+    } catch (err) {
+      console.error("이체 실패", err);
       alert("이체 실패");
     }
+
   };
 
   return (
@@ -84,13 +83,6 @@ function TransferFinalInner() {
         </span>
         을 이체하시겠어요?
       </div>
-
-      {/* 잔액 부족 경고 */}
-      {insufficientBalance && (
-        <div className="text-red-500 text-sm text-center mb-4">
-          계좌 잔액이 부족합니다. 선납할 수 없습니다.
-        </div>
-      )}
 
     {/* ---------------- Info Box : 무조건 보이게 ---------------- */}
     <div className="bg-gray-100 rounded-2xl p-4 text-sm mb-8">
@@ -110,6 +102,13 @@ function TransferFinalInner() {
       </div>
     </div>
 
+      {/* 잔액 부족 경고 */}
+      {insufficientBalance && (
+        <div className="text-red-500 text-m text-center mb-4">
+          계좌 잔액이 부족합니다. 선납할 수 없습니다.
+        </div>
+      )}
+
       <div className="flex gap-3">
         {/* <CommonButton
           label="추가이체"
@@ -117,6 +116,7 @@ function TransferFinalInner() {
           widthClassName="w-full"
           onClick={() => router.push("/auto-deposit")}
         /> */}
+
 
         <CommonButton
           label="이체"
