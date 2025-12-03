@@ -77,14 +77,14 @@ export default function Home() {
   );
 
   return (
-    <>
+    <div className="px-6">
       <AssetAndConsumeToggle />
       <MainTopLevelNavigation activeId={activeCategory} onChange={setActiveCategory} />
-      <div className="py-4 space-y-4 flex flex-col w-full px-6">
+      <div className="py-4 flex flex-col w-full">
         {contentByCategory[activeCategory]}
         <QuickActionFunctionList />
         <QuickActionLoanFunctionList />
       </div>
-    </>
+    </div>
   );
 }

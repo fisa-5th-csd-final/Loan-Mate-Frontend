@@ -40,7 +40,7 @@ export default function QuickActionLoanFunctionList() {
   const { setDirection } = useNavigation();
 
   return (
-    <section className="w-full py-6">
+    <section className="w-full pb-8 pt-0">
       {/* 상단 타이틀 */}
       <SectionHeading className="mb-4">
         대출 알아보기

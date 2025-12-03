@@ -30,7 +30,7 @@ export default function MonthlyLoanSummary({
                 이번달 나의 위험도 요약
             </SectionHeading>
 
-            <div className="flex flex-col w-full justify-center p-4 gap-5 rounded-xl space-y-4 bg-white shadow-md">
+            <div className="flex flex-col w-full justify-center p-4 gap-3 rounded-xl bg-white shadow-md">
                 {/* 전체 대출 평균 위험도 박스 */}
                 {isLoading ? (
                     <div className="w-full h-[88px] rounded-[28px] bg-gray-100 animate-pulse" />

@@ -28,7 +28,7 @@ export const TopCategoryNav: React.FC<TopCategoryNavProps> = ({
 }) => {
   return (
     <nav
-      className={`w-full px-4 py-3 flex justify-between ${className}`}
+      className={`w-full flex justify-between ${className}`}
     >
       {items.map((item) => {
         const isActive = item.id === activeId;
@@ -48,11 +48,11 @@ export const TopCategoryNav: React.FC<TopCategoryNavProps> = ({
           >
             <span
               className={`
-                text-[20px]
+                text-[18px]
                 tracking-tight
-                ${isActive ? 'font-semibold text-[#3b3f43]' : ''}
-                ${!isActive && !isDisabled ? 'font-normal text-[#6e7378]' : ''}
-                ${isDisabled ? 'font-normal text-gray-300' : ''}
+                ${isActive ? 'font-semibold text-gray-900' : ''}
+                ${!isActive && !isDisabled ? 'font-normal text-gray-500' : ''}
+                ${isDisabled ? 'font-normal text-gray-500' : ''}
               `}
             >
               {item.label}

@@ -18,15 +18,15 @@ export default function RiskAverageBox({
   label = "평균",
 }: RiskAverageBoxProps) {
   return (
-    <div className="w-full rounded-[28px] bg-[#E8F4FF] px-5 py-4 flex items-center gap-4">
+    <div className="w-full rounded-[28px] bg-[#E8F4FF] px-4 py-2 flex items-center gap-4">
       {/* 왼쪽 이모지 */}
-      <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#FFE9B8] shadow-sm text-3xl">
+      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#FFE9B8] shadow-sm text-3xl">
         <span className="leading-none">{emoji}</span>
       </div>
 
       {/* 오른쪽 텍스트 */}
       <div className="flex flex-col">
-        <p className="text-[20px] font-semibold text-gray-900">
+        <p className="text-[18px] font-semibold text-gray-900">
           {label}{" "}
           <span>
             {percentage}

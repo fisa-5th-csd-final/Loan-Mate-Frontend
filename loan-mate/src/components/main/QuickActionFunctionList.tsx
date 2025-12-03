@@ -51,7 +51,7 @@ export default function QuickActionFunctionList() {
   const { setDirection } = useNavigation();
 
   return (
-    <section className="w-full py-6">
+    <section className="w-full py-8">
       {/* 상단 타이틀 */}
       <SectionHeading className="mb-4">
         이러한 기능을 사용할 수 있어요

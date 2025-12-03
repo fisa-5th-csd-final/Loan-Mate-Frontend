@@ -29,7 +29,7 @@ export default function MainTopLevelNavigation({
                 items={MAIN_NAV_ITEMS}
                 activeId={activeId}
                 onChange={onChange}
-                className="max-w-4xl mx-auto"
+                className="max-w-4xl"
             />
         </div>
     );
