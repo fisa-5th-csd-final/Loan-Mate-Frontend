@@ -186,7 +186,7 @@ function ApplyAutoDepositContent() {
       }
 
       if (selected.length === 0) {
-        alert("자동 예치할 대출을 하나 이상 선택해주세요.");
+        showToast("자동 예치할 대출을 하나 이상 선택해주세요.", "error");
         return;
       }
 
