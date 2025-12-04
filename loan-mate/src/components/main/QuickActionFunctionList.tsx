@@ -17,7 +17,7 @@ type ActionItem = {
 const actions: ActionItem[] = [
   {
     title: "나의 지출 한도 정하기",
-    description: "나의 소비 내역을 카테고리 별로 보고 AI가 지출 한도를 제안해줘요",
+    description: "나의 소비 내역을 카테고리 별로 보고\nAI가 지출 한도를 제안해줘요",
     path: "/expenditure/limit",
     leading: (
       <div className="h-10 w-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
@@ -37,7 +37,7 @@ const actions: ActionItem[] = [
   },
   {
     title: "자동 예치 등록/선납하기",
-    description: "여유 자금을 감지하면 예치와 부분 상환을 유도해주어 연체를 예방할 수 있어요",
+    description: "여유 자금이 생길 경우 예치와\n선납으로 연체를 예방할 수 있어요",
     path: PAGES.AUTO_DEPOSIT,
     leading: (
       <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">

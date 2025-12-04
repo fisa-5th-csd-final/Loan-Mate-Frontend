@@ -37,7 +37,7 @@ export default function QuickActionButton({
         {/* 텍스트 영역 */}
         <div className="text-left">
           <div className="text-lg font-bold text-gray-900">{title}</div>
-          <div className="mt-1 text-sm text-gray-500 leading-5">{description}</div>
+          <div className="mt-1 text-sm text-gray-500 leading-5 whitespace-pre-wrap">{description}</div>
         </div>
       </div>
 
