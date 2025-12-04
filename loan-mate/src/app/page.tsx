@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 import { PAGES } from "@/consts/ROUTES";
 import { getFlag } from "@/lib/db/userFlags";
 

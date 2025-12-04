@@ -1,6 +1,6 @@
 "use client";
 
-import RiskSimulationContainer from "./_components/RiskSimulationContainter";
+import RiskSimulationContainer from "@/components/spending-balance/RiskSimulationContainter";
 
 export default function Page() {
     return (

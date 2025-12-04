@@ -2,14 +2,15 @@
 export const dynamic = "force-dynamic";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import InstitutionSearchBar from "@/components/search/SearchBar";
+import InstitutionSearchBar from "@/components/ui/search/SearchBar";
 import InstitutionList from "@/components/institution/InstitutionList";
-import CommonButton from "@/components/button/CommonButton";
-import { useNavigation } from "@/components/navigation/NavigationContext";
-import CategoryTabs from "@/components/CategoryTabs";
+import PageWithCTA from "@/components/expenditure/PageWithCTA";
+import { useNavigation } from "@/components/ui/navigation/NavigationContext";
+import CategoryTabs from "@/components/ui/tab/CategoryTabs";
 import { useEffect, useState, Suspense } from "react";
 import { apiClient } from "@/lib/api/client";
 import { useLoanStore } from "@/stores/useLoanStore";
+import { useToast } from "@/context/ToastContext";
 
 function ApplyAutoDepositContent() {
   const params = useSearchParams();
@@ -17,6 +18,7 @@ function ApplyAutoDepositContent() {
   const { setTitle } = useNavigation();
   const router = useRouter();
   const { setPrepaidLoan } = useLoanStore();
+  const { showToast } = useToast();
 
   const tabs = ["추천", "신용", "담보", "부동산"];
   const [activeTab, setActiveTab] = useState(0);
@@ -50,97 +52,97 @@ function ApplyAutoDepositContent() {
 
   // 데이터 불러오기 
   useEffect(() => {
-  async function fetchItems() {
-    try {
-      let res;
+    async function fetchItems() {
+      try {
+        let res;
 
-      // deposit 자동예치하기 모드
-      if (mode === "deposit") {
-        res = await apiClient.get<{
-          data: {
-            loanLedgerId: { value: number };
-            loanName: string;
-            accountBalance: number;
-            autoDepositEnabled: boolean;
-          }[];
-        }>("/api/loans/auto-deposit-summary");
+        // deposit 자동예치하기 모드
+        if (mode === "deposit") {
+          res = await apiClient.get<{
+            data: {
+              loanLedgerId: { value: number };
+              loanName: string;
+              accountBalance: number;
+              autoDepositEnabled: boolean;
+            }[];
+          }>("/api/loans/auto-deposit-summary");
 
-        const mapped: LoanItem[] = res.data.map((item) => ({
-          loanLedgerId: item.loanLedgerId.value,
-          logo: getBankLogo(item.loanName),
-          name: item.loanName,
-          connected: item.autoDepositEnabled,
-          checked: false,
-        }));
+          const mapped: LoanItem[] = res.data.map((item) => ({
+            loanLedgerId: item.loanLedgerId.value,
+            logo: getBankLogo(item.loanName),
+            name: item.loanName,
+            connected: item.autoDepositEnabled,
+            checked: false,
+          }));
 
-        setItems(mapped);
-        return;
+          setItems(mapped);
+          return;
+        }
+
+        // prepaid 선납하기 모드
+        if (mode === "prepaid") {
+          res = await apiClient.get<{
+            data: {
+              loanLedgerId: number;
+              balance: number;
+              loanName: string;
+              benefit: number;
+              mustPaidAmount: number;
+              accountNumber: string;
+            }[];
+          }>("/api/loans/prepayment-infos");
+
+          const mapped: LoanItem[] = res.data.map((item) => ({
+            loanLedgerId: item.loanLedgerId,
+            logo: getBankLogo(item.loanName),
+            name: item.loanName,
+            connected: false,
+            checked: false,
+            benefit: item.benefit,
+            mustPaidAmount: item.mustPaidAmount,
+            balance: item.balance,
+            accountNumber: item.accountNumber,
+          }));
+
+          setItems(mapped);
+          return;
+        }
+
+        // repay 상환금 납부하기 모드
+        if (mode === "repay") {
+          res = await apiClient.get<{
+            data: {
+              loanId: number;
+              loanName: string;
+              monthlyRepayment: number;
+              accountNumber: string;
+            }[];
+          }>("/api/loans/ledgers/details");
+
+          const mapped: LoanItem[] = res.data.map((item) => ({
+            loanLedgerId: item.loanId,
+            logo: getBankLogo(item.loanName),
+            name: item.loanName,
+            connected: false,
+            checked: false,
+
+            // repay 모드에서 필요한 값
+            monthlyRepayment: item.monthlyRepayment,
+            accountNumber: item.accountNumber,
+          }));
+
+          setItems(mapped);
+          return;
+        }
+
+      } catch (err) {
+        console.error("API 호출 오류:", err);
+        setItems([]);
       }
-
-      // prepaid 선납하기 모드
-      if (mode === "prepaid") {
-        res = await apiClient.get<{
-          data: {
-            loanLedgerId: number;
-            balance: number;
-            loanName: string;
-            benefit: number;
-            mustPaidAmount: number;
-            accountNumber: string;
-          }[];
-        }>("/api/loans/prepayment-infos");
-
-        const mapped: LoanItem[] = res.data.map((item) => ({
-          loanLedgerId: item.loanLedgerId,
-          logo: getBankLogo(item.loanName),
-          name: item.loanName,
-          connected: false,
-          checked: false,
-          benefit: item.benefit,
-          mustPaidAmount: item.mustPaidAmount,
-          balance: item.balance,
-          accountNumber: item.accountNumber,
-        }));
-
-        setItems(mapped);
-        return;
-      }
-
-      // repay 상환금 납부하기 모드
-      if (mode === "repay") {
-        res = await apiClient.get<{
-          data: {
-            loanId: number;
-            loanName: string;
-            monthlyRepayment: number;
-            accountNumber: string;
-          }[];
-        }>("/api/loans/ledgers/details");
-
-        const mapped: LoanItem[] = res.data.map((item) => ({
-          loanLedgerId: item.loanId,
-          logo: getBankLogo(item.loanName),
-          name: item.loanName,
-          connected: false,
-          checked: false,
-
-          // repay 모드에서 필요한 값
-          monthlyRepayment: item.monthlyRepayment,
-          accountNumber: item.accountNumber,
-        }));
-
-        setItems(mapped);
-        return;
-      }
-
-    } catch (err) {
-      console.error("API 호출 오류:", err);
-      setItems([]);
     }
-  }
 
-  fetchItems();
-}, [mode]);
+    fetchItems();
+  }, [mode]);
 
 
   // 체크 처리 
@@ -173,63 +175,69 @@ function ApplyAutoDepositContent() {
 
   // 제출 
   async function handleSubmit() {
-  const selected = items.filter((i) => i.checked);
+    const selected = items.filter((i) => i.checked);
 
-  // deposit 자동예치하기 모드 
-  if (mode === "deposit") {
-    if (selected.length === 0) {
-      alert("자동 예치할 대출을 하나 이상 선택해주세요.");
+    // deposit 자동예치하기 모드 
+    if (mode === "deposit") {
+      const allConnected = items.length > 0 && items.every((i) => i.connected);
+      if (allConnected) {
+        showToast("이미 모든 대출이 선납예치 처리 되었습니다.", "error");
+        return;
+      }
+
+      if (selected.length === 0) {
+        showToast("자동 예치할 대출을 하나 이상 선택해주세요.", "error");
+        return;
+      }
+
+      await Promise.all(
+        selected.map((item) =>
+          updateAutoDeposit(item.loanLedgerId, true)
+        )
+      );
+
+      showToast("자동 예치 설정이 완료되었습니다!", "success");
+      router.push("/auto-deposit");
       return;
     }
 
-    await Promise.all(
-      selected.map((item) =>
-        updateAutoDeposit(item.loanLedgerId, true)
-      )
-    );
+    if (selected.length !== 1) {
+      showToast("하나의 대출만 선택해주세요.", "error");
+      return;
+    }
 
-    alert("자동 예치 설정이 완료되었습니다!");
-    router.push("/auto-deposit");
-    return;
+    const loan = selected[0];
+
+    // prepaid 선납하기 모드 
+    if (mode === "prepaid") {
+      setPrepaidLoan({
+        mode: "prepaid",
+        loanLedgerId: loan.loanLedgerId,
+        loanName: loan.name,
+        mustPaidAmount: loan.mustPaidAmount || 0,
+        balance: loan.balance || 0,
+        accountNumber: loan.accountNumber || "",
+      });
+
+      router.push("/auto-deposit/transfer?mode=prepaid");
+      return;
+    }
+
+    // repyay 상환금 납부하기 모드 
+    if (mode === "repay") {
+      setPrepaidLoan({
+        mode: "repay",
+        loanLedgerId: loan.loanLedgerId,
+        loanName: loan.name,
+        mustPaidAmount: loan.monthlyRepayment || 0,
+        balance: loan.balance || 0,
+        accountNumber: loan.accountNumber || "",
+      });
+
+      router.push("/auto-deposit/transfer?mode=repay");
+      return;
+    }
   }
-
-  if (selected.length !== 1) {
-    alert("하나의 대출만 선택해주세요.");
-    return;
-  }
-
-  const loan = selected[0];
-
-  // prepaid 선납하기 모드 
-  if (mode === "prepaid") {
-    setPrepaidLoan({
-      mode: "prepaid",
-      loanLedgerId: loan.loanLedgerId,
-      loanName: loan.name,
-      mustPaidAmount: loan.mustPaidAmount || 0,
-      balance: loan.balance || 0,
-      accountNumber: loan.accountNumber || "",
-    });
-
-    router.push("/auto-deposit/transfer?mode=prepaid");
-    return;
-  }
-
-  // repyay 상환금 납부하기 모드 
-  if (mode === "repay") {
-    setPrepaidLoan({
-      mode: "repay",
-      loanLedgerId: loan.loanLedgerId,
-      loanName: loan.name,
-      mustPaidAmount: loan.monthlyRepayment || 0, 
-      balance: loan.balance || 0,
-      accountNumber: loan.accountNumber || "",
-    });
-
-    router.push("/auto-deposit/transfer?mode=repay");
-    return;
-  }
-}
 
 
   async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
@@ -249,8 +257,8 @@ function ApplyAutoDepositContent() {
     mode === "deposit"
       ? "자동 예치 등록하기"
       : mode === "repay"
-      ? "상환하기"      
-      : "선납하기";
+        ? "상환하기"
+        : "선납하기";
 
   const submitDisabled =
     mode === "deposit"
@@ -258,35 +266,32 @@ function ApplyAutoDepositContent() {
       : items.filter((i) => i.checked).length === 0;
 
   return (
-    <div className="space-y-6 pt-4">
-      <h2 className="text-lg font-semibold">
-        {mode === "deposit"
-          ? "자동 예치할 대출을 선택해 주세요"
-          : mode === "repay"
-          ? "상환할 대출을 선택해 주세요"
-          : "선납할 대출을 선택해 주세요"}
-      </h2>
+    <PageWithCTA
+      ctaLabel={buttonLabel}
+      onClick={handleSubmit}
+    >
+      <div className="space-y-6 pt-4">
+        <h2 className="text-lg font-semibold">
+          {mode === "deposit"
+            ? "자동 예치할 대출을 선택해 주세요"
+            : mode === "repay"
+              ? "상환할 대출을 선택해 주세요"
+              : "선납할 대출을 선택해 주세요"}
+        </h2>
 
-      <InstitutionSearchBar />
+        <InstitutionSearchBar />
 
-      <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
+        <CategoryTabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
-      <InstitutionList
-        title="은행 목록"
-        items={items}
-        onToggle={handleToggle}
-        onToggleAll={handleToggleAll}
-        disabledKey="connected"
-      />
-
-      <CommonButton
-        label={buttonLabel}
-        size="lg"
-        widthClassName="w-full"
-        onClick={handleSubmit}
-        disabled={submitDisabled}
-      />
-    </div>
+        <InstitutionList
+          title="은행 목록"
+          items={items}
+          onToggle={handleToggle}
+          onToggleAll={handleToggleAll}
+          disabledKey="connected"
+        />
+      </div>
+    </PageWithCTA>
   );
 }
 

@@ -1,12 +1,12 @@
-import MobileNotch from "@/components/layout/MobileNotch";
+import MobileNotch from "@/components/ui/layout/MobileNotch";
 import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
 import { NavigationProvider } from "@/context/NavigationContext";
 import "./globals.css";
 import { WebVitals } from "@/components/vitals/WebVitals";
-import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+
+
 
 export const metadata: Metadata = {
   title: "Loan Mate",
@@ -41,7 +41,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} bg-neutral-900 text-white overflow-hidden`}>
+      <body className="font-sans bg-neutral-900 text-white overflow-hidden">
         {/* 전체 배경 */}
         <div className="min-h-screen flex items-center justify-center">
           {/* 실제 앱이 들어갈 '모바일 기기' 영역 */}
@@ -62,11 +62,13 @@ export default function RootLayout({
             <WebVitals />
 
             {/* 실제 페이지 */}
-            <ClientProviders>
-              <NavigationProvider>
-                {children}
-              </NavigationProvider>
-            </ClientProviders>
+            <div className="h-full overflow-y-auto no-scrollbar">
+              <ClientProviders>
+                <NavigationProvider>
+                  {children}
+                </NavigationProvider>
+              </ClientProviders>
+            </div>
 
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import CheckIcon from "@/components/CheckIcon";
+import CheckIcon from "@/components/ui/icon/CheckIcon";
 
 export default function InstitutionItem({
   logo,

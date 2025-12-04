@@ -17,15 +17,11 @@ import type {
 const BASE_PATH = "/api/manual-ledgers";
 
 export async function fetchExpenditures(): Promise<ExpenditureItem[]> {
-  const { data } = await apiClient.get<SuccessBody<ExpenditureItem[]>>(BASE_PATH);
-  return data;
+  return apiClient.fetch<ExpenditureItem[]>(BASE_PATH);
 }
 
 export async function fetchExpenditure(id: ExpenditureId): Promise<ExpenditureItem> {
-  const { data } = await apiClient.get<SuccessBody<ExpenditureItem>>(
-    `${BASE_PATH}/${id}`
-  );
-  return data;
+  return apiClient.fetch<ExpenditureItem>(`${BASE_PATH}/${id}`);
 }
 
 export async function createExpenditure(
@@ -56,28 +52,18 @@ export async function deleteExpenditure(id: ExpenditureId): Promise<void> {
 export async function fetchSpendingRecommend(
   params: SpendingRecommendParams
 ): Promise<SpendingRecommendResponse> {
-  const res = await apiClient.get<
-    SuccessBody<SpendingRecommendResponse> | SpendingRecommendResponse
-  >(
+  return apiClient.fetch<SpendingRecommendResponse>(
     "/api/spending/recommended",
     { query: { year: params.year, month: params.month } }
   );
-  
-  return (res as SuccessBody<SpendingRecommendResponse>)?.data
-    ? (res as SuccessBody<SpendingRecommendResponse>).data
-    : (res as SpendingRecommendResponse);
 }
 
 export async function fetchMonthlySpending(
   params: MonthlySpendingParams
 ): Promise<MonthlySpendingResponse> {
-  const res = await apiClient.get<
-    SuccessBody<MonthlySpendingResponse> | MonthlySpendingResponse
-  >(`/api/spending/${params.year}/${params.month}`);
-
-  return (res as SuccessBody<MonthlySpendingResponse>)?.data
-    ? (res as SuccessBody<MonthlySpendingResponse>).data
-    : (res as MonthlySpendingResponse);
+  return apiClient.fetch<MonthlySpendingResponse>(
+    `/api/spending/${params.year}/${params.month}`
+  );
 }
 
 export async function updateSpendingLimit(

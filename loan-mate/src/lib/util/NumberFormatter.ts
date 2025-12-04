@@ -13,8 +13,8 @@ export function formatCurrency(value: number | string | null | undefined): strin
 
 // 계좌 13자리까지만  
 export function formatAccountNumber(value: string): string {
-  const digits = value.replace(/\D/g, "");  
-  return digits.slice(0, 13);              
+  const digits = value.replace(/\D/g, "");
+  return digits.slice(0, 13);
 }
 
 export function isValidAccountNumber(value: string): boolean {
@@ -25,7 +25,7 @@ export function formatAccountNumberWithBar(value: string): string {
   const digits = value.replace(/\D/g, "");
   const clean = digits.slice(0, 13);
 
-  if (clean.length <= 3) return clean;
-  if (clean.length <= 7) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
-  return `${clean.slice(0, 3)}-${clean.slice(3, 7)}-${clean.slice(7)}`;
+  if (clean.length <= 4) return clean;
+  if (clean.length <= 7) return `${clean.slice(0, 4)}-${clean.slice(4)}`;
+  return `${clean.slice(0, 4)}-${clean.slice(4, 7)}-${clean.slice(7)}`;
 }

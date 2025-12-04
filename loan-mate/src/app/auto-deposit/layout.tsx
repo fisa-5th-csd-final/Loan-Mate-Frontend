@@ -1,7 +1,7 @@
 "use client";
 
-import { NavigationProvider } from "@/components/navigation/NavigationContext";
-import AutoDepositLayoutContent from "./_components/AutoDepositLayoutContent";
+import { NavigationProvider } from "@/components/ui/navigation/NavigationContext";
+import AutoDepositLayoutContent from "@/components/auto-deposit/AutoDepositLayoutContent";
 
 export const dynamic = "force-dynamic";
 

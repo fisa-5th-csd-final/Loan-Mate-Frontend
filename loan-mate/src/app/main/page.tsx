@@ -1,29 +1,28 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import AssetAndConsumeToggle from "@/components/button/AssetAndConsumeToggle";
-import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/navigation/MainTopLevelNavigation";
+import AssetAndConsumeToggle from "@/components/ui/button/AssetAndConsumeToggle";
+import MainTopLevelNavigation, { MAIN_NAV_ITEMS } from "@/components/ui/navigation/MainTopLevelNavigation";
 import MonthlyLoanSummary from "@/components/loan/MonthlyLoanSummary";
 import dynamic from "next/dynamic";
 
-const QuickActionFunctionList = dynamic(() => import("./_components/QuickActionFunctionList"), {
+const QuickActionFunctionList = dynamic(() => import("@/components/main/QuickActionFunctionList"), {
   loading: () => <div className="h-20 bg-gray-100 rounded-xl animate-pulse" />,
 });
-const QuickActionLoanFunctionList = dynamic(() => import("./_components/QuickActionLoanFunctionList"), {
+const QuickActionLoanFunctionList = dynamic(() => import("@/components/main/QuickActionLoanFunctionList"), {
   loading: () => <div className="h-20 bg-gray-100 rounded-xl animate-pulse" />,
 });
 
 import { type LoanSummary } from "@/../types/loan";
-import { useLoanList } from "@/hooks/loan/useLoanList";
-import LoadingSpinner from "@/components/loading/LoadingSpinner";
+import { useLoanListQuery } from "@/lib/api/loan/hooks";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
+import CategoryCard from "@/components/ui/card/CategoryCard";
 
 type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
-import CategoryCard from "@/components/card/CategoryCard";
-
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("loan");
-  const { data: loans, isLoading } = useLoanList();
+  const { data: loans, isLoading } = useLoanListQuery();
 
   const contentByCategory = useMemo<Record<CategoryId, React.ReactNode>>(
     () => {
@@ -78,14 +77,14 @@ export default function Home() {
   );
 
   return (
-    <>
+    <div className="px-6">
       <AssetAndConsumeToggle />
       <MainTopLevelNavigation activeId={activeCategory} onChange={setActiveCategory} />
-      <div className="py-4 px-8 space-y-4 flex flex-col w-full max-w-2xl mx-auto">
+      <div className="py-4 flex flex-col w-full">
         {contentByCategory[activeCategory]}
         <QuickActionFunctionList />
         <QuickActionLoanFunctionList />
       </div>
-    </>
+    </div>
   );
 }

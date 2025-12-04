@@ -22,9 +22,8 @@ export function TableHeader({
 }: BaseProps & { columns?: string }) {
   return (
     <div
-      className={`grid items-center text-[13px] px-1 text-gray-700 font-semibold mb-2 ${
-        className ?? ""
-      }`}
+      className={`grid items-center text-[13px] px-1 text-gray-700 font-semibold mb-2 ${className ?? ""
+        }`}
       style={{ gridTemplateColumns: columns || "1fr 1fr 1fr" }}
     >
       {children}
@@ -41,7 +40,7 @@ interface TableRowProps {
 export function TableRow({ columns = "1fr 1fr 1fr", children }: TableRowProps) {
   return (
     <div
-      className="grid gap-2 py-3"
+      className="grid gap-2 py-3 items-center"
       style={{ gridTemplateColumns: columns }}
     >
       {children}

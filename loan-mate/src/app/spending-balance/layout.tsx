@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import NavigationBar from "@/components/navigation/BackRouteNavigation";
+import NavigationBar from "@/components/ui/navigation/BackRouteNavigation";
 
 export default function SpendingBalanceLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,7 +8,7 @@ export default function SpendingBalanceLayout({ children }: { children: ReactNod
       <NavigationBar title="나의 소비밸런스 맞추기" />
 
       {/* 페이지 본문 */}
-      <main className="flex-1 px-4 pb-28">
+      <main className="flex-1 px-6 pb-28">
         {children}
       </main>
     </div>

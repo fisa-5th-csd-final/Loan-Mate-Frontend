@@ -1,10 +1,10 @@
 'use client';
 
-import ProgressBar from '../ProgressBar';
+import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LoanRiskAverageBox from './LoanRiskAverageBox';
 import LoanDetailContainer from './LoanRiskDetailContainer';
 import { LoanRiskToggle } from './LoanRiskToggle';
-import SectionHeading from '../SectionHeading';
+import SectionHeading from "@/components/ui/typography/SectionHeading";
 import type { LoanSummary } from '@/../types/loan';
 import { useTotalLoanRisk } from '@/hooks/loan/useTotalLoanRisk';
 
@@ -30,7 +30,7 @@ export default function MonthlyLoanSummary({
                 이번달 나의 위험도 요약
             </SectionHeading>
 
-            <div className="flex flex-col w-full justify-center p-4 gap-5 rounded-xl space-y-4 bg-white shadow-md">
+            <div className="flex flex-col w-full justify-center p-4 gap-3 rounded-xl bg-white shadow-md">
                 {/* 전체 대출 평균 위험도 박스 */}
                 {isLoading ? (
                     <div className="w-full h-[88px] rounded-[28px] bg-gray-100 animate-pulse" />
