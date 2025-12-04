@@ -202,7 +202,7 @@ function ApplyAutoDepositContent() {
     }
 
     if (selected.length !== 1) {
-      alert("하나의 대출만 선택해주세요.");
+      showToast("하나의 대출만 선택해주세요.", "error");
       return;
     }
 
