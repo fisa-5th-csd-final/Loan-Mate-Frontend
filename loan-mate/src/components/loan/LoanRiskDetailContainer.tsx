@@ -47,7 +47,11 @@ export default function LoanDetailContainer({
   const error = detailError ? (detailError instanceof Error ? detailError.message : "대출 정보를 불러오지 못했습니다.") : null;
 
   if (loading) {
-    return <LoanRiskDetailsSkeleton />;
+    return (
+      <div role="status" aria-label="대출 상세 정보를 불러오는 중입니다.">
+        <LoanRiskDetailsSkeleton />
+      </div>
+    );
   }
 
   if (error || !data) {
