@@ -1,3 +1,4 @@
+import localFont from "next/font/local";
 import MobileNotch from "@/components/ui/layout/MobileNotch";
 import type { Metadata, Viewport } from "next";
 import ClientProviders from "@/components/ClientProviders";
@@ -5,8 +6,32 @@ import { NavigationProvider } from "@/context/NavigationContext";
 import "./globals.css";
 import { WebVitals } from "@/components/vitals/WebVitals";
 
-
-
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pretendard",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Loan Mate",
@@ -41,7 +66,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="font-sans bg-neutral-900 text-white overflow-hidden">
+      <body className={`${pretendard.variable} font-sans bg-neutral-900 text-white overflow-hidden`}>
         {/* 전체 배경 */}
         <div className="min-h-screen flex items-center justify-center">
           {/* 실제 앱이 들어갈 '모바일 기기' 영역 */}
