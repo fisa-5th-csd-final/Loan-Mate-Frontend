@@ -51,7 +51,7 @@ export default function RiskDashboard({
     const riskLevelPercent = finalRiskScore * 100;
 
     // 3. 델타 값을 %로 변환 및 부호 결정
-    const deltaPercent = apiResponse.delta;
+    const deltaPercent = Math.abs(apiResponse.delta);
     const isDecreased = apiResponse.delta < 0; // 위험도가 줄었는지 확인
 
     // 4. 위험도 텍스트 및 이모지 결정
