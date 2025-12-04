@@ -11,7 +11,7 @@ export default function AutoDepositPage() {
   const { setTitle, setShowBack, setRight } = useNavigation();
 
   useEffect(() => {
-    setTitle("자동 예치 등록/선납하기");
+    setTitle("자동예치 등록/선납하기");
     setShowBack(true);
     setRight(null);
   }, [setTitle, setShowBack, setRight]);
@@ -21,7 +21,7 @@ export default function AutoDepositPage() {
       <AutoDepositTable />
       <div className="mt-4">
         <CommonButton
-          label="자동 예치 등록하기"
+          label="자동예치 등록하기"
           size="lg"
           widthClassName="w-full"
           href="/auto-deposit/loan-select?mode=deposit"
