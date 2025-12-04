@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { simulationFetch } from "@/lib/api/ai/SimulationFetch";
-import type { AiSimulationResponse, ChangeItem } from "../../../../types/ai/AiSimulation";
+import type { AiSimulationResponse, ChangeItem } from "../../../types/ai/AiSimulation";
 import RiskDashboard from "./RiskDashboard";
 import FixedBudgetDashboard, { FixedBudgetItem } from "./FixedBudgetDashboard";
 import BottomSheet from "@/components/ui/modal/BottomSheet";

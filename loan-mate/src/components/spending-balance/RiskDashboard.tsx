@@ -60,9 +60,9 @@ export default function RiskDashboard({
 
                 {/* 상단 텍스트 영역 */}
                 <div className=" w-full text-left">
-                    <div className="text-[17px] font-bold text-[#2E393D]">나의 계획에 따라</div>
-                    <div className="text-[17px] font-bold text-[#2E393D]">AI가 예측한 위험도예요</div>
-                    <div className="text-[12px] text-[#A8A9AE]">
+                    <div className="text-lg font-bold text-[#2E393D]">나의 계획에 따라</div>
+                    <div className="text-lg font-bold text-[#2E393D]">AI가 예측한 위험도예요</div>
+                    <div className="text-sm text-[#A8A9AE]">
                         이대로만 가면, 연체 걱정은{` `}
                         <span className={"text-[#A8A9AE]"}>
                             {deltaPercent}%
