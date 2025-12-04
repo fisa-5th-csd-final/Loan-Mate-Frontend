@@ -5,6 +5,8 @@ import { useLoanDetailQuery, useLoanCommentQuery } from "@/lib/api/loan/hooks";
 import LoanRiskDetails from "@/components/loan/LoanRiskDetails";
 import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
+import LoanRiskDetailsSkeleton from "@/components/loan/LoanRiskDetailsSkeleton";
+
 // 상수는 컴포넌트 외부로 이동하여 리렌더링 시 재생성 방지
 const LOAN_TYPE_MAP: Record<string, string> = {
   MORTGAGE: "전세/담보대출",
@@ -45,11 +47,7 @@ export default function LoanDetailContainer({
   const error = detailError ? (detailError instanceof Error ? detailError.message : "대출 정보를 불러오지 못했습니다.") : null;
 
   if (loading) {
-    return (
-      <div className="w-full rounded-3xl bg-white px-5 py-8 flex items-center justify-center">
-        <LoadingSpinner label="대출 정보를 불러오는 중입니다" />
-      </div>
-    );
+    return <LoanRiskDetailsSkeleton />;
   }
 
   if (error || !data) {
