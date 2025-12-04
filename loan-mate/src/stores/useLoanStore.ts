@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type PrepaidLoanInfo = {
-  mode: "prepaid" | "repay";
+  mode: "prepaid" | "repay" | "deposit";
   loanLedgerId: number;
   loanName: string;
   balance: number;

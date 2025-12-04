@@ -1,8 +1,8 @@
 export interface AccountDetail {
-  accountId: number;
-  accountNumber: string;
+  bankLogo: string;
   bankCode: string;
+  accountId: string;
   balance: number;
-  createdAt: string;
-  isForIncome: boolean;
+  checked: boolean;
+  connected: boolean;
 }

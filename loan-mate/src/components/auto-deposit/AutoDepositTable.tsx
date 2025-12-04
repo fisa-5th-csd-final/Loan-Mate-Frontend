@@ -47,7 +47,7 @@ export default function AutoDepositTable() {
 
   return (
     <section className="mt-4">
-      <h2 className="font-semibold text-lg mb-2">자동 예치 현황</h2>
+      <h2 className="font-semibold text-lg mb-2">자동예치 현황</h2>
 
       <Card>
         {loading ? (
@@ -58,7 +58,7 @@ export default function AutoDepositTable() {
               <tr className="text-gray-600 text-center">
                 <th className="text-left py-2">대출명</th>
                 <th>예치금 현황</th>
-                <th>자동 예치 여부</th>
+                <th>자동예치 여부</th>
               </tr>
             </thead>
 

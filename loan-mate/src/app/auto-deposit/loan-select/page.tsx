@@ -181,28 +181,32 @@ function ApplyAutoDepositContent() {
     if (mode === "deposit") {
       const allConnected = items.length > 0 && items.every((i) => i.connected);
       if (allConnected) {
-        showToast("이미 모든 대출이 선납예치 처리 되었습니다.", "error");
+        showToast("이미 모든 대출이 자동예치 처리 되었습니다.", "error");
         return;
       }
 
       if (selected.length === 0) {
-        showToast("자동 예치할 대출을 하나 이상 선택해주세요.", "error");
+        showToast("자동예치할 대출을 선택해주세요.", "error");
         return;
       }
 
-      await Promise.all(
-        selected.map((item) =>
-          updateAutoDeposit(item.loanLedgerId, true)
-        )
-      );
+      if (selected.length > 1) {
+        showToast("자동예치할 대출을 하나만 선택해주세요.", "error");
+        return;
+      }
 
-      showToast("자동 예치 설정이 완료되었습니다!", "success");
-      router.push("/auto-deposit");
-      return;
-    }
+      const loan = selected[0];
 
-    if (selected.length !== 1) {
-      showToast("하나의 대출만 선택해주세요.", "error");
+      setPrepaidLoan({
+        mode: "deposit",
+        loanLedgerId: loan.loanLedgerId,
+        loanName: loan.name,
+        accountNumber: "",
+        mustPaidAmount: 0,
+        balance: 0,
+      });
+
+      router.push("/auto-deposit/from-account");
       return;
     }
 
@@ -210,6 +214,17 @@ function ApplyAutoDepositContent() {
 
     // prepaid 선납하기 모드 
     if (mode === "prepaid") {
+
+      if (selected.length === 0) {
+        showToast("상환할 대출을 선택해주세요.", "error");
+        return;
+      }
+
+      if (selected.length > 1) {
+        showToast("상환할 대출을 하나만 선택해주세요.", "error");
+        return;
+      }
+      
       setPrepaidLoan({
         mode: "prepaid",
         loanLedgerId: loan.loanLedgerId,
@@ -225,6 +240,17 @@ function ApplyAutoDepositContent() {
 
     // repyay 상환금 납부하기 모드 
     if (mode === "repay") {
+
+      if (selected.length === 0) {
+        showToast("상환할 대출을 선택해주세요.", "error");
+        return;
+      }
+
+      if (selected.length > 1) {
+        showToast("상환할 대출을 하나만 선택해주세요.", "error");
+        return;
+      }
+
       setPrepaidLoan({
         mode: "repay",
         loanLedgerId: loan.loanLedgerId,
@@ -239,23 +265,22 @@ function ApplyAutoDepositContent() {
     }
   }
 
-
-  async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
-    try {
-      return await apiClient.patch(
-        `/api/loans/ledgers/${loanLedgerId}/auto-deposit`,
-        {
-          autoDepositEnabled: enabled,
-        }
-      );
-    } catch (err) {
-      throw err;
-    }
-  }
+  // async function updateAutoDeposit(loanLedgerId: number, enabled: boolean) {
+  //   try {
+  //     return await apiClient.patch(
+  //       `/api/loans/ledgers/${loanLedgerId}/auto-deposit`,
+  //       {
+  //         autoDepositEnabled: enabled,
+  //       }
+  //     );
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // }
 
   const buttonLabel =
     mode === "deposit"
-      ? "자동 예치 등록하기"
+      ? "다음"
       : mode === "repay"
         ? "상환하기"
         : "선납하기";
