@@ -13,13 +13,13 @@ const INITIAL_RISK_DATA: AiSimulationResponse = {
     base_risk_score: 0.15,
     simulated_risk_score: 0.15,
     delta: 0,
-    explanation: "현재 수입/지출 상태를 기반으로\n분석된 위험도입니다.",
+    explanation: "현재 재무 상태를 기준으로 계산한\n기본 위험도입니다.",
 };
 
 export default function RiskSimulationContainer() {
     // ── 상태 관리 ──
     const [riskData, setRiskData] = useState<AiSimulationResponse>(INITIAL_RISK_DATA);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const [open, setIsOpen] = useState(false);
@@ -66,13 +66,15 @@ export default function RiskSimulationContainer() {
                 ...expenseValues.map(item => ({ type: "expense" as const, name: item.label, amount: (item.value / 100) * item.max }))
             ];
 
-            // 값이 모두 0이면 호출 안 함 (선택 사항)
-            const totalAmount = changes.reduce((acc, cur) => acc + cur.amount, 0);
-            if (totalAmount === 0) return;
-
             try {
                 setIsLoading(true);
                 const response = await simulationFetch({ changes });
+
+                // 특정 멘트에 줄바꿈 적용
+                if (response.explanation === "현재 재무 상태를 기준으로 계산한 기본 위험도입니다.") {
+                    response.explanation = "현재 재무 상태를 기준으로 계산한\n기본 위험도입니다.";
+                }
+
                 setRiskData(response);
                 setError(null);
             } catch (err) {
@@ -90,11 +92,7 @@ export default function RiskSimulationContainer() {
     return (
         <div className="flex flex-col gap-8 bg-white relative">
             {/* 로딩 인디케이터 (오버레이 형태) */}
-            {isLoading && (
-                <div className="absolute top-10 right-10 z-10">
-                    <LoadingSpinner size="sm" />
-                </div>
-            )}
+            {/* 로딩 인디케이터 (오버레이 형태) -> 제거됨 */}
 
             {/* 에러 메시지 (오버레이 형태) */}
             {error && (
@@ -103,7 +101,7 @@ export default function RiskSimulationContainer() {
                 </div>
             )}
 
-            <RiskDashboard apiResponse={riskData} />
+            <RiskDashboard apiResponse={riskData} isLoading={isLoading} />
 
             <FixedBudgetDashboard
                 onAddClick={() => setIsOpen(true)}

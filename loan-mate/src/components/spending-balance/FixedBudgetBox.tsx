@@ -37,7 +37,7 @@ export default function BudgetBox({
                 progress={item.value}
                 label={item.label}
                 min={0}
-                max={item.max}
+                max={item.max.toLocaleString()}
                 onChange={(newValue) => updateBar(i, newValue)}
               />
             ))
