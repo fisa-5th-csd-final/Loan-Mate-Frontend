@@ -196,7 +196,7 @@ function ApplyAutoDepositContent() {
         )
       );
 
-      alert("자동 예치 설정이 완료되었습니다!");
+      showToast("자동 예치 설정이 완료되었습니다!", "success");
       router.push("/auto-deposit");
       return;
     }
