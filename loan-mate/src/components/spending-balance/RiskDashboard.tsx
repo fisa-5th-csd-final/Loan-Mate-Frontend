@@ -77,7 +77,7 @@ export default function RiskDashboard({
                 </div>
 
                 {isLoading ? (
-                    <div className="py-20">
+                    <div className="h-[254px] flex items-center justify-center">
                         <LoadingSpinner size="lg" />
                     </div>
                 ) : (
