@@ -37,12 +37,10 @@ export default function ExpenditureLimitPage() {
     >
       {/* LCP 측정을 위한 이미지 */}
       <div className="w-full h-40 relative mb-4 rounded-xl overflow-hidden">
-        <Image
+        <img
           src="/logo/woori.svg"
           alt="LCP Image"
-          fill
           className="object-cover"
-          priority
         />
       </div>
 

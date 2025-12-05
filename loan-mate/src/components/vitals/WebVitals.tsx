@@ -1,7 +1,7 @@
 'use client';
 
 import { useReportWebVitals } from 'next/web-vitals';
-import { onINP } from 'web-vitals/attribution';
+import { onINP, onLCP } from 'web-vitals/attribution';
 import { useEffect } from 'react';
 
 // Define a type that covers both Next.js metrics and web-vitals metrics with attribution
@@ -33,14 +33,18 @@ export function WebVitals() {
             onINP((metric) => {
                 logMetric(metric as unknown as WebVitalsMetric);
             }, { reportAllChanges: true });
+
+            onLCP((metric) => {
+                logMetric(metric as unknown as WebVitalsMetric);
+            }, { reportAllChanges: true });
         } catch (e) {
-            console.error('[WebVitals] Failed to initialize onINP', e);
+            console.error('[WebVitals] Failed to initialize metrics', e);
         }
     }, []);
 
     useReportWebVitals((metric) => {
-        // Avoid duplicate logging for INP since we handle it explicitly above
-        if (metric.name !== 'INP') {
+        // Avoid duplicate logging for INP and LCP since we handle them explicitly above
+        if (metric.name !== 'INP' && metric.name !== 'LCP') {
             logMetric(metric as unknown as WebVitalsMetric);
         }
     });
