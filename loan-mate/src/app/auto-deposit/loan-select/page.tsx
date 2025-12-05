@@ -11,6 +11,7 @@ import { useEffect, useState, Suspense } from "react";
 import { apiClient } from "@/lib/api/client";
 import { useLoanStore } from "@/stores/useLoanStore";
 import { useToast } from "@/context/ToastContext";
+import { getCyclicBankIcon } from "@/consts/loan";
 
 function ApplyAutoDepositContent() {
   const params = useSearchParams();
@@ -67,9 +68,9 @@ function ApplyAutoDepositContent() {
             }[];
           }>("/api/loans/auto-deposit-summary");
 
-          const mapped: LoanItem[] = res.data.map((item) => ({
+          const mapped: LoanItem[] = res.data.map((item, index) => ({
             loanLedgerId: item.loanLedgerId.value,
-            logo: getBankLogo(item.loanName),
+            logo: getCyclicBankIcon(index),
             name: item.loanName,
             connected: item.autoDepositEnabled,
             checked: false,
@@ -92,9 +93,9 @@ function ApplyAutoDepositContent() {
             }[];
           }>("/api/loans/prepayment-infos");
 
-          const mapped: LoanItem[] = res.data.map((item) => ({
+          const mapped: LoanItem[] = res.data.map((item, index) => ({
             loanLedgerId: item.loanLedgerId,
-            logo: getBankLogo(item.loanName),
+            logo: getCyclicBankIcon(index),
             name: item.loanName,
             connected: false,
             checked: false,
@@ -119,9 +120,9 @@ function ApplyAutoDepositContent() {
             }[];
           }>("/api/loans/ledgers/details");
 
-          const mapped: LoanItem[] = res.data.map((item) => ({
+          const mapped: LoanItem[] = res.data.map((item, index) => ({
             loanLedgerId: item.loanId,
-            logo: getBankLogo(item.loanName),
+            logo: getCyclicBankIcon(index),
             name: item.loanName,
             connected: false,
             checked: false,
@@ -224,7 +225,7 @@ function ApplyAutoDepositContent() {
         showToast("상환할 대출을 하나만 선택해주세요.", "error");
         return;
       }
-      
+
       setPrepaidLoan({
         mode: "prepaid",
         loanLedgerId: loan.loanLedgerId,
@@ -320,12 +321,6 @@ function ApplyAutoDepositContent() {
   );
 }
 
-function getBankLogo(name: string) {
-  if (name.includes("1")) return "/logo/kookmin.svg";
-  if (name.includes("2")) return "/logo/hana.svg";
-  if (name.includes("테스트")) return "/logo/shinhan.svg";
-  return "/logo/woori.svg";
-}
 
 export default function ApplyAutoDepositPage() {
   return (

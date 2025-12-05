@@ -8,7 +8,7 @@ import SectionHeading from "@/components/ui/typography/SectionHeading";
 import type { LoanSummary } from '@/../types/loan';
 import { useTotalLoanRisk } from '@/hooks/loan/useTotalLoanRisk';
 
-import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP } from '@/consts/loan';
+import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP, getCyclicBankIcon } from '@/consts/loan';
 
 type MonthlyLoanSummaryProps = {
     loans?: LoanSummary[],
@@ -69,9 +69,11 @@ export default function MonthlyLoanSummary({
                 {/* 개별 대출 위험도 토글들 */}
                 <div>
                     {
-                        loans?.map(loan => {
+                        loans?.map((loan, index) => {
                             const riskLabel = RISK_LEVEL_MAP[loan.riskLevel] || loan.riskLevel;
                             const riskColor = RISK_COLOR_MAP[loan.riskLevel] || "text-gray-500";
+
+                            const logoUrl = getCyclicBankIcon(index);
 
                             return (
                                 <LoanRiskToggle
@@ -79,7 +81,7 @@ export default function MonthlyLoanSummary({
                                     title={loan.loanName}
                                     riskLabel={riskLabel}
                                     riskColorClassName={riskColor}
-                                    logoUrl={loan.iconUrl}
+                                    logoUrl={logoUrl}
                                 >
                                     <LoanDetailContainer loanId={loan.loanId} />
                                 </LoanRiskToggle>
