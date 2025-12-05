@@ -2,6 +2,13 @@ import { apiClient } from "@/lib/api/client";
 import type { LoanSummary, LoanDetail, LoanAiCommentResponse } from "@/../types/loan";
 import { API } from "@/consts/ROUTES";
 
+export interface LoanRepaymentRatioResponse {
+  monthlyIncome: number;
+  totalMonthlyRepayment: number;
+  ratio: number;
+  peerAverageRatio: number;
+}
+
 export async function fetchLoanList(): Promise<LoanSummary[]> {
   return apiClient.fetch<LoanSummary[]>(API.LOAN.LIST);
 }
@@ -17,4 +24,8 @@ export async function fetchLoanComment(loanId: number): Promise<string> {
 
 export async function fetchLoanLedgerDetails(): Promise<LoanDetail[]> {
   return apiClient.fetch<LoanDetail[]>(API.LOAN.LEDGER_DETAILS);
+}
+
+export async function fetchLoanRepaymentRatio(): Promise<LoanRepaymentRatioResponse> {
+  return apiClient.fetch<LoanRepaymentRatioResponse>(API.LOAN.REPAYMENT_RATIO);
 }

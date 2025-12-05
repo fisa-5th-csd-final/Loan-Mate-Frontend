@@ -23,6 +23,7 @@ export const API = {
         PREPAYMENT_INFOS: '/api/loans/prepayment-infos',
         LEDGER_DETAILS: '/api/loans/ledgers/details',
         SIMULATION: '/api/loans/ai-simulation',
+        REPAYMENT_RATIO: '/api/loans/repayment-ratio',
     },
     SPENDING: {
         MONTHLY: (accountId: number, year: number, month: number) => `/api/spending/${accountId}/${year}/${month}`,

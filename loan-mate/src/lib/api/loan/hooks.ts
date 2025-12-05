@@ -4,14 +4,31 @@ import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 
 import type { LoanDetail, LoanSummary } from "@/../types/loan";
 import type { ApiError } from "@/lib/api/client";
-import { fetchLoanLedgerDetails, fetchLoanList, fetchLoanDetail, fetchLoanComment } from "./service";
+import {
+  fetchLoanLedgerDetails,
+  fetchLoanList,
+  fetchLoanDetail,
+  fetchLoanComment,
+  fetchLoanRepaymentRatio, // Add import
+  type LoanRepaymentRatioResponse, // Add import
+} from "./service";
 
 const loanKeys = {
   list: ["loan", "list"] as const,
   detail: (id: number) => ["loan", "detail", id] as const,
   comment: (id: number) => ["loan", "comment", id] as const,
   ledgerDetails: ["loan", "ledger-details"] as const,
+  repaymentRatio: ["loan", "repayment-ratio"] as const, // Add key
 };
+
+export function useLoanRepaymentRatioQuery() {
+  return useQuery<LoanRepaymentRatioResponse>({
+    queryKey: loanKeys.repaymentRatio,
+    queryFn: fetchLoanRepaymentRatio,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+}
 
 type LedgerDetailOptions = Omit<
   UseQueryOptions<
