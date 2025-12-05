@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import RiskIndicator from './RiskIndicator';
 import RiskGaugeMeter from './RiskGaugeMeter';
 import { AiSimulationResponse } from "@/../types/ai/AiSimulationResponse";
+import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 
 // 5단계 위험도 분류 로직 (0.0~1.0 기준)
 function getRiskClassification(level: number) {
@@ -20,10 +21,12 @@ function getRiskClassification(level: number) {
 
 interface RiskDashboardProps {
     apiResponse: AiSimulationResponse;
+    isLoading?: boolean;
 }
 
 export default function RiskDashboard({
     apiResponse,
+    isLoading = false,
 }: RiskDashboardProps) {
 
     // apiResponse explanation 분리
@@ -48,7 +51,7 @@ export default function RiskDashboard({
     const riskLevelPercent = finalRiskScore * 100;
 
     // 3. 델타 값을 %로 변환 및 부호 결정
-    const deltaPercent = Math.round(Math.abs(apiResponse.delta) * 100);
+    const deltaPercent = Math.abs(apiResponse.delta);
     const isDecreased = apiResponse.delta < 0; // 위험도가 줄었는지 확인
 
     // 4. 위험도 텍스트 및 이모지 결정
@@ -62,29 +65,44 @@ export default function RiskDashboard({
                 <div className=" w-full text-left">
                     <div className="text-lg font-bold text-[#2E393D]">나의 계획에 따라</div>
                     <div className="text-lg font-bold text-[#2E393D]">AI가 예측한 위험도예요</div>
-                    <div className="text-sm text-[#A8A9AE]">
-                        이대로만 가면, 연체 걱정은{` `}
-                        <span className={"text-[#A8A9AE]"}>
-                            {deltaPercent}%
-                        </span>
-                        {isDecreased ? ' 줄어요!' : ' 늘어요!'}
+                    {!isLoading && (
+                        <div className="text-sm text-[#A8A9AE]">
+                            이대로만 가면, 연체 걱정은{` `}
+                            <span className={"text-[#A8A9AE]"}>
+                                {deltaPercent}%
+                            </span>
+                            {isDecreased ? ' 줄어요!' : ' 늘어요!'}
+                        </div>
+                    )}
+                </div>
+
+                {isLoading ? (
+                    <div className="h-[254px] flex items-center justify-center">
+                        <LoadingSpinner size="lg" />
                     </div>
-                </div>
+                ) : (
+                    <>
+                        {/* 게이지 및 지표 영역 (시각화) */}
+                        <div className='-space-y-12'>
+                            {/* 1. GaugeMeter */}
+                            <RiskGaugeMeter riskLevel={riskLevelPercent} />
 
-                {/* 게이지 및 지표 영역 (시각화) */}
-                <div className='-space-y-12'>
-                    {/* 1. GaugeMeter */}
-                    <RiskGaugeMeter riskLevel={riskLevelPercent} />
+                            {/* 2. 위험 지표 */}
+                            <RiskIndicator emoji={emoji} riskText={riskText} />
+                        </div>
 
-                    {/* 2. 위험 지표 */}
-                    <RiskIndicator emoji={emoji} riskText={riskText} />
-                </div>
-
-                {/* 하단 정보 영역 */}
-                <div className="w-full p-2.5 text-center bg-[#D1EAFF] rounded-4xl text-[#2E393D] font-semibold whitespace-pre-wrap">
-                    {head} <br />
-                    {match?.[1]}{tail}
-                </div>
+                        {/* 하단 정보 영역 */}
+                        <div className="w-full p-2.5 text-center bg-[#D1EAFF] rounded-4xl text-[#2E393D] font-semibold whitespace-pre-wrap">
+                            {head.split('\n').map((line, i) => (
+                                <React.Fragment key={i}>
+                                    {line}
+                                    {i < head.split('\n').length - 1 && <br />}
+                                </React.Fragment>
+                            ))} <br />
+                            {match?.[1]}{tail}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { simulationFetch } from "@/lib/api/ai/SimulationFetch";
 import type { AiSimulationResponse, ChangeItem } from "../../../types/ai/AiSimulation";
 import RiskDashboard from "./RiskDashboard";
@@ -13,18 +13,21 @@ const INITIAL_RISK_DATA: AiSimulationResponse = {
     base_risk_score: 0.15,
     simulated_risk_score: 0.15,
     delta: 0,
-    explanation: "현재 수입/지출 상태를 기반으로\n분석된 위험도입니다.",
+    explanation: "현재 재무 상태를 기준으로 계산한\n기본 위험도입니다.",
 };
 
 export default function RiskSimulationContainer() {
     // ── 상태 관리 ──
     const [riskData, setRiskData] = useState<AiSimulationResponse>(INITIAL_RISK_DATA);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const [open, setIsOpen] = useState(false);
     const [incomeValues, setIncomeValues] = useState<FixedBudgetItem[]>([]);
     const [expenseValues, setExpenseValues] = useState<FixedBudgetItem[]>([]);
+
+    // 이전 변경 사항 추적을 위한 ref
+    const prevChangesRef = useRef<string | null>(null);
 
     // ── 핸들러 ──
 
@@ -66,13 +69,27 @@ export default function RiskSimulationContainer() {
                 ...expenseValues.map(item => ({ type: "expense" as const, name: item.label, amount: (item.value / 100) * item.max }))
             ];
 
-            // 값이 모두 0이면 호출 안 함 (선택 사항)
-            const totalAmount = changes.reduce((acc, cur) => acc + cur.amount, 0);
-            if (totalAmount === 0) return;
+            // 0이 아닌 값만 필터링하여 유의미한 변경사항인지 확인
+            const effectiveChanges = changes.filter(item => item.amount > 0);
+            const changesString = JSON.stringify(effectiveChanges);
+
+            // 변경사항이 없으면(이전과 동일하면) API 호출 스킵
+            if (prevChangesRef.current === changesString) {
+                return;
+            }
+
+            // 변경사항 업데이트
+            prevChangesRef.current = changesString;
 
             try {
                 setIsLoading(true);
                 const response = await simulationFetch({ changes });
+
+                // 특정 멘트에 줄바꿈 적용
+                if (response.explanation === "현재 재무 상태를 기준으로 계산한 기본 위험도입니다.") {
+                    response.explanation = "현재 재무 상태를 기준으로 계산한\n기본 위험도입니다.";
+                }
+
                 setRiskData(response);
                 setError(null);
             } catch (err) {
@@ -89,12 +106,7 @@ export default function RiskSimulationContainer() {
 
     return (
         <div className="flex flex-col gap-8 bg-white relative">
-            {/* 로딩 인디케이터 (오버레이 형태) */}
-            {isLoading && (
-                <div className="absolute top-10 right-10 z-10">
-                    <LoadingSpinner size="sm" />
-                </div>
-            )}
+            {/* 로딩 인디케이터 (오버레이 형태) -> 제거됨 */}
 
             {/* 에러 메시지 (오버레이 형태) */}
             {error && (
@@ -103,7 +115,7 @@ export default function RiskSimulationContainer() {
                 </div>
             )}
 
-            <RiskDashboard apiResponse={riskData} />
+            <RiskDashboard apiResponse={riskData} isLoading={isLoading} />
 
             <FixedBudgetDashboard
                 onAddClick={() => setIsOpen(true)}

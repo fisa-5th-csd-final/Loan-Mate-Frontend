@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 type ProgressBarProps = {
     progress: number
     min: number
-    max: number
+    max: string
     label: string
     onChange?: (value: number) => void;
 };

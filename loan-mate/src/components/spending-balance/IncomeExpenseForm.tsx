@@ -69,13 +69,15 @@ export default function IncomeExpenseForm({
                     <div className="flex flex-col gap-2">
                         <label className="text-[15px] font-semibold text-[#676E74]">예상 최대 금액</label>
                         <input
-                            value={amount}
+                            value={amount === "" ? "" : amount.toLocaleString()}
                             onChange={(e) => {
-                                const value = e.target.value;
+                                const value = e.target.value.replace(/,/g, "");
+                                if (!/^\d*$/.test(value)) return;
                                 setAmount(value === "" ? "" : Number(value));
                             }}
                             placeholder=""
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
                             className="w-full h-[39px] p-2 bg-[#F0F4F5] rounded-[10px] outline-none"
                         />
                     </div>
