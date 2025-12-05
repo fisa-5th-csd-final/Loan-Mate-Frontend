@@ -27,5 +27,5 @@ export async function fetchLoanLedgerDetails(): Promise<LoanDetail[]> {
 }
 
 export async function fetchLoanRepaymentRatio(): Promise<LoanRepaymentRatioResponse> {
-  return apiClient.fetch<LoanRepaymentRatioResponse>("/api/loans/repayment-ratio");
+  return apiClient.fetch<LoanRepaymentRatioResponse>(API.LOAN.REPAYMENT_RATIO);
 }
