@@ -8,7 +8,7 @@ import SectionHeading from "@/components/ui/typography/SectionHeading";
 import type { LoanSummary } from '@/../types/loan';
 import { useTotalLoanRisk } from '@/hooks/loan/useTotalLoanRisk';
 
-import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP } from '@/consts/loan';
+import { RISK_LEVEL_MAP, RISK_COLOR_MAP, RISK_LEVEL_TEXT_MAP, RISK_EMOJI_MAP, getCyclicBankIcon } from '@/consts/loan';
 
 type MonthlyLoanSummaryProps = {
     loans?: LoanSummary[],
@@ -49,16 +49,31 @@ export default function MonthlyLoanSummary({
 
                 {/* 전체 대출 비율 프로그레스바 */}
                 <div className="flex flex-col gap-5">
-                    <ProgressBar label="나의 대출 비율" value={totalLoanRate} />
-                    <ProgressBar label="또래 평균 대출 비율" value={peerAverageLoanRatio} />
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between items-end">
+                            <span className="text-gray-600 text-[15px]">나의 대출 비율</span>
+                            <span className="text-gray-600 text-[15px]">{Math.round(totalLoanRate)}%</span>
+                        </div>
+                        <ProgressBar label="" value={totalLoanRate} />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between items-end">
+                            <span className="text-gray-600 text-[15px]">또래 평균 대출 비율</span>
+                            <span className="text-gray-600 text-[15px]">{Math.round(peerAverageLoanRatio)}%</span>
+                        </div>
+                        <ProgressBar label="" value={peerAverageLoanRatio} color="#25D08A" />
+                    </div>
                 </div>
 
                 {/* 개별 대출 위험도 토글들 */}
                 <div>
                     {
-                        loans?.map(loan => {
+                        loans?.map((loan, index) => {
                             const riskLabel = RISK_LEVEL_MAP[loan.riskLevel] || loan.riskLevel;
                             const riskColor = RISK_COLOR_MAP[loan.riskLevel] || "text-gray-500";
+
+                            const logoUrl = getCyclicBankIcon(index);
 
                             return (
                                 <LoanRiskToggle
@@ -66,7 +81,7 @@ export default function MonthlyLoanSummary({
                                     title={loan.loanName}
                                     riskLabel={riskLabel}
                                     riskColorClassName={riskColor}
-                                    logoUrl={loan.iconUrl}
+                                    logoUrl={logoUrl}
                                 >
                                     <LoanDetailContainer loanId={loan.loanId} />
                                 </LoanRiskToggle>

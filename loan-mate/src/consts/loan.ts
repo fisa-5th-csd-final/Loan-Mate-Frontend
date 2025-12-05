@@ -30,3 +30,12 @@ export const RISK_EMOJI_MAP: Record<RiskLevel, string> = {
     FOUR: "😨",
     FIVE: "😱",
 };
+
+export const BANK_ICONS = [
+    "/logo/hn.png",
+    "/logo/kb.jpg",
+    "/logo/sh.png",
+    "/logo/woori.svg"
+];
+
+export const getCyclicBankIcon = (index: number) => BANK_ICONS[index % BANK_ICONS.length];
