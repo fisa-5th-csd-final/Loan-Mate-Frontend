@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AddItem, AddItemType } from "@/consts/add-item";
 import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
 import { ConsumptionCategoryMeta, ConsumptionCategoryLabelMap } from "../ConsumptionCategoryMeta";
+import { formatNumber } from "@/lib/util/NumberFormatter";
 
 type InitialData = Partial<AddItem> & { id?: string | number };
 
@@ -122,13 +123,18 @@ export default function AddItemModalPage({
         <div>
           <label className="text-sm font-medium text-gray-700">예상 최대 금액</label>
           <input
-            value={amount}
+            value={amount === "" ? "" : formatNumber(amount)}
             onChange={(e) => {
-              const value = e.target.value;
-              setAmount(value === "" ? "" : Number(value));
+              const value = e.target.value.replace(/,/g, "");
+              if (value === "") {
+                setAmount("");
+                return;
+              }
+              if (!isNaN(Number(value))) {
+                setAmount(Number(value));
+              }
             }}
             placeholder="예: 3,000,000"
-            type="number"
             className="w-full mt-1 p-3 border bg-gray-100 rounded-xl focus:outline-none"
           />
         </div>
