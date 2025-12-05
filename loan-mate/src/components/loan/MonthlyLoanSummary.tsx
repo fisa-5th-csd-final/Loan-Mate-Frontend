@@ -49,8 +49,21 @@ export default function MonthlyLoanSummary({
 
                 {/* 전체 대출 비율 프로그레스바 */}
                 <div className="flex flex-col gap-5">
-                    <ProgressBar label="나의 대출 비율" value={totalLoanRate} />
-                    <ProgressBar label="또래 평균 대출 비율" value={peerAverageLoanRatio} />
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between items-end">
+                            <span className="text-gray-600 text-[15px]">나의 대출 비율</span>
+                            <span className="text-gray-600 text-[15px]">{Math.round(totalLoanRate)}%</span>
+                        </div>
+                        <ProgressBar label="" value={totalLoanRate} />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <div className="flex justify-between items-end">
+                            <span className="text-gray-600 text-[15px]">또래 평균 대출 비율</span>
+                            <span className="text-gray-600 text-[15px]">{Math.round(peerAverageLoanRatio)}%</span>
+                        </div>
+                        <ProgressBar label="" value={peerAverageLoanRatio} color="#25D08A" />
+                    </div>
                 </div>
 
                 {/* 개별 대출 위험도 토글들 */}
