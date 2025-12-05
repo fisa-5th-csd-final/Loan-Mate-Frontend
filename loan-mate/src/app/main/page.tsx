@@ -14,7 +14,7 @@ const QuickActionLoanFunctionList = dynamic(() => import("@/components/main/Quic
 });
 
 import { type LoanSummary } from "@/../types/loan";
-import { useLoanListQuery } from "@/lib/api/loan/hooks";
+import { useLoanListQuery, useLoanRepaymentRatioQuery } from "@/lib/api/loan/hooks"; // Update import
 import LoadingSpinner from "@/components/ui/loading/LoadingSpinner";
 import CategoryCard from "@/components/ui/card/CategoryCard";
 
@@ -22,10 +22,13 @@ type CategoryId = (typeof MAIN_NAV_ITEMS)[number]["id"];
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("loan");
-  const { data: loans, isLoading } = useLoanListQuery();
+  const { data: loans, isLoading: isLoanLoading } = useLoanListQuery();
+  const { data: ratioData, isLoading: isRatioLoading } = useLoanRepaymentRatioQuery();
 
   const contentByCategory = useMemo<Record<CategoryId, React.ReactNode>>(
     () => {
+      const isLoading = isLoanLoading || isRatioLoading;
+
       const loanContent = isLoading ? (
         <div className="flex justify-center p-8">
           <LoadingSpinner />
@@ -33,8 +36,8 @@ export default function Home() {
       ) : loans ? (
         <MonthlyLoanSummary
           loans={loans}
-          totalLoanRate={0} // API에서 제공하지 않으므로 임시값 0
-          peerAverageLoanRatio={0} // API에서 제공하지 않으므로 임시값 0
+          totalLoanRate={(ratioData?.ratio ?? 0) * 100}
+          peerAverageLoanRatio={(ratioData?.peerAverageRatio ?? 0) * 100}
         />
       ) : (
         <div className="text-center p-4 text-gray-500">대출 정보를 불러올 수 없습니다.</div>
@@ -73,7 +76,7 @@ export default function Home() {
         ),
       };
     },
-    [isLoading, loans]
+    [isLoanLoading, isRatioLoading, loans, ratioData]
   );
 
   return (
