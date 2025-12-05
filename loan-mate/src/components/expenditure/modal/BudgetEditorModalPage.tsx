@@ -5,6 +5,7 @@ import {
   ConsumptionCategoryMeta,
   ConsumptionCategoryLabelMap,
 } from "../ConsumptionCategoryMeta";
+import { formatNumber } from "@/lib/util/NumberFormatter";
 
 interface BudgetEditorContentProps {
   KEYS: ConsumptionCategoryKey[];
@@ -79,14 +80,20 @@ export default function BudgetEditorContent({
 
               <div className="flex items-center gap-2">
                 <input
-                  type="number"
+                  type="text"
                   inputMode="numeric"
                   className="w-28 px-3 py-2 border border-gray-200 rounded-lg text-right text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  value={value}
-                  min={0}
-                  onChange={(e) =>
-                    onChange(key, Math.max(0, Number(e.target.value)))
-                  }
+                  value={formatNumber(value)}
+                  onChange={(e) => {
+                    const rawValue = e.target.value.replace(/,/g, "");
+                    if (rawValue === "") {
+                      onChange(key, 0);
+                      return;
+                    }
+                    if (!isNaN(Number(rawValue))) {
+                      onChange(key, Math.max(0, Number(rawValue)));
+                    }
+                  }}
                 />
                 <span className="text-sm text-gray-500">원</span>
               </div>
@@ -106,11 +113,10 @@ export default function BudgetEditorContent({
 
         <button
           disabled={isProcessing}
-          className={`w-1/2 py-3 rounded-lg text-sm font-medium text-white transition ${
-            isProcessing
-              ? "bg-blue-300"
-              : "bg-[#1565FF] hover:bg-[#0B50D6]"
-          }`}
+          className={`w-1/2 py-3 rounded-lg text-sm font-medium text-white transition ${isProcessing
+            ? "bg-blue-300"
+            : "bg-[#1565FF] hover:bg-[#0B50D6]"
+            }`}
           onClick={onApply}
         >
           적용하기
