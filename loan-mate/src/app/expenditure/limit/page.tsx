@@ -11,6 +11,7 @@ import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_componen
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
 import CommonButton from "@/components/button/CommonButton";
+import Image from "next/image";
 
 function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
   return categories.map((cat) => {
@@ -34,6 +35,17 @@ export default function ExpenditureLimitPage() {
       ctaLabel="상환금 납부하러 가기"
       onClick={() => console.log("저장")}
     >
+      {/* LCP 측정을 위한 이미지 */}
+      <div className="w-full h-40 relative mb-4 rounded-xl overflow-hidden">
+        <Image
+          src="/logo/woori.svg"
+          alt="LCP Image"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
       {/* 상단 영역 */}
       <div className="flex items-center justify-between mb-3 px-1">
         <p className="text-gray-900 text-[18px] font-semibold">
