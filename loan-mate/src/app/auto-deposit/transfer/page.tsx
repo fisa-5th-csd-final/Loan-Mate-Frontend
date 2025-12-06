@@ -64,9 +64,8 @@ function TransferFinalInner() {
 
     // 선납하기 
     if (prepaidLoan.mode === "prepaid") {
-      response = await apiClient.post(
-        `/api/loans/${prepaidLoan.loanLedgerId}/prepayment`,
-        { amount: prepaidLoan.mustPaidAmount }
+      response = await apiClient.delete(
+        `/api/loans/${prepaidLoan.loanLedgerId}`,
       );
 
     // 상환하기 
