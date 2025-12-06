@@ -38,6 +38,7 @@ function ApplyAutoDepositContent() {
 
     remainPrincipal?: number;
     monthlyRepayment?: number;
+    interestPayment?: number;
     loanId?: number;
   };
 
@@ -47,18 +48,20 @@ function ApplyAutoDepositContent() {
   useEffect(() => {
     if (mode === "deposit") setTitle("자동예치 신청하기");
     else if (mode === "prepaid") setTitle("선납하기");
-    else if (mode === "repay") setTitle("상환하기"); // 상환금 납부하기 
+    else if (mode === "repay")
+      setTitle("상환하기"); // 상환금 납부하기
     else setTitle("신청하기");
   }, [mode, setTitle]);
 
-  // 데이터 불러오기 
+  // 데이터 불러오기
   useEffect(() => {
     async function fetchItems() {
       try {
         let res;
 
         // Helper to safe extract loanLedgerId
-        const getLedgerId = (id: any) => (typeof id === 'object' && id !== null ? id.value : id);
+        const getLedgerId = (id: any) =>
+          typeof id === "object" && id !== null ? id.value : id;
 
         // deposit 자동예치하기 모드
         if (mode === "deposit") {
@@ -119,6 +122,7 @@ function ApplyAutoDepositContent() {
               loanId: number;
               loanName: string;
               monthlyRepayment: number;
+              interestPayment: number;
               accountNumber: string;
               loanLedgerId: any; // Flexible type
             }[];
@@ -147,6 +151,7 @@ function ApplyAutoDepositContent() {
               checked: false,
 
               monthlyRepayment: item.monthlyRepayment,
+              interestPayment: item.interestPayment,
               accountNumber: item.accountNumber,
 
               balance: balanceItem?.accountBalance ?? 0,
@@ -156,8 +161,6 @@ function ApplyAutoDepositContent() {
           setItems(mapped);
           return;
         }
-
-
       } catch (err) {
         console.error("API 호출 오류:", err);
         setItems([]);
@@ -167,8 +170,7 @@ function ApplyAutoDepositContent() {
     fetchItems();
   }, [mode]);
 
-
-  // 체크 처리 
+  // 체크 처리
   function handleToggle(idx: number) {
     setItems((prev) =>
       prev.map((item, i) =>
@@ -196,11 +198,11 @@ function ApplyAutoDepositContent() {
     });
   }
 
-  // 제출 
+  // 제출
   async function handleSubmit() {
     const selected = items.filter((i) => i.checked);
 
-    // deposit 자동예치하기 모드 
+    // deposit 자동예치하기 모드
     if (mode === "deposit") {
       const allConnected = items.length > 0 && items.every((i) => i.connected);
       if (allConnected) {
@@ -235,9 +237,8 @@ function ApplyAutoDepositContent() {
 
     const loan = selected[0];
 
-    // prepaid 선납하기 모드 
+    // prepaid 선납하기 모드
     if (mode === "prepaid") {
-
       if (selected.length === 0) {
         showToast("상환할 대출을 선택해주세요.", "error");
         return;
@@ -253,7 +254,7 @@ function ApplyAutoDepositContent() {
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
         mustPaidAmount: loan.mustPaidAmount || 0,
-        balance: loan.balance || 0,
+        balance: loan.balance || 10000000000,
         accountNumber: loan.accountNumber || "",
       });
 
@@ -261,9 +262,8 @@ function ApplyAutoDepositContent() {
       return;
     }
 
-    // repyay 상환금 납부하기 모드 
+    // repyay 상환금 납부하기 모드
     if (mode === "repay") {
-
       if (selected.length === 0) {
         showToast("상환할 대출을 선택해주세요.", "error");
         return;
@@ -274,11 +274,14 @@ function ApplyAutoDepositContent() {
         return;
       }
 
+      const monthlyAmount =
+        (loan.monthlyRepayment ?? 0) + (loan.interestPayment ?? 0);
+
       setPrepaidLoan({
         mode: "repay",
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
-        mustPaidAmount: loan.monthlyRepayment || 0,
+        mustPaidAmount: monthlyAmount || 0,
         balance: loan.balance || 10000000,
         accountNumber: loan.accountNumber || "",
       });
@@ -302,11 +305,7 @@ function ApplyAutoDepositContent() {
   // }
 
   const buttonLabel =
-    mode === "deposit"
-      ? "다음"
-      : mode === "repay"
-        ? "상환하기"
-        : "선납하기";
+    mode === "deposit" ? "다음" : mode === "repay" ? "상환하기" : "선납하기";
 
   const submitDisabled =
     mode === "deposit"
@@ -314,10 +313,7 @@ function ApplyAutoDepositContent() {
       : items.filter((i) => i.checked).length === 0;
 
   return (
-    <PageWithCTA
-      ctaLabel={buttonLabel}
-      onClick={handleSubmit}
-    >
+    <PageWithCTA ctaLabel={buttonLabel} onClick={handleSubmit}>
       <div className="space-y-6 pt-4">
         <h2 className="text-lg font-semibold">
           {mode === "deposit"
@@ -342,7 +338,6 @@ function ApplyAutoDepositContent() {
     </PageWithCTA>
   );
 }
-
 
 export default function ApplyAutoDepositPage() {
   return (
