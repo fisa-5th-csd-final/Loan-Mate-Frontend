@@ -254,7 +254,7 @@ function ApplyAutoDepositContent() {
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
         mustPaidAmount: loan.mustPaidAmount || 0,
-        balance: loan.balance || 0,
+        balance: loan.balance || 10000000000,
         accountNumber: loan.accountNumber || "",
       });
 
