@@ -46,6 +46,9 @@ export default function QuickActionFunctionList() {
             onClick={() => {
               // 실제 경로 이동 로직 (필요시 활성화)
               router.push(action.path);
+              if (action.path.includes("/expenditure/limit")) {
+                sessionStorage.setItem("exp_start_time", performance.now().toString());
+              }
               console.log(`${action.title} 클릭됨`);
             }}
           />
