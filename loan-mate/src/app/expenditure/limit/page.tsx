@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import PageWithCTA from "@/components/expenditure/PageWithCTA";
@@ -65,6 +65,17 @@ function formatNextRepaymentDate(
 }
 
 export default function ExpenditureLimitPage() {
+  // 페이지 로드 시 시간 측정
+  useEffect(() => {
+    const startTimeStr = sessionStorage.getItem("exp_start_time");
+    if (startTimeStr) {
+      const startTime = parseFloat(startTimeStr);
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      console.log(`페이지 이동 시간: ${duration.toFixed(3)}초`);
+      sessionStorage.removeItem("exp_start_time");
+    }
+  }, []);
   const router = useRouter();
 
   /** 날짜 */
