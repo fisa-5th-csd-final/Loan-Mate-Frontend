@@ -117,6 +117,7 @@ function ApplyAutoDepositContent() {
               loanName: string;
               monthlyRepayment: number;
               accountNumber: string;
+              loanLedgerId: { value: number }; // 매핑용 응답값 추가 
             }[];
           }>("/api/loans/ledgers/details");
 
@@ -131,11 +132,11 @@ function ApplyAutoDepositContent() {
 
           const mapped: LoanItem[] = repayRes.data.map((item, index) => {
             const balanceItem = balanceRes.data.find(
-              (b) => b.loanLedgerId.value === item.loanId
+              (b) => b.loanLedgerId.value === item.loanLedgerId.value
             );
 
             return {
-              loanLedgerId: item.loanId,
+              loanLedgerId: item.loanLedgerId.value,
               logo: getCyclicBankIcon(index),
               name: item.loanName,
               connected: false,
@@ -274,7 +275,7 @@ function ApplyAutoDepositContent() {
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
         mustPaidAmount: loan.monthlyRepayment || 0,
-        balance: loan.balance || 0,
+        balance: loan.balance || 10000000,
         accountNumber: loan.accountNumber || "",
       });
 
