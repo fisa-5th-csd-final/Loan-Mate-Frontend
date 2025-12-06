@@ -111,7 +111,7 @@ function ApplyAutoDepositContent() {
 
         // repay 상환금 납부하기 모드
         if (mode === "repay") {
-          res = await apiClient.get<{
+          const repayRes = await apiClient.get<{
             data: {
               loanId: number;
               loanName: string;
@@ -120,21 +120,38 @@ function ApplyAutoDepositContent() {
             }[];
           }>("/api/loans/ledgers/details");
 
-          const mapped: LoanItem[] = res.data.map((item, index) => ({
-            loanLedgerId: item.loanId,
-            logo: getCyclicBankIcon(index),
-            name: item.loanName,
-            connected: false,
-            checked: false,
+          const balanceRes = await apiClient.get<{
+            data: {
+              loanLedgerId: { value: number };
+              loanName: string;
+              accountBalance: number;
+              autoDepositEnabled: boolean;
+            }[];
+          }>("/api/loans/auto-deposit-summary");
 
-            // repay 모드에서 필요한 값
-            monthlyRepayment: item.monthlyRepayment,
-            accountNumber: item.accountNumber,
-          }));
+          const mapped: LoanItem[] = repayRes.data.map((item, index) => {
+            const balanceItem = balanceRes.data.find(
+              (b) => b.loanLedgerId.value === item.loanId
+            );
+
+            return {
+              loanLedgerId: item.loanId,
+              logo: getCyclicBankIcon(index),
+              name: item.loanName,
+              connected: false,
+              checked: false,
+
+              monthlyRepayment: item.monthlyRepayment,
+              accountNumber: item.accountNumber,
+
+              balance: balanceItem?.accountBalance ?? 0,
+            };
+          });
 
           setItems(mapped);
           return;
         }
+
 
       } catch (err) {
         console.error("API 호출 오류:", err);
