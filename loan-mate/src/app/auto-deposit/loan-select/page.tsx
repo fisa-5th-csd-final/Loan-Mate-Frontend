@@ -57,11 +57,14 @@ function ApplyAutoDepositContent() {
       try {
         let res;
 
+        // Helper to safe extract loanLedgerId
+        const getLedgerId = (id: any) => (typeof id === 'object' && id !== null ? id.value : id);
+
         // deposit 자동예치하기 모드
         if (mode === "deposit") {
           res = await apiClient.get<{
             data: {
-              loanLedgerId: { value: number };
+              loanLedgerId: any; // Flexible type
               loanName: string;
               accountBalance: number;
               autoDepositEnabled: boolean;
@@ -69,7 +72,7 @@ function ApplyAutoDepositContent() {
           }>("/api/loans/auto-deposit-summary");
 
           const mapped: LoanItem[] = res.data.map((item, index) => ({
-            loanLedgerId: item.loanLedgerId.value,
+            loanLedgerId: getLedgerId(item.loanLedgerId),
             logo: getCyclicBankIcon(index),
             name: item.loanName,
             connected: item.autoDepositEnabled,
@@ -117,13 +120,13 @@ function ApplyAutoDepositContent() {
               loanName: string;
               monthlyRepayment: number;
               accountNumber: string;
-              loanLedgerId: { value: number }; // 매핑용 응답값 추가 
+              loanLedgerId: any; // Flexible type
             }[];
           }>("/api/loans/ledgers/details");
 
           const balanceRes = await apiClient.get<{
             data: {
-              loanLedgerId: { value: number };
+              loanLedgerId: any; // Flexible type
               loanName: string;
               accountBalance: number;
               autoDepositEnabled: boolean;
@@ -131,12 +134,13 @@ function ApplyAutoDepositContent() {
           }>("/api/loans/auto-deposit-summary");
 
           const mapped: LoanItem[] = repayRes.data.map((item, index) => {
+            const itemId = getLedgerId(item.loanLedgerId);
             const balanceItem = balanceRes.data.find(
-              (b) => b.loanLedgerId.value === item.loanLedgerId.value
+              (b) => getLedgerId(b.loanLedgerId) === itemId
             );
 
             return {
-              loanLedgerId: item.loanLedgerId.value,
+              loanLedgerId: itemId,
               logo: getCyclicBankIcon(index),
               name: item.loanName,
               connected: false,

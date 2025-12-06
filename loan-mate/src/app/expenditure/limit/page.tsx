@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import PageWithCTA from "@/components/expenditure/PageWithCTA";
@@ -18,9 +18,9 @@ import {
   useExpenditureAiMessageQuery,
 } from "@/lib/api/expenditure/hooks";
 import { useLoanLedgerDetailsQuery } from "@/lib/api/loan/hooks";
-import { ConsumptionCategoryKey } from "@/models/expenditure-limit";
+import { ConsumptionCategory, ExpenditureCategory, ConsumptionCategoryKey } from "@/models/expenditure-limit";
 
-import { ConsumptionCategoryLabelMap, ConsumptionCategoryMeta } from "@/components/expenditure/ConsumptionCategoryMeta";
+import { ConsumptionCategoryMeta, ConsumptionCategoryLabelMap } from "@/components/expenditure/ConsumptionCategoryMeta";
 
 import { useSpendingRecommendationManager } from "@/hooks/expenditure/useSpendingRecommendationManager";
 import {
@@ -64,8 +64,36 @@ function formatNextRepaymentDate(
   )}.${String(d.getDate()).padStart(2, "0")}`;
 }
 
+/**
+ * AI 메시지 내 영문 카테고리를 한글로 변환
+ */
+function translateAiMessage(message: string | undefined): string {
+  if (!message) return "";
+  let translated = message;
+
+  // ConsumptionCategory Enum의 Key(영문)와 Value(한글)를 이용하여 변환
+  Object.entries(ConsumptionCategory).forEach(([key, value]) => {
+    const regex = new RegExp(key, "g");
+    translated = translated.replace(regex, value);
+  });
+
+  return translated;
+}
+
 export default function ExpenditureLimitPage() {
   const router = useRouter();
+
+  // 페이지 로드 시 시간 측정
+  useEffect(() => {
+    const startTimeStr = sessionStorage.getItem("exp_start_time");
+    if (startTimeStr) {
+      const startTime = parseFloat(startTimeStr);
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      console.log(`페이지 이동 시간: ${duration.toFixed(3)}초`);
+      sessionStorage.removeItem("exp_start_time");
+    }
+  }, []);
 
   /** 날짜 */
   const { year, month } = useMemo(() => {
@@ -209,7 +237,7 @@ export default function ExpenditureLimitPage() {
               <LoadingSpinner label="AI 메시지를 불러오는 중입니다..." size="sm" />
             </div>
           ) : (
-            aiMessage
+            translateAiMessage(aiMessage)
           )}
         </MessageBox>
       )}
