@@ -6,7 +6,8 @@ import { TableRow, TableCell } from "@/components/ui/Table";
 import { expenditureLimitSample } from "@/data/expenditure-limit.sample";
 import { formatCurrency } from "@/lib/util/NumberFormatter";
 import PageWithCTA from "../_components/PageWithCTA";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { ConsumptionCategoryKeyMap, ConsumptionCategoryMeta } from "../_components/ConsumptionCategoryMeta";
 import { ConsumptionCategory, ExpenditureCategory } from "@/models/expenditure-limit";
 import SegmentProgressBar from "@/components/SegmentProgressBar";
@@ -29,6 +30,18 @@ function convertCategoriesToSegments(categories: ExpenditureCategory[]) {
 export default function ExpenditureLimitPage() {
   const data = expenditureLimitSample;
   const router = useRouter();
+
+  // 페이지 로드 시 시간 측정
+  useEffect(() => {
+    const startTimeStr = sessionStorage.getItem("exp_start_time");
+    if (startTimeStr) {
+      const startTime = parseFloat(startTimeStr);
+      const endTime = performance.now();
+      const duration = (endTime - startTime) / 1000;
+      console.log(`페이지 이동 시간: ${duration.toFixed(3)}초`);
+      sessionStorage.removeItem("exp_start_time");
+    }
+  }, []);
 
   return (
     <PageWithCTA
