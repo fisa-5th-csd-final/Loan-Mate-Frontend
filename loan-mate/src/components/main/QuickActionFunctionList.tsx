@@ -68,6 +68,9 @@ export default function QuickActionFunctionList() {
             href={action.path}
             onClick={() => {
               setDirection('forward');
+              if (action.path.includes("/expenditure/limit")) {
+                sessionStorage.setItem("exp_start_time", performance.now().toString());
+              }
               console.log(`${action.title} 클릭됨`);
             }}
           />
