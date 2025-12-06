@@ -166,7 +166,7 @@ function getRecommendCache(params: SpendingRecommendParams): SpendingRecommendRe
     ) {
       return parsed;
     }
-  } catch {}
+  } catch { }
 
   return null;
 }
@@ -188,7 +188,7 @@ export function useSpendingRecommendQuery(
   if (query.isSuccess) {
     try {
       localStorage.setItem(storageKey, JSON.stringify(query.data));
-    } catch {}
+    } catch { }
 
     userOptions?.onSuccess?.(query.data);
   }
@@ -196,41 +196,18 @@ export function useSpendingRecommendQuery(
   return query;
 }
 
-function getAiMessageCache(params: ExpenditureAiMessageParams): ExpenditureAiMessageResponse | null {
-  if (typeof window === "undefined") return null;
-
-  try {
-    const raw = localStorage.getItem(
-      `ai-expenditure-${params.year}-${params.month}`
-    );
-    if (!raw) return null;
-
-    return JSON.parse(raw) as ExpenditureAiMessageResponse;
-  } catch {}
-
-  return null;
-}
-
 export function useExpenditureAiMessageQuery(
   params: ExpenditureAiMessageParams,
   userOptions?: { onSuccess?: (data: ExpenditureAiMessageResponse) => void }
 ) {
-  const cached = getAiMessageCache(params);
-  const storageKey = `ai-expenditure-${params.year}-${params.month}`;
-
   const query = useQuery({
     queryKey: expenditureKeys.aiMessage(params.year, params.month),
     queryFn: () => fetchExpenditureAiMessage(params),
-    ...(cached ? { initialData: cached } : {}),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지 (메모리)
     gcTime: 30 * 60 * 1000,
   });
 
   if (query.isSuccess) {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(query.data));
-    } catch {}
-
     userOptions?.onSuccess?.(query.data);
   }
 
