@@ -90,7 +90,7 @@ function ApplyAutoDepositContent() {
         if (mode === "prepaid") {
           res = await apiClient.get<{
             data: {
-              loanLedgerId: number;
+              loanLedgerId: any; // Flexible type for safety
               balance: number;
               loanName: string;
               benefit: number;
@@ -100,7 +100,7 @@ function ApplyAutoDepositContent() {
           }>("/api/loans/prepayment-infos");
 
           const mapped: LoanItem[] = res.data.map((item, index) => ({
-            loanLedgerId: item.loanLedgerId,
+            loanLedgerId: getLedgerId(item.loanLedgerId),
             logo: getCyclicBankIcon(index),
             name: item.loanName,
             connected: false,
@@ -138,13 +138,17 @@ function ApplyAutoDepositContent() {
           }>("/api/loans/auto-deposit-summary");
 
           const mapped: LoanItem[] = repayRes.data.map((item, index) => {
-            const itemId = getLedgerId(item.loanLedgerId);
+            // loanLedgerId가 repayRes(details)에 없지만 loanId가 존재함.
+            // details의 loanId가 summary의 loanLedgerId와 대응된다고 가정하여 매칭.
             const balanceItem = balanceRes.data.find(
-              (b) => getLedgerId(b.loanLedgerId) === itemId
+              (b) => getLedgerId(b.loanLedgerId) === item.loanId
             );
 
+            // 매칭된 balanceItem이 있으면 그 ID 사용, 없으면 item.loanId 사용 (fallback)
+            const realLedgerId = balanceItem ? getLedgerId(balanceItem.loanLedgerId) : item.loanId;
+
             return {
-              loanLedgerId: itemId,
+              loanLedgerId: realLedgerId,
               logo: getCyclicBankIcon(index),
               name: item.loanName,
               connected: false,
@@ -254,7 +258,7 @@ function ApplyAutoDepositContent() {
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
         mustPaidAmount: loan.mustPaidAmount || 0,
-        balance: loan.balance || 10000000000,
+        balance: loan.balance || 0,
         accountNumber: loan.accountNumber || "",
       });
 
@@ -274,15 +278,12 @@ function ApplyAutoDepositContent() {
         return;
       }
 
-      const monthlyAmount =
-        (loan.monthlyRepayment ?? 0) + (loan.interestPayment ?? 0);
-
       setPrepaidLoan({
         mode: "repay",
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
-        mustPaidAmount: monthlyAmount || 0,
-        balance: loan.balance || 10000000,
+        mustPaidAmount: loan.monthlyRepayment || 0,
+        balance: loan.balance || 0,
         accountNumber: loan.accountNumber || "",
       });
 
