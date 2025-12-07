@@ -278,14 +278,11 @@ function ApplyAutoDepositContent() {
         return;
       }
 
-      const monthlyAmount =
-        (loan.monthlyRepayment ?? 0) + (loan.interestPayment ?? 0);
-
       setPrepaidLoan({
         mode: "repay",
         loanLedgerId: loan.loanLedgerId,
         loanName: loan.name,
-        mustPaidAmount: monthlyAmount || 0,
+        mustPaidAmount: loan.monthlyRepayment || 0,
         balance: loan.balance || 0,
         accountNumber: loan.accountNumber || "",
       });
